@@ -1,0 +1,4 @@
+function onLoad() {
+	parseGpx();
+	// calculateMovements();
+}
