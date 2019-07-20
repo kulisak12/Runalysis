@@ -9,6 +9,6 @@ This application aims to provide insight and deep analysis for recorded activiti
   - Lap splits
   - Analysis of time spent in pace and heart rate zones
 
-## Future possible updates
+## Possible future updates
   - Map with the activity
   - Strava synchronization
