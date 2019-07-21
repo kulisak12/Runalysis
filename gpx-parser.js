@@ -1,6 +1,6 @@
-var activity = {};
+var run = {};
 
-// create an activity object
+// create an run object
 function parseGpx() {
 	var parser = new DOMParser();
 	const xmlDom = parser.parseFromString(sessionStorage.getItem("gpxXml"), "text/xml");
@@ -8,22 +8,22 @@ function parseGpx() {
 	// general
 	const gpx = xmlDom.getElementsByTagName("gpx")[0];
 	const startTime = gpx.getElementsByTagName("metadata")[0].getElementsByTagName("time")[0].innerHTML;
-	activity.startTime = new Date(startTime);
+	run.startTime = new Date(startTime);
 	
 	const trk = gpx.getElementsByTagName("trk")[0];
-	activity.name = trk.getElementsByTagName("name")[0].innerHTML;
+	run.name = trk.getElementsByTagName("name")[0].innerHTML;
 	
-	activity.hasHr = Boolean(trk.getElementsByTagName("gpxtpx:hr")[0]);
-	activity.hasCad = Boolean(trk.getElementsByTagName("gpxtpx:cad")[0]);
-	activity.hasTemp = Boolean(trk.getElementsByTagName("gpxtpx:atemp")[0]);
+	run.hasHr = Boolean(trk.getElementsByTagName("gpxtpx:hr")[0]);
+	run.hasCad = Boolean(trk.getElementsByTagName("gpxtpx:cad")[0]);
+	run.hasTemp = Boolean(trk.getElementsByTagName("gpxtpx:atemp")[0]);
 	
 	// individual track points
-	activity.points = [];
-	activity.laps = [];
+	run.points = [];
+	run.laps = [];
 	const trkSegs = trk.getElementsByTagName("trkseg");
 	for (var i = 0; i < trkSegs.length; i++) {
-		activity.points = activity.points.concat(parseTrkSeg(trkSegs[i]));
-		activity.laps.push(activity.points.length - 1); // index of last point
+		run.points = run.points.concat(parseTrkSeg(trkSegs[i]));
+		run.laps.push(run.points.length - 1); // index of last point
 	}
 }
 
