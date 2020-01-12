@@ -1,11 +1,11 @@
 function onLoad() {
-	parseGpx();
-	calculateMovements();
+	var run = JSON.parse(sessionStorage.getItem("runData"));
+	calculateMovements(run);
 	//calculatePace();
 }
 
 // calculate time and distance differences between two consecutive points
-function calculateMovements() {
+function calculateMovements(run) {
 	run.points[0].duration = 0;
 	run.points[0].distance = 0;
 	run.points[0].elevDiff = 0;

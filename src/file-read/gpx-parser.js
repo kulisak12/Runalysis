@@ -1,10 +1,10 @@
-var run = {};
-
-// create an run object
-function parseGpx() {
-	var parser = new DOMParser();
-	const xmlDom = parser.parseFromString(sessionStorage.getItem("gpxXml"), "text/xml");
+// create a run object
+function gpxParser(fileContent) {
+	var run = {};
 	
+	var parser = new DOMParser();
+	const xmlDom = parser.parseFromString(fileContent, "text/xml");
+
 	// general
 	const gpx = xmlDom.getElementsByTagName("gpx")[0];
 	const startTime = gpx.getElementsByTagName("metadata")[0].getElementsByTagName("time")[0].innerHTML;
@@ -25,6 +25,8 @@ function parseGpx() {
 		run.points = run.points.concat(parseTrkSeg(trkSegs[i]));
 		run.laps.push(run.points.length - 1); // index of last point
 	}
+
+	return run;
 }
 
 // get an array of track points from one segment

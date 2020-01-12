@@ -1,27 +1,31 @@
 // check uploaded file
 function getFile() {
-	const formEle = document.getElementById("file");
-	const errorEle = document.getElementById("error");
-	var file = formEle.files[0];
+	var file = document.getElementById("file").files[0];
 	
 	if (file == null) {
 		return;
 	}
-	if (!file.name.endsWith(".gpx")) {
-		errorEle.innerHTML = "Please upload a .gpx file.";
+
+	if (file.name.endsWith(".gpx")) {
+		readFile(file, gpxParser);
+	}
+	else { // unsupported format
+		document.getElementById("error").innerHTML = "Please upload a .gpx file.";
 		return;
 	}
-	errorEle.innerHTML = "";
-	formEle.value = "";
-	readFile(file);
 }
 
+
 // extract content
-function readFile(file) {
+function readFile(file, parser) {
 	var reader = new FileReader();
-		reader.onload = function() {
-			sessionStorage.setItem("gpxXml", reader.result);
-			window.location.href = "view.html";
-		};
-		reader.readAsText(file);
+	reader.onload = function() {
+		var run = parser(reader.result);
+		sessionStorage.setItem("runData", JSON.stringify(run));
+
+		document.getElementById("error").innerHTML = "";
+		document.getElementById("file").value = "";
+		window.location.href = "view.html";
+	};
+	reader.readAsText(file);
 }
