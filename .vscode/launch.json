@@ -6,12 +6,16 @@
 	"configurations": [
 
 		{
+			"name": "Chrome Debug",
 			"type": "chrome",
 			"request": "launch",
-			"name": "Chrome Debug",
 			"url": "file:///home/kulisak12/Html/Runalysis/src/index.html",
 			"webRoot": "${workspaceFolder}",
-			"runtimeExecutable": "/usr/bin/chromium-browser"
+			"runtimeExecutable": "/usr/bin/chromium-browser",
+			"runtimeArgs": [
+			  "--remote-debugging-port=9222",
+			  "--user-data-dir=~/Projects/Secret/.chromium-cache/"
+			]
 		}
 	]
 }

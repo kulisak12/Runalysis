@@ -1,8 +1,12 @@
 function onLoad() {
 	var run = JSON.parse(sessionStorage.getItem("runData"));
+	// precalculate all values
 	calculateMovements(run);
 	calculatePace(run);
+	// TODO prefix sums
+	// TODO ingore paused
 
+	
 }
 
 // calculate time and distance differences between two consecutive points
