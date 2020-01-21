@@ -3,10 +3,10 @@ function onLoad() {
 	// precalculate all values
 	calculateMovements(run);
 	calculatePace(run);
-	// TODO prefix sums
+	calculatePrefixSums(run);
 	// TODO ingore paused
 
-	
+	createGraph(run);
 }
 
 // calculate time and distance differences between two consecutive points
@@ -14,19 +14,14 @@ function calculateMovements(run) {
 	run.points[0].duration = 0;
 	run.points[0].distance = 0;
 	run.points[0].elevDiff = 0;
-	run.points[0].totalTime = 0;
-	run.points[0].totalDistance = 0;
 	
 	for (var i = 1; i < run.points.length; i++) {
 		var point = run.points[i];
 		var previousPoint = run.points[i - 1];
 		
-		point.distance = calculateDistance(previousPoint, point);
 		point.duration = calculateDuration(previousPoint, point);
+		point.distance = calculateDistance(previousPoint, point);
 		point.elevDiff = point.elev - previousPoint.elev;
-		
-		point.totalTime = previousPoint.totalTime + point.duration;
-		point.totalDistance = previousPoint.totalDistance + point.distance;
 	}
 }
 
@@ -35,10 +30,31 @@ function calculatePace(run) {
 		var point = run.points[i];
 		
 		point.pace = point.duration / point.distance * 1000;
-		point.gap = calculateGap(point.pace, point.elevDiff / point.distance);
+		point.incline = point.elevDiff / point.distance;
+		point.gap = calculateGap(point.pace, point.incline);
+	}
+}
 
-		point.paceString = formatPace(point.pace);
-		point.gapString = formatPace(point.gap);
+function calculatePrefixSums(run) {
+	calculatePrefixSum(run, "duration", "sumDuration");
+	calculatePrefixSum(run, "distance", "sumDistance");
+	calculateWeightedPrefixSum(run, "hr", "sumHr");
+	calculateWeightedPrefixSum(run, "cad", "sumCad");
+}
+
+function calculatePrefixSum(run, value, sumValue) {
+	var sum = 0;
+	for (var i = 0; i < run.points.length; i++) {
+		sum += run.points[i][value];
+		run.points[i][sumValue] = sum;
+	}
+}
+
+function calculateWeightedPrefixSum(run, value, sumValue) {
+	var sum = 0;
+	for (var i = 0; i < run.points.length; i++) {
+		sum += run.points[i][value] * run.points[i].duration;
+		run.points[i][sumValue] = sum;
 	}
 }
 
@@ -49,20 +65,6 @@ Number.prototype.toRadians = function() {
 
 function square(x) {
 	return x * x;
-}
-
-function padZeros(str, zeros) {
-	while (str.length < zeros) {
-		str = "0" + str;
-	}
-	return str;
-}
-
-function formatPace(pace) {
-	pace = parseInt(pace);
-	var secs = pace % 60;
-	var minutes = (pace - secs) / 60;
-	return minutes.toString() + ":" + padZeros(secs.toString(), 2);
 }
 
 // grade adjusted pace
@@ -86,6 +88,5 @@ function calculateDistance(point1, point2) {
 }
 
 function calculateDuration(point1, point2) {
-	var msDiff = new Date(point2.fullDate).getTime() - new Date(point1.fullDate).getTime();
-	return msDiff / 1000; // from ms to s
+	return (point2.date - point1.date) / 1000;
 }

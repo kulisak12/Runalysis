@@ -45,7 +45,7 @@ function parseTrkPt(trkPt) {
 	point.lat = parseFloat(trkPt.getAttribute("lat"));
 	point.lon = parseFloat(trkPt.getAttribute("lon"));
 	point.elev = parseFloat(trkPt.getElementsByTagName("ele")[0].innerHTML);
-	point.fullDate = trkPt.getElementsByTagName("time")[0].innerHTML;
+	point.date = new Date(trkPt.getElementsByTagName("time")[0].innerHTML).getTime();
 	
 	// extra information
 	const extensionsEle = trkPt.getElementsByTagName("gpxtpx:TrackPointExtension")[0];
