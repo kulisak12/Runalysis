@@ -22,49 +22,66 @@ function createGraph(run) {
 	}
 
 	g = new Dygraph(document.getElementById("graphdiv"),
-              data,
-              {
-				labels: ["Duration", "Distance", "Elevation", "Heart rate", "Cadence", "Temperature", "Time", "Pace", "GAP", "Incline"],
-				visibility: [false, true, true, false, false, false, true, false, false],
-				animatedZooms: true,
-				//showRangeSelector: true,
-				clickCallback: drawLine,
-				highlightCallback: drawHighlight,
-				series: {
-					"Elevation": {
-						fillGraph: true,
-						strokeWidth: 0,
-						axis: "y2"
-					},
-					"Heart rate": {
-						fillGraph: true,
-						strokeWidth: 0,
-						axis: "y2"
-					},
-					"Pace": {
-						axis: "y"
-					},
-					"GAP": {
-						axis: "y"
-					},
+        data, {
+			labels: ["Duration", "Distance", "Elevation", "Heart rate", "Cadence", "Temperature", "Time", "Pace", "GAP", "Incline"],
+			visibility: [false, true, true, false, false, false, true, true, false],
+			//animatedZooms: true, // cannot determine if graph is zoomed
+			drawCallback: defaultZoom,
+			xRangePad: 0,
+			yRangePad: 0.5,
+			series: {
+				"Pace": {
+					axis: "y",
+					color: "blue"
 				},
-				/*axes: {
-					"y": {
-						independentTicks: true,
-						valueRange: [0, 12]
-					},
-					"y2": {
-						independentTicks: true,
-						valueRange: [0, 300],
-						axisLabelFormatter: function(y2) {
-							return y2.toString() + " min/km";
-						}
-					}
-				}*/
-			  });
+				"GAP": {
+					axis: "y",
+					color: "purple"
+				},
+				"Elevation": {
+					fillGraph: true,
+					color: "gray",
+					strokeWidth: 0,
+					axis: "y2"
+				},
+				"Heart rate": {
+					fillGraph: true,
+					color: "red",
+					strokeWidth: 0,
+					axis: "y2"
+				}
+			},
+			axes: {
+				"x": {
+					axisLabelFormatter: formatTime,
+					valueFormatter: formatTime
+				},
+				"y": {
+					independentTicks: true,
+					axisLabelFormatter: formatTime,
+					valueFormatter: formatTime,
+				}
+			}
+		}
+	);
+
 }
 
-function drawLine(e, x, points) {
+function defaultZoom(graph, initial) {
+	var slowestPaceToShow = 60*10;
+	var extremes = graph.yAxisExtremes();
+	var max = extremes[0][0];
+	var min = extremes[0][1];
+	if (min > slowestPaceToShow) {
+		min = slowestPaceToShow;
+	}
+	if (!graph.isZoomed()) {
+		graph.updateOptions({axes: {"y": {valueRange: [min, max]}}});
+	}
+}
+
+
+/* function drawLine(e, x, points) {
 	clickedX = x;
 	var lineWidth = 1;
 	
@@ -90,18 +107,26 @@ function drawHighlight(e, x, points, row, seriesName) {
 
 	drawLine(e, clickedX, points);
 }
+ */
 
+function formatTime(time) {
+	time = parseInt(time);
+	var secs = time % 60;
+	time = (time - secs) / 60;
+	var mins = time % 60;
+	var hours = (time - mins) / 60;
+	
+	var result = mins.toString() + ":" + padZeros(secs.toString(), 2);
+	if (hours > 1) {
+		result = hours.toString() + padZeros(result, 5);
+	}
+	
+	return result;
+}
 
 function padZeros(str, zeros) {
 	while (str.length < zeros) {
 		str = "0" + str;
 	}
 	return str;
-}
-
-function formatPace(pace) {
-	pace = parseInt(pace);
-	var secs = pace % 60;
-	var minutes = (pace - secs) / 60;
-	return minutes.toString() + ":" + padZeros(secs.toString(), 2);
 }
