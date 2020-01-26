@@ -6,7 +6,7 @@ function onLoad() {
 	calculatePrefixSums(run);
 	// TODO ingore paused
 
-	createGraph(run);
+	drawGraphs(run);
 }
 
 // calculate time and distance differences between two consecutive points

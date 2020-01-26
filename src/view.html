@@ -2,25 +2,28 @@
 <html>
 	<head>
 		<script type="text/javascript" src="activity-processing.js"></script>
-		<script type="text/javascript" src="display-info.js"></script>
+		<script type="text/javascript" src="draw-graphs.js"></script>
+		<script type="text/javascript" src="formatters.js"></script>
 
-		<script type="text/javascript" src="dygraph/dygraph.min.js"></script>
 		<link rel="stylesheet" src="dygraph/dygraph.css" />
+		<script type="text/javascript" src="dygraph/dygraph.min.js"></script>
+		<script type="text/javascript" src="dygraph/synchronizer.js"></script>
 		<style>
-			#graphic {position: relative;}
-			#top-layer {z-index: 1; pointer-events: none;}
-			#top-layer,
-			#graphdiv {position: absolute; left: 0; top: 0;}
-
+			.graph-box {width: 70%;}
+			.stats-div {width: 5em; float: left;}
+			.graph-div {margin-left: 5em; height: 10em;}
 		</style>
 	</head>
 	<body onload="onLoad()">
 
 <p id="result">Content</p>
-<div id="graphic">
-	<div id="graphdiv"></div>
-	<canvas id="top-layer" width="480" height="320"></canvas>
-</div>
+<div id="graphs-container"></div>
+<form id="data-selector">
+	<table>
+		<tr id="selector-descriptions"></tr>
+		<tr id="selector-checkboxes"></tr>
+	</table>
+</form>
 	
 	</body>
 </html>
