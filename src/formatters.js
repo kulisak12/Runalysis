@@ -13,6 +13,12 @@ function formatTime(time) {
 	return result;
 }
 
+function formatDistance(distance) {
+	distance -= distance % 10;
+	distance /= 1000;
+	return distance.toString() + " km";
+}
+
 function padZeros(str, zeros) {
 	while (str.length < zeros) {
 		str = "0" + str;
@@ -22,6 +28,7 @@ function padZeros(str, zeros) {
 
 function getFieldName(id) {
 	var names = {
+		sumDistance: "Distance",
 		elev: "Elevation",
 		pace: "Pace",
 		gap: "GAP",

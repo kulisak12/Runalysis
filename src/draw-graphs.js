@@ -2,13 +2,15 @@ function drawGraphs(run) {
 	var availableData = getAvailableData(run);
 	addDataSelector(availableData);
 	addGraphBoxes(availableData);
-	addGraphs(run);
-	
+	graphs = addGraphs(run);
+	sync(graphs);
+
 }
+
 
 function addGraphs(run) {
 	var graphDivs = Array.from(document.getElementsByClassName("graph-div"));
-	graphs = [];
+	var graphs = [];
 	graphDivs.forEach(function(graphDiv) {
 		var field = graphDiv.classList[1];
 		var data = [];
@@ -25,16 +27,29 @@ function addGraphs(run) {
 			labelsDiv: document.getElementsByClassName("labels-div " + field)[0],
 			legend: "always",
 			legendFormatter: legendFormatter,
+			axes: {
+				"x": {
+					drawAxis: true
+				}
+			}
 		});
 		graphs.push(g);
 	});
+	return graphs;
 }
 
 function legendFormatter(data) {
 	if (data.x == null) { // nothing highlighted
 	  return "--";
 	}
-	return data.series[0].yHTML;
+	var result = "";
+	for (var i = 0; i < data.series.length; i++) {
+		if (i > 0) {
+			result += "<br>";
+		}
+		result += data.series[i].yHTML;
+	}
+	return result;
 }
 
 function getAvailableData(run) {
@@ -103,7 +118,13 @@ function addGraphBox(field) {
 	document.getElementById("graphs-container").appendChild(graphBox);
 }
 
-
+function sync(graphs) {
+	var sync = Dygraph.synchronize(graphs, {
+		selection: true,
+		zoom: true,
+		range: false
+	});
+}
 
 function defaultZoom(graph, initial) {
 	var slowestPaceToShow = 60*10;
@@ -119,8 +140,6 @@ function defaultZoom(graph, initial) {
 }
 
 /*
-g = new Dygraph(document.getElementById("graph-main"), data, {
-	labels: ["Duration", "Distance", "Elevation", "Heart rate", "Cadence", "Temperature", "Time", "Pace", "GAP", "Incline"],
 	visibility: [false, true, true, false, false, false, true, true, false],
 	//animatedZooms: true, // cannot determine if graph is zoomed
 	drawCallback: defaultZoom,
@@ -129,40 +148,11 @@ g = new Dygraph(document.getElementById("graph-main"), data, {
 	rollPeriod: 2,
 	showRoller: true,
 	series: {
-		"Pace": {
-			axis: "y",
-			color: "blue"
-		},
-		"GAP": {
-			axis: "y",
-			color: "purple"
-		},
 		"Elevation": {
 			fillGraph: true,
 			color: "gray",
 			strokeWidth: 0,
 			axis: "y2"
 		},
-		"Heart rate": {
-			fillGraph: true,
-			color: "red",
-			strokeWidth: 0,
-			axis: "y2"
-		}
-	},
-	axes: {
-		"x": {
-			axisLabelFormatter: formatTime,
-			valueFormatter: formatTime
-		},
-		"y": {
-			independentTicks: true,
-			axisLabelFormatter: formatTime,
-			valueFormatter: formatTime
-		},
-		"y2": {
-			independentTicks: true
-		}
-	}
-});
+
 */
