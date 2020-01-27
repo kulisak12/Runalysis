@@ -1,6 +1,5 @@
 function drawGraphs(run) {
 	var availableData = getAvailableData(run);
-	addDataSelector(availableData);
 	addGraphBoxes(availableData);
 	graphs = addGraphs(run);
 	sync(graphs);
@@ -12,24 +11,36 @@ function addGraphs(run) {
 	var graphDivs = Array.from(document.getElementsByClassName("graph-div"));
 	var graphs = [];
 	graphDivs.forEach(function(graphDiv) {
-		var field = graphDiv.classList[1];
+		var field1 = graphDiv.classList[1];
+		var field2 = graphDiv.classList[2];
 		var data = [];
 		for (var i = 0; i < run.points.length; i++) {
 			var point = run.points[i];
 			var pointArray = [];
 			pointArray.push(point.sumDuration);
-			pointArray.push(point[field]);
+			pointArray.push(point[field1]);
+			pointArray.push(point[field2]);
 			data.push(pointArray);
 		}
 
+
+		var seriesObj = {};
+		seriesObj[getFieldName(field2)] = {
+			fillGraph: true,
+			strokeWidth: 0,
+			axis: "y2"
+		};
 		var g = new Dygraph(graphDiv, data, {
-			labels: ["Time", getFieldName(field)],
-			labelsDiv: document.getElementsByClassName("labels-div " + field)[0],
+			labels: ["Time", getFieldName(field1), getFieldName(field2)],
 			legend: "always",
-			legendFormatter: legendFormatter,
+			series: seriesObj,
+			//legendFormatter: legendFormatter,
 			axes: {
-				"x": {
-					drawAxis: true
+				"y1": {
+					independentTicks: true
+				},
+				"y2": {
+					independentTicks: true
 				}
 			}
 		});
@@ -38,22 +49,9 @@ function addGraphs(run) {
 	return graphs;
 }
 
-function legendFormatter(data) {
-	if (data.x == null) { // nothing highlighted
-	  return "--";
-	}
-	var result = "";
-	for (var i = 0; i < data.series.length; i++) {
-		if (i > 0) {
-			result += "<br>";
-		}
-		result += data.series[i].yHTML;
-	}
-	return result;
-}
-
 function getAvailableData(run) {
-	var availableData = ["elev", "pace", "gap"];
+	var availableData = ["pace"];
+	if (run.hasEle) {availableData.push("elev", "gap");}
 	if (run.hasHr) {availableData.push("hr");}
 	if (run.hasCad) {availableData.push("cad");}
 	if (run.hasTemp) {availableData.push("temp");}
@@ -61,38 +59,43 @@ function getAvailableData(run) {
 	return availableData;
 }
 
-function addDataSelector(availableData) {
-	var selectorDescriptions = document.getElementById("selector-descriptions");
-	var selectorCheckboxes = document.getElementById("selector-checkboxes");
-	availableData.forEach(function(field) {
-		var td = document.createElement("td");
-		var input = document.createElement("input");
-		input.classList.add("selection", field);
-		input.type = "checkbox";
-		input.value = getFieldName(field);
-		td.appendChild(input);
-		selectorCheckboxes.appendChild(td);
-
-		td = document.createElement("td");
-		var description = document.createElement("span");
-		description.innerHTML = getFieldName(field);
-		td.appendChild(description);
-		selectorDescriptions.appendChild(td);
-	});
-}
-
 function addGraphBoxes(availableData) {
-	availableData.forEach(function(field) {
-		addGraphBox(field);
-	});
+	// first graph
+	document.getElementById("graphs-container").appendChild(
+		createGraphBox(availableData[0], availableData[1])
+	);
+	// second graph, field repeated
+	if (availableData.length == 3) {
+		document.getElementById("graphs-container").appendChild(
+			createGraphBox(availableData[0], availableData[2])
+		);
+	}
+	// second graph, two new fields
+	if (availableData.length > 3) {
+		document.getElementById("graphs-container").appendChild(
+			createGraphBox(availableData[2], availableData[3])
+		);
+	}
 }
 
-function addGraphBox(field) {
+function createGraphBox(field1, field2) {
 	var graphBox = document.createElement("div");
-	graphBox.classList.add("graph-box", field);
+	graphBox.classList.add("graph-box", field1, field2);
 	
+	graphBox.appendChild(createStatsDiv(field1, "left"));
+
+	var graphDiv = document.createElement("div");
+	graphDiv.classList.add("graph-div", field1, field2);
+	graphBox.appendChild(graphDiv);
+
+	graphBox.appendChild(createStatsDiv(field2, "right"));
+
+	return graphBox;
+}
+
+function createStatsDiv(field, side) {
 	var statsDiv = document.createElement("div");
-	statsDiv.classList.add("stats-div");
+	statsDiv.classList.add("stats-div", side);
 
 	var graphName = document.createElement("b");
 	graphName.innerHTML = getFieldName(field);
@@ -110,12 +113,8 @@ function addGraphBox(field) {
 	avgValue.innerHTML = "todo";
 	avgValue.classList.add("avg", field);
 	statsDiv.appendChild(avgValue);
-	graphBox.appendChild(statsDiv);
 
-	var graphDiv = document.createElement("div");
-	graphDiv.classList.add("graph-div", field);
-	graphBox.appendChild(graphDiv);
-	document.getElementById("graphs-container").appendChild(graphBox);
+	return statsDiv;
 }
 
 function sync(graphs) {
@@ -126,6 +125,7 @@ function sync(graphs) {
 	});
 }
 
+/*
 function defaultZoom(graph, initial) {
 	var slowestPaceToShow = 60*10;
 	var extremes = graph.yAxisExtremes();
@@ -139,7 +139,6 @@ function defaultZoom(graph, initial) {
 	}
 }
 
-/*
 	visibility: [false, true, true, false, false, false, true, true, false],
 	//animatedZooms: true, // cannot determine if graph is zoomed
 	drawCallback: defaultZoom,

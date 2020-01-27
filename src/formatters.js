@@ -1,3 +1,17 @@
+function legendFormatter(data) {
+	if (data.x == null) { // nothing highlighted
+	  return "--";
+	}
+	var result = "";
+	for (var i = 0; i < data.series.length; i++) {
+		if (i > 0) {
+			result += "<br>";
+		}
+		result += data.series[i].yHTML;
+	}
+	return result;
+}
+
 function formatTime(time) {
 	time = parseInt(time);
 	var secs = time % 60;

@@ -13,6 +13,7 @@ function gpxParser(fileContent) {
 	const trk = gpx.getElementsByTagName("trk")[0];
 	run.name = trk.getElementsByTagName("name")[0].innerHTML;
 	
+	run.hasEle = Boolean(trk.getElementsByTagName("ele")[0]);
 	run.hasHr = Boolean(trk.getElementsByTagName("gpxtpx:hr")[0]);
 	run.hasCad = Boolean(trk.getElementsByTagName("gpxtpx:cad")[0]);
 	run.hasTemp = Boolean(trk.getElementsByTagName("gpxtpx:atemp")[0]);
