@@ -21,7 +21,7 @@ function sampleFile() {
 		if(file.readyState === 4) {
 			if(file.status === 200 || file.status == 0){
 				var fileText = file.responseText;
-				var run = parser(fileText);
+				var run = gpxParser(fileText);
 				sessionStorage.setItem("runData", JSON.stringify(run));
 				
 				document.getElementById("error").innerHTML = "";
