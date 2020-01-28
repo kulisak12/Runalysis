@@ -1,16 +1,16 @@
 function onLoad() {
-	var run = JSON.parse(sessionStorage.getItem("runData"));
+	run = JSON.parse(sessionStorage.getItem("runData"));
 	// precalculate all values
-	calculateMovements(run);
-	calculatePace(run);
-	calculatePrefixSums(run);
+	calculateMovements();
+	calculatePace();
+	calculatePrefixSums();
 	// TODO ingore paused
 
-	drawGraphs(run);
+	drawGraphs();
 }
 
 // calculate time and distance differences between two consecutive points
-function calculateMovements(run) {
+function calculateMovements() {
 	run.points[0].duration = 0;
 	run.points[0].distance = 0;
 	run.points[0].elevDiff = 0;
@@ -25,7 +25,7 @@ function calculateMovements(run) {
 	}
 }
 
-function calculatePace(run) {
+function calculatePace() {
 	for (var i = 1; i < run.points.length; i++) {
 		var point = run.points[i];
 		
@@ -35,14 +35,14 @@ function calculatePace(run) {
 	}
 }
 
-function calculatePrefixSums(run) {
-	calculatePrefixSum(run, "duration", "sumDuration");
-	calculatePrefixSum(run, "distance", "sumDistance");
-	calculateWeightedPrefixSum(run, "hr", "sumHr");
-	calculateWeightedPrefixSum(run, "cad", "sumCad");
+function calculatePrefixSums() {
+	calculatePrefixSum("duration", "sumDuration");
+	calculatePrefixSum("distance", "sumDistance");
+	calculateWeightedPrefixSum("hr", "sumHr");
+	calculateWeightedPrefixSum("cad", "sumCad");
 }
 
-function calculatePrefixSum(run, value, sumValue) {
+function calculatePrefixSum(value, sumValue) {
 	var sum = 0;
 	for (var i = 0; i < run.points.length; i++) {
 		sum += run.points[i][value];
@@ -50,7 +50,7 @@ function calculatePrefixSum(run, value, sumValue) {
 	}
 }
 
-function calculateWeightedPrefixSum(run, value, sumValue) {
+function calculateWeightedPrefixSum(value, sumValue) {
 	var sum = 0;
 	for (var i = 0; i < run.points.length; i++) {
 		sum += run.points[i][value] * run.points[i].duration;

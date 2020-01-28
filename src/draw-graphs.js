@@ -1,13 +1,14 @@
-function drawGraphs(run) {
-	var availableData = getAvailableData(run);
+function drawGraphs() {
+	var availableData = getAvailableData();
 	addGraphBoxes(availableData);
-	graphs = addGraphs(run);
+	graphs = addGraphs();
 	sync(graphs);
 
+	setColors(graphs);
 }
 
 
-function addGraphs(run) {
+function addGraphs() {
 	var graphDivs = Array.from(document.getElementsByClassName("graph-div"));
 	var graphs = [];
 	graphDivs.forEach(function(graphDiv) {
@@ -49,7 +50,22 @@ function addGraphs(run) {
 	return graphs;
 }
 
-function getAvailableData(run) {
+function setColors(graphs) {
+	var seriesObj = {};
+	seriesObj[getFieldName("pace")] = {color: "blue"};
+	seriesObj[getFieldName("elev")] = {color: "gray"};
+	seriesObj[getFieldName("gap")] = {color: "green"};
+	seriesObj[getFieldName("hr")] = {color: "red"};
+	seriesObj[getFieldName("cad")] = {color: "purple"};
+
+	graphs.forEach(function(g) {
+		g.updateOptions({
+			series: seriesObj
+		});
+	});
+}
+
+function getAvailableData() {
 	var availableData = ["pace"];
 	if (run.hasEle) {availableData.push("elev", "gap");}
 	if (run.hasHr) {availableData.push("hr");}
