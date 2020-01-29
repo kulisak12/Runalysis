@@ -1,15 +1,23 @@
-function legendFormatter(data) {
-	if (data.x == null) { // nothing highlighted
-	  return "--";
+function format(value, field) {
+	if (field == "pace" || field == "gap") {
+		return formatTime(value);
 	}
-	var result = "";
-	for (var i = 0; i < data.series.length; i++) {
-		if (i > 0) {
-			result += "<br>";
-		}
-		result += data.series[i].yHTML;
+	else if (field == "elev") {
+		return formatElevation(value);
 	}
-	return result;
+	else if (field == "hr") {
+		return formatHeartRate(value);
+	}
+	else if (field == "cad") {
+		return formatCadence(value);
+	}
+	else if (field == "temp") {
+		return formatTemperature(value);
+	}
+	else {
+		console.warn("Default formatter: " + field);
+		return value;
+	}
 }
 
 function formatTime(time) {
@@ -33,6 +41,22 @@ function formatDistance(distance) {
 	return distance.toString() + " km";
 }
 
+function formatElevation(elev) {
+	return elev + " m";
+}
+
+function formatHeartRate(hr) {
+	return hr + " bpm";
+}
+
+function formatCadence(cad) {
+	return cad + " spm";
+}
+
+function formatTemperature(temp) {
+	return temp + " °C";
+}
+
 function padZeros(str, zeros) {
 	while (str.length < zeros) {
 		str = "0" + str;
@@ -41,14 +65,53 @@ function padZeros(str, zeros) {
 }
 
 function getFieldName(id) {
-	var names = {
-		sumDistance: "Distance",
-		elev: "Elevation",
-		pace: "Pace",
-		gap: "GAP",
-		hr: "Heart rate",
-		cad: "Cadence",
-		temp: "Temperature"
+	for (var i = 0; i < names.length; i++) {
+		if (names[i].id == id) {
+			return names[i].name;
+		}
 	}
-	return names[id];
+}
+
+function getFieldId(name) {
+	for (var i = 0; i < names.length; i++) {
+		if (names[i].name == name) {
+			return names[i].id;
+		}
+	}
+}
+
+// mostly taken from default ticker code
+function timeTicker(a, b, pixels, opts, dygraph, vals) {
+	var pixelsPerTick = opts("pixelsPerLabel")
+	var maxTicks = Math.ceil(pixels / pixelsPerTick);
+	var unitsPerTick = Math.abs(b - a) / maxTicks;
+	var base = 60; // time is base 60
+	var mults = [1, 2, 5, 10, 20, 30]; // pretty numbers
+	var basePower = Math.floor(Math.log(unitsPerTick) / Math.log(base));
+	var baseScale = Math.pow(base, basePower);
+	
+	// find optimal scale
+	var scale, lowestVal, highestVal, spacing;
+    for (var i = 0; i < mults.length; i++) {
+		scale = baseScale * mults[i];
+		lowestVal = Math.floor(a / scale) * scale;
+		highestVal = Math.ceil(b / scale) * scale;
+		numTicks = Math.abs(highestVal - lowestVal) / scale;
+		spacing = pixels / numTicks;
+		if (spacing > pixelsPerTick) { // spacing found
+			break;
+		}
+	}
+	
+	// construct ticker array
+	var ticks = [];
+	for (i = 0; i <= numTicks; i++) {
+		tickVal = lowestVal + i * scale;
+		ticks.push({
+			v: tickVal,
+			label: formatTime(tickVal)
+		});
+    }
+
+	return ticks;
 }

@@ -1,10 +1,18 @@
 function drawGraphs() {
-	var availableData = getAvailableData();
-	addGraphBoxes(availableData);
+	names = [
+		{id: "pace", name: "Pace"},
+		{id: "elev", name: "Elevation"},
+		{id: "gap", name: "GAP"},
+		{id: "hr", name: "Heart rate"},
+		{id: "temp", name: "Temperature"},
+	];
+	availableData = getAvailableData();
+	addGraphBoxes();
 	graphs = addGraphs();
-	sync(graphs);
-
+	
 	setColors(graphs);
+	setOptions(graphs);
+	sync(graphs);
 }
 
 
@@ -12,8 +20,10 @@ function addGraphs() {
 	var graphDivs = Array.from(document.getElementsByClassName("graph-div"));
 	var graphs = [];
 	graphDivs.forEach(function(graphDiv) {
+		// each graph shows two fields
 		var field1 = graphDiv.classList[1];
 		var field2 = graphDiv.classList[2];
+		// create data source for graph
 		var data = [];
 		for (var i = 0; i < run.points.length; i++) {
 			var point = run.points[i];
@@ -23,31 +33,71 @@ function addGraphs() {
 			pointArray.push(point[field2]);
 			data.push(pointArray);
 		}
+		
+		var g = new Dygraph(graphDiv, data, {
+			labels: ["Time", getFieldName(field1), getFieldName(field2)],
+			legend: "never",
+			axes: {
+				"x": {drawAxis: false, ticker: timeTicker},
+				"y2": {independentTicks: true}
+			}
+		});
+		graphs.push(g);
+	});
+	return graphs;
+}
 
-
+function setOptions(graphs) {
+	graphs.forEach(function(g) {
+		// get field names
+		var field1 = getFieldId(g.getOption("labels")[1]);
+		var field2 = getFieldId(g.getOption("labels")[2]);
 		var seriesObj = {};
 		seriesObj[getFieldName(field2)] = {
 			fillGraph: true,
 			strokeWidth: 0,
 			axis: "y2"
 		};
-		var g = new Dygraph(graphDiv, data, {
-			labels: ["Time", getFieldName(field1), getFieldName(field2)],
-			legend: "always",
+
+		g.updateOptions({
 			series: seriesObj,
-			//legendFormatter: legendFormatter,
-			axes: {
-				"y1": {
-					independentTicks: true
-				},
-				"y2": {
-					independentTicks: true
-				}
-			}
+			highlightCallback: highlight,
+			//unhighlightCallback: unhighlight, // TODO: do I want to unhighlight?
 		});
-		graphs.push(g);
 	});
-	return graphs;
+
+	graphs[0].updateOptions({
+		axes: {
+			"x": {
+				drawAxis: true,
+				axisLabelFormatter: formatTime,
+			}
+		}
+	});
+}
+
+function highlight(event, x, points, row, seriesName) {
+	if (x == 0) {
+		return;
+	}
+	availableData.forEach(function(field) {
+		var fieldLegendDivs = Array.from(document.getElementsByClassName("legend-div " + field));
+		fieldLegendDivs.forEach(function(legendDiv) {
+			legendDiv.innerHTML = format(getPointByTime(x)[field], field);
+		});
+	});
+}
+
+function restoreZoom() {
+
+}
+
+function getPointByTime(time) {
+	for (var i = 0; i < run.points.length; i++) {
+		if (run.points[i].sumDuration == time) {
+			return run.points[i];
+		}
+	}
 }
 
 function setColors(graphs) {
@@ -75,7 +125,7 @@ function getAvailableData() {
 	return availableData;
 }
 
-function addGraphBoxes(availableData) {
+function addGraphBoxes() {
 	// first graph
 	document.getElementById("graphs-container").appendChild(
 		createGraphBox(availableData[0], availableData[1])
@@ -117,9 +167,9 @@ function createStatsDiv(field, side) {
 	graphName.innerHTML = getFieldName(field);
 	statsDiv.appendChild(graphName);
 
-	var labelsDiv = document.createElement("p");
-	labelsDiv.classList.add("labels-div", field);
-	statsDiv.appendChild(labelsDiv);
+	var legendDiv = document.createElement("p");
+	legendDiv.classList.add("legend-div", field);
+	statsDiv.appendChild(legendDiv);
 	
 	var avgText = document.createElement("p");
 	avgText.innerHTML = "Avg:";
@@ -155,19 +205,9 @@ function defaultZoom(graph, initial) {
 	}
 }
 
-	visibility: [false, true, true, false, false, false, true, true, false],
 	//animatedZooms: true, // cannot determine if graph is zoomed
-	drawCallback: defaultZoom,
 	xRangePad: 0,
 	yRangePad: 0.5,
 	rollPeriod: 2,
 	showRoller: true,
-	series: {
-		"Elevation": {
-			fillGraph: true,
-			color: "gray",
-			strokeWidth: 0,
-			axis: "y2"
-		},
-
 */
