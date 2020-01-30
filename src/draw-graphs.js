@@ -9,7 +9,7 @@ function drawGraphs() {
 	availableData = getAvailableData();
 	addGraphBoxes();
 	graphs = addGraphs();
-	restoreZoom();
+	defaultZoom();
 
 	setColors(graphs);
 	setOptions(graphs);
@@ -34,10 +34,20 @@ function addGraphs() {
 			pointArray.push(point[field2]);
 			data.push(pointArray);
 		}
+
+		var interactionModel = {
+			mousedown: Dygraph.defaultInteractionModel.mousedown,
+			dblclick: handleDoubleClick,
+			touchstart: Dygraph.defaultInteractionModel.touchstart,
+			touchend: Dygraph.defaultInteractionModel.touchend,
+			touchmove: Dygraph.defaultInteractionModel.touchmove,
+			willDestroyContextMyself: true,
+		}
 		
 		var g = new Dygraph(graphDiv, data, {
 			labels: ["Time", getFieldName(field1), getFieldName(field2)],
 			legend: "never",
+			interactionModel: interactionModel,
 			axes: {
 				"x": {drawAxis: false, ticker: timeTicker},
 				"y2": {independentTicks: true}
@@ -107,16 +117,17 @@ function handleDoubleClick(event, g, context) {
     if (event.altKey || event.shiftKey) {
 		return;
     }
-    restoreZoom();
+    defaultZoom();
 }
 
-function restoreZoom() {
+function defaultZoom() {
 	graphs.forEach(function(g) {
 		var fields = getGraphFields(g);
 		if (fields[0] != "pace" && fields[0] != "gap") {
-			g.doUnzoom_();
+			g.resetZoom();
 			return;
 		}
+		// find optimal value range
 		var slowestPaceToShow = 60*10;
 		var extremes = g.yAxisExtremes();
 		var max = extremes[0][0];
@@ -124,7 +135,10 @@ function restoreZoom() {
 		if (min > slowestPaceToShow) {
 			min = slowestPaceToShow;
 		}
-		g.updateOptions({axes: {"y": {valueRange: [min, max]}}});
+		g.updateOptions({
+			dateWindow: g.xAxisExtremes(),
+			axes: {"y": {valueRange: [min, max]}}
+		});
 	});
 }
 

@@ -174,7 +174,8 @@ function attachZoomHandlers(gs, syncOpts, prevCallbacks) {
         var opts = {
           dateWindow: me.xAxisRange()
         };
-        if (syncOpts.range) opts.valueRange = me.yAxisRange();
+        // changed (kulisak12)
+        if (syncOpts.range) opts.axes = {"y": {valueRange: me.yAxisRange()}};
 
         for (var j = 0; j < gs.length; j++) {
           if (gs[j] == me) {
@@ -189,6 +190,9 @@ function attachZoomHandlers(gs, syncOpts, prevCallbacks) {
               arraysAreEqual(opts.valueRange, gs[j].getOption('valueRange'))) {
             continue;
           }
+
+          // (kulisak12) keep all y ranges unchanged
+          if (!syncOpts.range) opts.axes = {"y": {valueRange: gs[j].yAxisRange()}};
 
           gs[j].updateOptions(opts);
         }
