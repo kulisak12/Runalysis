@@ -1,6 +1,6 @@
 function format(value, field) {
 	if (field == "pace" || field == "gap") {
-		return formatTime(value);
+		return formatPace(value);
 	}
 	else if (field == "elev") {
 		return formatElevation(value);
@@ -33,6 +33,10 @@ function formatTime(time) {
 	}
 	
 	return result;
+}
+
+function formatPace(pace) {
+	return formatTime(pace) + "min/km";
 }
 
 function formatDistance(distance) {

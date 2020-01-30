@@ -9,7 +9,8 @@ function drawGraphs() {
 	availableData = getAvailableData();
 	addGraphBoxes();
 	graphs = addGraphs();
-	
+	restoreZoom();
+
 	setColors(graphs);
 	setOptions(graphs);
 	sync(graphs);
@@ -50,22 +51,31 @@ function addGraphs() {
 function setOptions(graphs) {
 	graphs.forEach(function(g) {
 		// get field names
-		var field1 = getFieldId(g.getOption("labels")[1]);
-		var field2 = getFieldId(g.getOption("labels")[2]);
+		var fields = getGraphFields(g);
 		var seriesObj = {};
-		seriesObj[getFieldName(field2)] = {
+		seriesObj[getFieldName(fields[1])] = {
 			fillGraph: true,
 			strokeWidth: 0,
 			axis: "y2"
 		};
+		var axesObj = {};
+		if (fields[0] == "pace" || fields[0] == "gap") {
+			axesObj["y"] = {axisLabelFormatter: formatTime};
+		}
+		if (fields[1] == "pace" || fields[1] == "gap") {
+			axesObj["y2"] = {axisLabelFormatter: formatTime};
+		}
 
 		g.updateOptions({
+			animatedZooms: true,
+			axes: axesObj,
 			series: seriesObj,
 			highlightCallback: highlight,
 			//unhighlightCallback: unhighlight, // TODO: do I want to unhighlight?
 		});
 	});
 
+	// only show one x axis, between the two graphs
 	graphs[0].updateOptions({
 		axes: {
 			"x": {
@@ -88,8 +98,34 @@ function highlight(event, x, points, row, seriesName) {
 	});
 }
 
-function restoreZoom() {
+// taken from default double click code
+function handleDoubleClick(event, g, context) {
+    if (context.cancelNextDblclick) {
+		context.cancelNextDblclick = false;
+		return;
+    }
+    if (event.altKey || event.shiftKey) {
+		return;
+    }
+    restoreZoom();
+}
 
+function restoreZoom() {
+	graphs.forEach(function(g) {
+		var fields = getGraphFields(g);
+		if (fields[0] != "pace" && fields[0] != "gap") {
+			g.doUnzoom_();
+			return;
+		}
+		var slowestPaceToShow = 60*10;
+		var extremes = g.yAxisExtremes();
+		var max = extremes[0][0];
+		var min = extremes[0][1];
+		if (min > slowestPaceToShow) {
+			min = slowestPaceToShow;
+		}
+		g.updateOptions({axes: {"y": {valueRange: [min, max]}}});
+	});
 }
 
 function getPointByTime(time) {
@@ -113,6 +149,12 @@ function setColors(graphs) {
 			series: seriesObj
 		});
 	});
+}
+
+function getGraphFields(g) {
+	var field1 = getFieldId(g.getOption("labels")[1]);
+	var field2 = getFieldId(g.getOption("labels")[2]);
+	return [field1, field2];
 }
 
 function getAvailableData() {
@@ -192,19 +234,6 @@ function sync(graphs) {
 }
 
 /*
-function defaultZoom(graph, initial) {
-	var slowestPaceToShow = 60*10;
-	var extremes = graph.yAxisExtremes();
-	var max = extremes[0][0];
-	var min = extremes[0][1];
-	if (min > slowestPaceToShow) {
-		min = slowestPaceToShow;
-	}
-	if (!graph.isZoomed()) {
-		graph.updateOptions({axes: {"y": {valueRange: [min, max]}}});
-	}
-}
-
 	//animatedZooms: true, // cannot determine if graph is zoomed
 	xRangePad: 0,
 	yRangePad: 0.5,
