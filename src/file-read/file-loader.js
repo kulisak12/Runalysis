@@ -29,7 +29,7 @@ function sampleFile() {
             }
         }
     }
-	file.open("GET", "../bezzastaveni.gpx", false);
+	file.open("GET", "../sample.gpx", false);
     file.send(null);
 }
 
