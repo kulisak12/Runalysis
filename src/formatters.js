@@ -86,11 +86,12 @@ function getFieldId(name) {
 
 // mostly taken from default ticker code
 function timeTicker(a, b, pixels, opts, dygraph, vals) {
+
 	var pixelsPerTick = opts("pixelsPerLabel")
 	var maxTicks = Math.ceil(pixels / pixelsPerTick);
 	var unitsPerTick = Math.abs(b - a) / maxTicks;
 	var base = 60; // time is base 60
-	var mults = [1, 2, 5, 10, 20, 30]; // pretty numbers
+	var mults = [1, 2, 5, 10, 15, 20, 30, 60]; // pretty numbers
 	var basePower = Math.floor(Math.log(unitsPerTick) / Math.log(base));
 	var baseScale = Math.pow(base, basePower);
 	
@@ -106,7 +107,10 @@ function timeTicker(a, b, pixels, opts, dygraph, vals) {
 			break;
 		}
 	}
-	
+	if (lowestVal > highestVal) { // inverted Y axis
+		scale *= -1;
+	}
+
 	// construct ticker array
 	var ticks = [];
 	for (i = 0; i <= numTicks; i++) {

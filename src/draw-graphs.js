@@ -71,11 +71,15 @@ function setOptions(graphs) {
 			axis: "y2"
 		};
 		var axesObj = {};
+		var timeFormatter = {
+			axisLabelFormatter: formatTime,
+			ticker: timeTicker
+		};
 		if (fields[0] == "pace" || fields[0] == "gap") {
-			axesObj["y"] = {axisLabelFormatter: formatTime};
+			axesObj["y"] = timeFormatter;
 		}
 		if (fields[1] == "pace" || fields[1] == "gap") {
-			axesObj["y2"] = {axisLabelFormatter: formatTime};
+			axesObj["y2"] = timeFormatter;
 		}
 
 		g.updateOptions({
@@ -108,33 +112,17 @@ function defaultZoom(g) {
 	}
 	// find optimal value range
 	var slowestPaceToShow = 60*10;
-	var extremes = g.yAxisExtremes();
-	var max = extremes[0][0];
-	var min = extremes[0][1];
-	if (min > slowestPaceToShow) {
-		min = slowestPaceToShow;
+	var pad = 20;
+	var extremes = getExtremes(fields[0]);
+	var min = extremes[0] - pad;
+	var max = extremes[1] + pad;
+	if (max > slowestPaceToShow) {
+		max = slowestPaceToShow;
 	}
 	g.updateOptions({
 		dateWindow: g.xAxisExtremes(),
-		axes: {"y": {valueRange: [min, max]}}
+		axes: {"y": {valueRange: [max, min]}}
 	});
-}
-
-function getPointByTime(time) {
-	// binary search
-	var begin = 0;
-	var end = run.points.length; // outside of array
-	var center = Math.floor((begin + end) / 2);
-	while (run.points[center].sumDuration != time) {
-		if (run.points[center].sumDuration < time) {
-			begin = center + 1;
-		}
-		else {
-			end = center;
-		}
-		center = Math.floor((begin + end) / 2);
-	}
-	return run.points[center];
 }
 
 function setColors(graphs) {
@@ -233,11 +221,3 @@ function sync(graphs) {
 		range: false
 	});
 }
-
-/*
-	//animatedZooms: true, // cannot determine if graph is zoomed
-	xRangePad: 0,
-	yRangePad: 0.5,
-	rollPeriod: 2,
-	showRoller: true,
-*/

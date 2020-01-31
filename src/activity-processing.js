@@ -33,6 +33,10 @@ function calculatePace() {
 		point.incline = point.elevDiff / point.distance;
 		point.gap = calculateGap(point.pace, point.incline);
 	}
+
+	run.points[0].pace = run.points[1].pace;
+	run.points[0].incline = 0;
+	run.points[0].gap = run.points[1].gap;
 }
 
 function calculatePrefixSums() {
