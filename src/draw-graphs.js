@@ -49,7 +49,19 @@ function addGraphs() {
 }
 
 function setOptions(graphs) {
+	graphs[0].plotter_.clear();
+	// only show one x axis, between the two graphs
+	graphs[0].updateOptions({
+		axes: {
+			"x": {
+				drawAxis: true,
+				axisLabelFormatter: formatTime,
+			}
+		}
+	});
+
 	graphs.forEach(function(g) {
+		g.plotter_.clear();
 		// get field names
 		var fields = getGraphFields(g);
 		var seriesObj = {};
@@ -73,16 +85,6 @@ function setOptions(graphs) {
 			highlightCallback: highlight,
 			//unhighlightCallback: unhighlight, // TODO: do I want to unhighlight?
 		});
-	});
-
-	// only show one x axis, between the two graphs
-	graphs[0].updateOptions({
-		axes: {
-			"x": {
-				drawAxis: true,
-				axisLabelFormatter: formatTime,
-			}
-		}
 	});
 }
 
