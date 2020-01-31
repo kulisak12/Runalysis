@@ -121,11 +121,20 @@ function defaultZoom(g) {
 }
 
 function getPointByTime(time) {
-	for (var i = 0; i < run.points.length; i++) {
-		if (run.points[i].sumDuration == time) {
-			return run.points[i];
+	// binary search
+	var begin = 0;
+	var end = run.points.length; // outside of array
+	var center = Math.floor((begin + end) / 2);
+	while (run.points[center].sumDuration != time) {
+		if (run.points[center].sumDuration < time) {
+			begin = center + 1;
 		}
+		else {
+			end = center;
+		}
+		center = Math.floor((begin + end) / 2);
 	}
+	return run.points[center];
 }
 
 function setColors(graphs) {
