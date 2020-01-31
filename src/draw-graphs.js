@@ -9,7 +9,7 @@ function drawGraphs() {
 	availableData = getAvailableData();
 	addGraphBoxes();
 	graphs = addGraphs();
-	defaultZoom();
+	graphs.forEach(function(g) {defaultZoom(g);});
 
 	setColors(graphs);
 	setOptions(graphs);
@@ -34,20 +34,10 @@ function addGraphs() {
 			pointArray.push(point[field2]);
 			data.push(pointArray);
 		}
-
-		var interactionModel = {
-			mousedown: Dygraph.defaultInteractionModel.mousedown,
-			dblclick: handleDoubleClick,
-			touchstart: Dygraph.defaultInteractionModel.touchstart,
-			touchend: Dygraph.defaultInteractionModel.touchend,
-			touchmove: Dygraph.defaultInteractionModel.touchmove,
-			willDestroyContextMyself: true,
-		}
 		
 		var g = new Dygraph(graphDiv, data, {
 			labels: ["Time", getFieldName(field1), getFieldName(field2)],
 			legend: "never",
-			interactionModel: interactionModel,
 			axes: {
 				"x": {drawAxis: false, ticker: timeTicker},
 				"y2": {independentTicks: true}
@@ -108,37 +98,23 @@ function highlight(event, x, points, row, seriesName) {
 	});
 }
 
-// taken from default double click code
-function handleDoubleClick(event, g, context) {
-    if (context.cancelNextDblclick) {
-		context.cancelNextDblclick = false;
+function defaultZoom(g) {
+	var fields = getGraphFields(g);
+	if (fields[0] != "pace" && fields[0] != "gap") {
+		g.resetZoom();
 		return;
-    }
-    if (event.altKey || event.shiftKey) {
-		return;
-    }
-    defaultZoom();
-}
-
-function defaultZoom() {
-	graphs.forEach(function(g) {
-		var fields = getGraphFields(g);
-		if (fields[0] != "pace" && fields[0] != "gap") {
-			g.resetZoom();
-			return;
-		}
-		// find optimal value range
-		var slowestPaceToShow = 60*10;
-		var extremes = g.yAxisExtremes();
-		var max = extremes[0][0];
-		var min = extremes[0][1];
-		if (min > slowestPaceToShow) {
-			min = slowestPaceToShow;
-		}
-		g.updateOptions({
-			dateWindow: g.xAxisExtremes(),
-			axes: {"y": {valueRange: [min, max]}}
-		});
+	}
+	// find optimal value range
+	var slowestPaceToShow = 60*10;
+	var extremes = g.yAxisExtremes();
+	var max = extremes[0][0];
+	var min = extremes[0][1];
+	if (min > slowestPaceToShow) {
+		min = slowestPaceToShow;
+	}
+	g.updateOptions({
+		dateWindow: g.xAxisExtremes(),
+		axes: {"y": {valueRange: [min, max]}}
 	});
 }
 

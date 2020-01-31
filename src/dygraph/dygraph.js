@@ -2714,7 +2714,8 @@ DygraphInteraction.endTouch = function (event, g, context) {
     var now = new Date().getTime();
     var t = event.changedTouches[0];
     if (context.startTimeForDoubleTapMs && now - context.startTimeForDoubleTapMs < 500 && context.doubleTapX && Math.abs(context.doubleTapX - t.screenX) < 50 && context.doubleTapY && Math.abs(context.doubleTapY - t.screenY) < 50) {
-      g.resetZoom();
+      // changed (kulisak12)
+      defaultZoom(g);
     } else {
       context.startTimeForDoubleTapMs = now;
       context.doubleTapX = t.screenX;
@@ -2851,7 +2852,8 @@ DygraphInteraction.defaultModel = {
     if (event.altKey || event.shiftKey) {
       return;
     }
-    g.resetZoom();
+    // changed (kulisak12)
+    defaultZoom(g);
   }
 };
 
