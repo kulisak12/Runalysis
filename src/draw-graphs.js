@@ -221,6 +221,7 @@ function createStatsDiv(field, side) {
 
 	var legendDiv = document.createElement("p");
 	legendDiv.classList.add("legend-div", field);
+	legendDiv.innerHTML = "--";
 	statsDiv.appendChild(legendDiv);
 	
 	var avgText = document.createElement("p");

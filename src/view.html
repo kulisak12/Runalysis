@@ -11,9 +11,11 @@
 		<script type="text/javascript" src="dygraph/dygraph.js"></script>
 		<script type="text/javascript" src="dygraph/synchronizer.js"></script>
 		<style>
-			.graph-box {width: 90%; overflow: hidden;}
-			.stats-div {width: 10%; height: 100%; float:left; background-color: #f0f0f0; border-radius: 10%;}
-			.graph-div {width: 80%; height: 15em; float:left;}
+			.graph-box {width: 90%; height: 100%;
+			display: -webkit-box; display: -moz-box; display: -ms-flexbox; display: -webkit-flex; display: flex;}
+			.stats-div {width: 15%; float:left; background-color: #f0f0f0;
+			padding: 1em; margin: 0.5em 0; border: 1px solid black; border-radius: 10%;}
+			.graph-div {width: 70%; height: 15em; float:left;}
 		</style>
 	</head>
 	<body onload="onLoad()">
