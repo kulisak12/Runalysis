@@ -1,5 +1,5 @@
 function format(value, field) {
-	if (field == "pace" || field == "gap") {
+	if (isPace(field)) {
 		return formatPace(value);
 	}
 	else if (field == "elev") {
@@ -82,6 +82,10 @@ function getFieldId(name) {
 			return names[i].id;
 		}
 	}
+}
+
+function isPace(field) {
+	return field == "pace" || field == "gap";
 }
 
 // mostly taken from default ticker code

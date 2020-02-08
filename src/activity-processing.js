@@ -1,3 +1,5 @@
+var run;
+
 function onLoad() {
 	run = JSON.parse(sessionStorage.getItem("runData"));
 	// precalculate all values

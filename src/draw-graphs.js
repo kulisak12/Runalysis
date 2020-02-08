@@ -1,5 +1,7 @@
+"use strict";
+var graphs;
+
 function drawGraphs() {
-	availableData = getAvailableData();
 	addGraphBoxes();
 	graphs = addGraphs();
 	graphs.forEach(function(g) {defaultZoom(g);});
@@ -7,6 +9,7 @@ function drawGraphs() {
 	setColors(graphs);
 	setOptions(graphs);
 	sync(graphs);
+
 }
 
 
@@ -68,10 +71,10 @@ function setOptions(graphs) {
 			axisLabelFormatter: formatTime,
 			ticker: timeTicker
 		};
-		if (fields[0] == "pace" || fields[0] == "gap") {
+		if (isPace(fields[0])) {
 			axesObj["y"] = timeFormatter;
 		}
-		if (fields[1] == "pace" || fields[1] == "gap") {
+		if (isPace(fields[1])) {
 			axesObj["y2"] = timeFormatter;
 		}
 
@@ -89,7 +92,7 @@ function highlight(event, x, points, row, seriesName) {
 	if (x == 0) {
 		return;
 	}
-	availableData.forEach(function(field) {
+	getAvailableData().forEach(function(field) {
 		var fieldLegendDivs = Array.from(document.getElementsByClassName("legend-div " + field));
 		fieldLegendDivs.forEach(function(legendDiv) {
 			legendDiv.innerHTML = format(getPointByTime(x)[field], field);
@@ -149,7 +152,8 @@ function getAvailableData() {
 	return availableData;
 }
 
-function addGraphBoxes() {
+function addGraphBoxes() {	
+	var availableData = getAvailableData();
 	// first graph
 	document.getElementById("graphs-container").appendChild(
 		createGraphBox(availableData[0], availableData[1])
