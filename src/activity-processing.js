@@ -5,8 +5,10 @@ function onLoad() {
 	// precalculate all values
 	calculateMovements();
 	calculatePace();
+	if (run.source == "gpx") {
+		ignorePaused();
+	}
 	calculatePrefixSums();
-	// TODO ingore paused
 
 	drawGraphs();
 }
@@ -41,6 +43,17 @@ function calculatePace() {
 	run.points[0].gap = run.points[1].gap;
 }
 
+function ignorePaused() {
+	for (var i = 0; i < run.points.length; i++) {
+		if (run.points[i].duration > pausedThreshold) {
+			run.points[i].ignore = true;
+		}
+		else {
+			run.points[i].ingore = false;
+		}
+	}
+}
+
 function calculatePrefixSums() {
 	calculatePrefixSum("duration", "sumDuration");
 	calculatePrefixSum("distance", "sumDistance");
@@ -54,7 +67,9 @@ function calculatePrefixSums() {
 function calculatePrefixSum(value, sumValue) {
 	var sum = 0;
 	for (var i = 0; i < run.points.length; i++) {
-		sum += Math.max(run.points[i][value], 0); // ignore negative values
+		if (!run.points[í].ignore && run.points[i][value] > 0) {
+			sum += run.points[i][value];
+		}
 		run.points[i][sumValue] = sum;
 	}
 }
@@ -62,7 +77,9 @@ function calculatePrefixSum(value, sumValue) {
 function calculateWeightedPrefixSum(value, sumValue) {
 	var sum = 0;
 	for (var i = 0; i < run.points.length; i++) {
-		sum += run.points[i][value] * run.points[i].duration;
+		if (!run.points[í].ignore) {
+			sum += run.points[i][value] * run.points[i].duration;
+		}
 		run.points[i][sumValue] = sum;
 	}
 }

@@ -109,7 +109,6 @@ function defaultZoom(g) {
 		return;
 	}
 	// find optimal value range
-	var slowestPaceToShow = 60*10;
 	var pad = 20;
 	var extremes = getExtremes(fields[0]);
 	var min = extremes[0] - pad;

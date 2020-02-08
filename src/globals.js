@@ -5,3 +5,6 @@ const names = [
 	{id: "hr", name: "Heart rate"},
 	{id: "temp", name: "Temperature"},
 ];
+
+const pausedThreshold = 10;
+const slowestPaceToShow = 60 * 10;

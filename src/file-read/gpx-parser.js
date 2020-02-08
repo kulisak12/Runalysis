@@ -9,6 +9,7 @@ function gpxParser(fileContent) {
 	const gpx = xmlDom.getElementsByTagName("gpx")[0];
 	const startTime = gpx.getElementsByTagName("metadata")[0].getElementsByTagName("time")[0].innerHTML;
 	run.startTime = new Date(startTime);
+	run.source = "gpx";
 	
 	const trk = gpx.getElementsByTagName("trk")[0];
 	run.name = trk.getElementsByTagName("name")[0].innerHTML;

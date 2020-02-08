@@ -1,7 +1,7 @@
 function getPointByTime(time) {
-	// binary search
+	// binary search, returns closest point
 	var begin = 0;
-	var end = run.points.length; // outside of array
+	var end = run.points.length - 1;
 	var center = Math.floor((begin + end) / 2);
 	while (begin < end) {
 		if (run.points[center].sumDuration < time) {
