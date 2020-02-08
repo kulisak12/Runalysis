@@ -67,7 +67,7 @@ function calculatePrefixSums() {
 function calculatePrefixSum(value, sumValue) {
 	var sum = 0;
 	for (var i = 0; i < run.points.length; i++) {
-		if (!run.points[í].ignore && run.points[i][value] > 0) {
+		if (!run.points[i].ignore && run.points[i][value] > 0) {
 			sum += run.points[i][value];
 		}
 		run.points[i][sumValue] = sum;
@@ -77,7 +77,7 @@ function calculatePrefixSum(value, sumValue) {
 function calculateWeightedPrefixSum(value, sumValue) {
 	var sum = 0;
 	for (var i = 0; i < run.points.length; i++) {
-		if (!run.points[í].ignore) {
+		if (!run.points[i].ignore) {
 			sum += run.points[i][value] * run.points[i].duration;
 		}
 		run.points[i][sumValue] = sum;
