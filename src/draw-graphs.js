@@ -1,11 +1,4 @@
 function drawGraphs() {
-	names = [
-		{id: "pace", name: "Pace"},
-		{id: "elev", name: "Elevation"},
-		{id: "gap", name: "GAP"},
-		{id: "hr", name: "Heart rate"},
-		{id: "temp", name: "Temperature"},
-	];
 	availableData = getAvailableData();
 	addGraphBoxes();
 	graphs = addGraphs();
@@ -36,7 +29,7 @@ function addGraphs() {
 		}
 		
 		var g = new Dygraph(graphDiv, data, {
-			labels: ["Time", getFieldName(field1), getFieldName(field2)],
+			labels: ["Time", field1, field2],
 			legend: "never",
 			axes: {
 				"x": {drawAxis: false, ticker: timeTicker},
@@ -65,7 +58,7 @@ function setOptions(graphs) {
 		// get field names
 		var fields = getGraphFields(g);
 		var seriesObj = {};
-		seriesObj[getFieldName(fields[1])] = {
+		seriesObj[fields[1]] = {
 			fillGraph: true,
 			strokeWidth: 0,
 			axis: "y2"
@@ -127,11 +120,11 @@ function defaultZoom(g) {
 
 function setColors(graphs) {
 	var seriesObj = {};
-	seriesObj[getFieldName("pace")] = {color: "blue"};
-	seriesObj[getFieldName("elev")] = {color: "gray"};
-	seriesObj[getFieldName("gap")] = {color: "green"};
-	seriesObj[getFieldName("hr")] = {color: "red"};
-	seriesObj[getFieldName("cad")] = {color: "purple"};
+	seriesObj["pace"] = {color: "blue"};
+	seriesObj["elev"] = {color: "gray"};
+	seriesObj["gap"] = {color: "green"};
+	seriesObj["hr"] = {color: "red"};
+	seriesObj["cad"] = {color: "purple"};
 
 	graphs.forEach(function(g) {
 		g.updateOptions({
@@ -141,8 +134,8 @@ function setColors(graphs) {
 }
 
 function getGraphFields(g) {
-	var field1 = getFieldId(g.getOption("labels")[1]);
-	var field2 = getFieldId(g.getOption("labels")[2]);
+	var field1 = g.getOption("labels")[1];
+	var field2 = g.getOption("labels")[2];
 	return [field1, field2];
 }
 
