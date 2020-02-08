@@ -104,15 +104,14 @@ function highlight(event, x, points, row, seriesName) {
 
 function defaultZoom(g) {
 	var fields = getGraphFields(g);
-	if (fields[0] != "pace" && fields[0] != "gap") {
+	if (!isPace(fields[0])) {
 		g.resetZoom();
 		return;
 	}
 	// find optimal value range
-	var pad = 20;
 	var extremes = getExtremes(fields[0]);
-	var min = extremes[0] - pad;
-	var max = extremes[1] + pad;
+	var min = extremes[0] - paceAxisPadding;
+	var max = extremes[1] + paceAxisPadding;
 	if (max > slowestPaceToShow) {
 		max = slowestPaceToShow;
 	}

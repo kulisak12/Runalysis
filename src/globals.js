@@ -8,3 +8,4 @@ const names = [
 
 const pausedThreshold = 10;
 const slowestPaceToShow = 60 * 10;
+const paceAxisPadding = 20;
