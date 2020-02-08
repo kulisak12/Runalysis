@@ -82,6 +82,7 @@ function setOptions(graphs) {
 			animatedZooms: true,
 			axes: axesObj,
 			series: seriesObj,
+			drawCallback: visibleRange,
 			highlightCallback: highlight,
 			//unhighlightCallback: unhighlight, // TODO: do I want to unhighlight?
 		});
@@ -89,6 +90,7 @@ function setOptions(graphs) {
 }
 
 function highlight(event, x, points, row, seriesName) {
+	// the first point is missing some information
 	if (x == 0) {
 		return;
 	}
@@ -118,6 +120,28 @@ function defaultZoom(g) {
 	g.updateOptions({
 		dateWindow: g.xAxisExtremes(),
 		axes: {"y": {valueRange: [max, min]}}
+	});
+}
+
+function visibleRange(g, isInitial) {
+	var range = g.xAxisRange();
+	var leftPoint = getPointByTime(range[0]);
+	var rightPoint = getPointByTime(range[1]);
+	var timeDiff = pointDifference(leftPoint, rightPoint, "sumDuration");
+	getAvailableData().forEach(function(field) {
+		var fieldAvgEles = Array.from(document.getElementsByClassName("avg " + field));
+		fieldAvgEles.forEach(function(avgEle) {
+			if (isPace(field) || field == "hr" || field == "cad") {
+				var sumField = "sum" + field.charAt(0).toUpperCase() + field.slice(1); // pace -> sumPace
+				var avg = pointDifference(leftPoint, rightPoint, sumField) / timeDiff;
+				avgEle.innerHTML = format(avg, field);
+			}
+			else if (field == "elev") {
+				var elevDiff = pointDifference(leftPoint, rightPoint, "elev");
+				var elevGain = pointDifference(leftPoint, rightPoint, "sumElevGain");
+				avgEle.innerHTML = formatElevation(elevDiff) + " | " + formatElevation(elevGain);
+			}
+		});
 	});
 }
 

@@ -21,7 +21,7 @@ function format(value, field) {
 }
 
 function formatTime(time) {
-	time = parseInt(time);
+	time = Math.round(time);
 	var secs = time % 60;
 	time = (time - secs) / 60;
 	var mins = time % 60;
@@ -36,29 +36,29 @@ function formatTime(time) {
 }
 
 function formatPace(pace) {
-	return formatTime(pace) + "min/km";
+	return formatTime(pace) + " min/km";
 }
 
 function formatDistance(distance) {
-	distance -= distance % 10;
-	distance /= 1000;
+	distance = Math.round(distance / 10 + Number.EPSILON) / 100;
 	return distance.toString() + " km";
 }
 
 function formatElevation(elev) {
+	elev = Math.round(elev * 10 + Number.EPSILON) / 10;
 	return elev + " m";
 }
 
 function formatHeartRate(hr) {
-	return hr + " bpm";
+	return Math.round(hr) + " bpm";
 }
 
 function formatCadence(cad) {
-	return cad + " spm";
+	return Math.round(cad) + " spm";
 }
 
 function formatTemperature(temp) {
-	return temp + " °C";
+	return Math.round(temp) + " °C";
 }
 
 function padZeros(str, zeros) {

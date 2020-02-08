@@ -44,6 +44,9 @@ function calculatePace() {
 function calculatePrefixSums() {
 	calculatePrefixSum("duration", "sumDuration");
 	calculatePrefixSum("distance", "sumDistance");
+	calculatePrefixSum("elevDiff", "sumElevGain");
+	calculateWeightedPrefixSum("pace", "sumPace");
+	calculateWeightedPrefixSum("gap", "sumGap");
 	calculateWeightedPrefixSum("hr", "sumHr");
 	calculateWeightedPrefixSum("cad", "sumCad");
 }
@@ -51,7 +54,7 @@ function calculatePrefixSums() {
 function calculatePrefixSum(value, sumValue) {
 	var sum = 0;
 	for (var i = 0; i < run.points.length; i++) {
-		sum += run.points[i][value];
+		sum += Math.max(run.points[i][value], 0); // ignore negative values
 		run.points[i][sumValue] = sum;
 	}
 }
