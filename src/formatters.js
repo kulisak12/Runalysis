@@ -14,6 +14,12 @@ function format(value, field) {
 	else if (field == "temp") {
 		return formatTemperature(value);
 	}
+	else if (field == "sumDuration") {
+		return formatTime(value);
+	}
+	else if (field == "sumDistance") {
+		return formatDistance(value);
+	}
 	else {
 		console.warn("Default formatter: " + field);
 		return value;

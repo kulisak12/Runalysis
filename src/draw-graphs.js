@@ -95,9 +95,9 @@ function highlight(event, x, points, row, seriesName) {
 		return;
 	}
 	getAvailableData().forEach(function(field) {
-		var fieldLegendDivs = Array.from(document.getElementsByClassName("legend-div " + field));
-		fieldLegendDivs.forEach(function(legendDiv) {
-			legendDiv.innerHTML = format(getPointByTime(x)[field], field);
+		var fieldLegendEles = Array.from(document.getElementsByClassName("legend " + field));
+		fieldLegendEles.forEach(function(legendEle) {
+			legendEle.innerHTML = format(getPointByTime(x)[field], field);
 		});
 	});
 }
@@ -127,17 +127,16 @@ function visibleRange(g, isInitial) {
 	var rightPoint = getPointByTime(range[1]);
 	var timeDiff = pointDifference(leftPoint, rightPoint, "sumDuration");
 	getAvailableData().forEach(function(field) {
-		var fieldAvgEles = Array.from(document.getElementsByClassName("avg " + field));
-		fieldAvgEles.forEach(function(avgEle) {
+		var fieldStatsEles = Array.from(document.getElementsByClassName("stats " + field));
+		fieldStatsEles.forEach(function(statsEle) {
 			if (isPace(field) || field == "hr" || field == "cad") {
 				var sumField = "sum" + field.charAt(0).toUpperCase() + field.slice(1); // pace -> sumPace
 				var avg = pointDifference(leftPoint, rightPoint, sumField) / timeDiff;
-				avgEle.innerHTML = format(avg, field);
+				statsEle.innerHTML = format(avg, field);
 			}
-			else if (field == "elev") {
-				var elevDiff = pointDifference(leftPoint, rightPoint, "elev");
-				var elevGain = pointDifference(leftPoint, rightPoint, "sumElevGain");
-				avgEle.innerHTML = formatElevation(elevDiff) + " | " + formatElevation(elevGain);
+			else if (field == "elev" || field == "sumDuration" || field == "sumDistance") {
+				var difference = pointDifference(leftPoint, rightPoint, field);
+				statsEle.innerHTML = format(difference, field);
 			}
 		});
 	});
@@ -165,7 +164,7 @@ function getGraphFields(g) {
 }
 
 function getAvailableData() {
-	var availableData = ["pace"];
+	var availableData = ["sumDuration", "sumDistance", "pace"];
 	if (run.hasEle) {availableData.push("elev", "gap");}
 	if (run.hasHr) {availableData.push("hr");}
 	if (run.hasCad) {availableData.push("cad");}
@@ -176,6 +175,7 @@ function getAvailableData() {
 
 function addGraphBoxes() {	
 	var availableData = getAvailableData();
+	availableData = availableData.slice(2); // remove sumDistance, sumDuration
 	// first graph
 	document.getElementById("graphs-container").appendChild(
 		createGraphBox(availableData[0], availableData[1])
@@ -198,40 +198,39 @@ function createGraphBox(field1, field2) {
 	var graphBox = document.createElement("div");
 	graphBox.classList.add("graph-box", field1, field2);
 	
-	graphBox.appendChild(createStatsDiv(field1, "left"));
+	graphBox.appendChild(createFieldDiv(field1, "left"));
 
 	var graphDiv = document.createElement("div");
 	graphDiv.classList.add("graph-div", field1, field2);
 	graphBox.appendChild(graphDiv);
 
-	graphBox.appendChild(createStatsDiv(field2, "right"));
+	graphBox.appendChild(createFieldDiv(field2, "right"));
 
 	return graphBox;
 }
 
-function createStatsDiv(field, side) {
-	var statsDiv = document.createElement("div");
-	statsDiv.classList.add("stats-div", side);
+function createFieldDiv(field, side) {
+	var fieldDiv = document.createElement("div");
+	fieldDiv.classList.add("field-div", side);
 
 	var graphName = document.createElement("b");
-	graphName.innerHTML = getFieldName(field);
-	statsDiv.appendChild(graphName);
+	graphName.innerHTML = getFieldName(field) + ":";
+	fieldDiv.appendChild(graphName);
 
-	var legendDiv = document.createElement("p");
-	legendDiv.classList.add("legend-div", field);
-	legendDiv.innerHTML = "--";
-	statsDiv.appendChild(legendDiv);
+	var legend = document.createElement("p");
+	legend.classList.add("legend", field);
+	legend.innerHTML = "--";
+	fieldDiv.appendChild(legend);
 	
-	var avgText = document.createElement("p");
-	avgText.innerHTML = "Avg:";
-	statsDiv.appendChild(avgText);
+	var selectionText = document.createElement("b");
+	selectionText.innerHTML = "Selection:";
+	fieldDiv.appendChild(selectionText);
 	
-	var avgValue = document.createElement("p");
-	avgValue.innerHTML = "todo";
-	avgValue.classList.add("avg", field);
-	statsDiv.appendChild(avgValue);
+	var statsValue = document.createElement("p");
+	statsValue.classList.add("stats", field);
+	fieldDiv.appendChild(statsValue);
 
-	return statsDiv;
+	return fieldDiv;
 }
 
 function sync(graphs) {
