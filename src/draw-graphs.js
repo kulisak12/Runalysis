@@ -8,6 +8,7 @@ function drawGraphs() {
 
 	setColors(graphs);
 	setOptions(graphs);
+	addAxis(graphs);
 	sync(graphs);
 
 }
@@ -32,7 +33,7 @@ function addGraphs() {
 		}
 		
 		var g = new Dygraph(graphDiv, data, {
-			labels: ["Time", field1, field2],
+			labels: ["time", field1, field2],
 			legend: "never",
 			axes: {
 				"x": {drawAxis: false, ticker: timeTicker},
@@ -45,17 +46,6 @@ function addGraphs() {
 }
 
 function setOptions(graphs) {
-	graphs[0].plotter_.clear();
-	// only show one x axis, between the two graphs
-	graphs[0].updateOptions({
-		axes: {
-			"x": {
-				drawAxis: true,
-				axisLabelFormatter: formatTime,
-			}
-		}
-	});
-
 	graphs.forEach(function(g) {
 		g.plotter_.clear();
 		// get field names
@@ -176,19 +166,27 @@ function getAvailableData() {
 function addGraphBoxes() {	
 	var availableData = getAvailableData();
 	availableData = availableData.slice(2); // remove sumDistance, sumDuration
+	var graphsContainer = document.getElementById("graphs-container");
 	// first graph
-	document.getElementById("graphs-container").appendChild(
+	graphsContainer.appendChild(
 		createGraphBox(availableData[0], availableData[1])
 	);
+	// x axis
+	var axisGraphBox = createGraphBox("axis", "axis");
+	var axisGraphDiv = axisGraphBox.children[1];
+	axisGraphDiv.classList.remove("graph-div");
+	axisGraphDiv.id = "axis-div";
+	graphsContainer.appendChild(axisGraphBox);
+
 	// second graph, field repeated
 	if (availableData.length == 3) {
-		document.getElementById("graphs-container").appendChild(
+		graphsContainer.appendChild(
 			createGraphBox(availableData[0], availableData[2])
 		);
 	}
 	// second graph, two new fields
 	if (availableData.length > 3) {
-		document.getElementById("graphs-container").appendChild(
+		graphsContainer.appendChild(
 			createGraphBox(availableData[2], availableData[3])
 		);
 	}
@@ -211,7 +209,7 @@ function createGraphBox(field1, field2) {
 
 function createFieldDiv(field, side) {
 	var fieldDiv = document.createElement("div");
-	fieldDiv.classList.add("field-div", side);
+	fieldDiv.classList.add("field-div", field, "side", side);
 
 	var graphName = document.createElement("b");
 	graphName.innerHTML = getFieldName(field) + ":";
@@ -239,4 +237,34 @@ function sync(graphs) {
 		zoom: true,
 		range: false
 	});
+}
+
+// custom graph where only the axis is shown
+function addAxis(graphs) {
+	var data = [];
+	for (var i = 0; i < run.points.length; i++) {
+		var point = run.points[i];
+		var pointArray = [];
+		pointArray.push(point.sumDuration);
+		pointArray.push(1);
+		data.push(pointArray);
+	}
+	
+	var g = new Dygraph(document.getElementById("axis-div"), data, {
+		labels: ["time", "second"],
+		legend: "never",
+		visibility: [false],
+		series: {
+			"second": {
+				axis: "y2"
+			}
+		},
+		axes: {
+			"x": {drawAxis: true, ticker: timeTicker},
+			"y": {drawAxis: true, ticker: emptyTicker},
+			"y2": {drawAxis: true}
+		}
+	});
+
+	graphs.push(g);
 }

@@ -133,3 +133,8 @@ function timeTicker(a, b, pixels, opts, dygraph, vals) {
 
 	return ticks;
 }
+
+function emptyTicker(a, b, pixels, opts, dygraph, vals) {
+	var ticks = [];
+	return ticks;
+}
