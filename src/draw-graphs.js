@@ -11,8 +11,10 @@ function drawGraphs() {
 	addAxis(graphs);
 	sync(graphs);
 
+	addSettings();
 }
 
+// graph creation
 
 function addGraphs() {
 	var graphDivs = Array.from(document.getElementsByClassName("graph-div"));
@@ -43,153 +45,6 @@ function addGraphs() {
 		graphs.push(g);
 	});
 	return graphs;
-}
-
-function setOptions(graphs) {
-	graphs.forEach(function(g) {
-		g.plotter_.clear();
-		// get field names
-		var fields = getGraphFields(g);
-		var seriesObj = {};
-		seriesObj[fields[1]] = {
-			fillGraph: true,
-			strokeWidth: 0,
-			axis: "y2"
-		};
-		var axesObj = {};
-		var timeFormatter = {
-			axisLabelFormatter: formatTime,
-			ticker: timeTicker
-		};
-		if (isPace(fields[0])) {
-			axesObj["y"] = timeFormatter;
-		}
-		if (isPace(fields[1])) {
-			axesObj["y2"] = timeFormatter;
-		}
-
-		g.updateOptions({
-			animatedZooms: true,
-			axes: axesObj,
-			series: seriesObj,
-			drawCallback: visibleRange,
-			highlightCallback: highlight,
-			//unhighlightCallback: unhighlight, // TODO: do I want to unhighlight?
-		});
-	});
-}
-
-function highlight(event, x, points, row, seriesName) {
-	// the first point is missing some information
-	if (x == 0) {
-		return;
-	}
-	getAvailableData(FieldTypes.ALL).forEach(function(field) {
-		var fieldLegendEles = Array.from(document.getElementsByClassName("legend " + field));
-		fieldLegendEles.forEach(function(legendEle) {
-			legendEle.innerHTML = format(getPointByTime(x)[field], field);
-		});
-	});
-}
-
-function defaultZoom(g) {
-	var fields = getGraphFields(g);
-	if (!isPace(fields[0])) {
-		g.resetZoom();
-		return;
-	}
-	// find optimal value range
-	var extremes = getExtremes(fields[0]);
-	var min = extremes[0] - paceAxisPadding;
-	var max = extremes[1] + paceAxisPadding;
-	if (max > slowestPaceToShow) {
-		max = slowestPaceToShow;
-	}
-	g.updateOptions({
-		dateWindow: g.xAxisExtremes(),
-		axes: {"y": {valueRange: [max, min]}}
-	});
-}
-
-function visibleRange(g, isInitial) {
-	var range = g.xAxisRange();
-	var leftPoint = getPointByTime(range[0]);
-	var rightPoint = getPointByTime(range[1]);
-	var timeDiff = pointDifference(leftPoint, rightPoint, "sumDuration");
-	getAvailableData(FieldTypes.ALL).forEach(function(field) {
-		var fieldStatsEles = Array.from(document.getElementsByClassName("stats " + field));
-		fieldStatsEles.forEach(function(statsEle) {
-			if (isPace(field) || field == "hr" || field == "cad") {
-				var sumField = "sum" + field.charAt(0).toUpperCase() + field.slice(1); // pace -> sumPace
-				var avg = pointDifference(leftPoint, rightPoint, sumField) / timeDiff;
-				statsEle.innerHTML = format(avg, field);
-			}
-			else if (field == "elev" || field == "sumDuration" || field == "sumDistance") {
-				var difference = pointDifference(leftPoint, rightPoint, field);
-				statsEle.innerHTML = format(difference, field);
-			}
-		});
-	});
-}
-
-function setColors(graphs) {
-	var seriesObj = {};
-	seriesObj["pace"] = {color: "blue"};
-	seriesObj["elev"] = {color: "gray"};
-	seriesObj["gap"] = {color: "green"};
-	seriesObj["hr"] = {color: "red"};
-	seriesObj["cad"] = {color: "purple"};
-
-	graphs.forEach(function(g) {
-		g.updateOptions({
-			series: seriesObj
-		});
-	});
-}
-
-function getGraphFields(g) {
-	var field1 = g.getOption("labels")[1];
-	var field2 = g.getOption("labels")[2];
-	return [field1, field2];
-}
-
-function getAvailableData(fieldType) {
-	var main = ["sumDuration", "sumDistance"];
-	var primary = ["pace"];
-	var secondary = [];
-	if (run.hasEle) {
-		primary.push("gap");
-		secondary.push("elev");
-	}
-	if (run.hasHr) {
-		secondary.push("hr");
-	}
-	if (run.hasCad) {
-		primary.push("cad");
-	}
-	if (run.hasTemp) {
-		secondary.push("temp");
-	}
-
-	if (fieldType == FieldTypes.ALL) {
-		return Array.prototype.concat(main, primary, secondary);
-	}
-	if (fieldType == FieldTypes.MAIN) {
-		return main;
-	}
-	if (fieldType == FieldTypes.DEPENDANT) {
-		return Array.prototype.concat(primary, secondary);
-	}
-	if (fieldType == FieldTypes.PRIMARY) {
-		return primary;
-	}
-	if (fieldType == FieldTypes.SECONDARY) {
-		return secondary;
-	}
-
-	// wrong value
-	console.warn("Wrong field type");
-	return null;
 }
 
 function addGraphBoxes() {	
@@ -261,6 +116,57 @@ function createFieldDiv(field, side) {
 	return fieldDiv;
 }
 
+// display adjustments
+
+function setOptions(graphs) {
+	graphs.forEach(function(g) {
+		g.plotter_.clear();
+		// get field names
+		var fields = getGraphFields(g);
+		var seriesObj = {};
+		seriesObj[fields[1]] = {
+			fillGraph: true,
+			strokeWidth: 0,
+			axis: "y2"
+		};
+		var axesObj = {};
+		var timeFormatter = {
+			axisLabelFormatter: formatTime,
+			ticker: timeTicker
+		};
+		if (isPace(fields[0])) {
+			axesObj["y"] = timeFormatter;
+		}
+		if (isPace(fields[1])) {
+			axesObj["y2"] = timeFormatter;
+		}
+
+		g.updateOptions({
+			animatedZooms: true,
+			axes: axesObj,
+			series: seriesObj,
+			drawCallback: visibleRange,
+			highlightCallback: highlight,
+			//unhighlightCallback: unhighlight, // TODO: do I want to unhighlight?
+		});
+	});
+}
+
+function setColors(graphs) {
+	var seriesObj = {};
+	seriesObj["pace"] = {color: "blue"};
+	seriesObj["elev"] = {color: "gray"};
+	seriesObj["gap"] = {color: "green"};
+	seriesObj["hr"] = {color: "red"};
+	seriesObj["cad"] = {color: "purple"};
+
+	graphs.forEach(function(g) {
+		g.updateOptions({
+			series: seriesObj
+		});
+	});
+}
+
 function sync(graphs) {
 	var sync = Dygraph.synchronize(graphs, {
 		selection: true,
@@ -297,4 +203,67 @@ function addAxis(graphs) {
 	});
 
 	graphs.push(g);
+}
+
+// user interaction
+
+function highlight(event, x, points, row, seriesName) {
+	// the first point is missing some information
+	if (x == 0) {
+		return;
+	}
+	getAvailableData(FieldTypes.ALL).forEach(function(field) {
+		var fieldLegendEles = Array.from(document.getElementsByClassName("legend " + field));
+		fieldLegendEles.forEach(function(legendEle) {
+			legendEle.innerHTML = format(getPointByTime(x)[field], field);
+		});
+	});
+}
+
+function defaultZoom(g) {
+	var fields = getGraphFields(g);
+	if (!isPace(fields[0])) {
+		g.resetZoom();
+		return;
+	}
+	// find optimal value range
+	var extremes = getExtremes(fields[0]);
+	var min = extremes[0] - paceAxisPadding;
+	var max = extremes[1] + paceAxisPadding;
+	if (max > slowestPaceToShow) {
+		max = slowestPaceToShow;
+	}
+	g.updateOptions({
+		dateWindow: g.xAxisExtremes(),
+		axes: {"y": {valueRange: [max, min]}}
+	});
+}
+
+function visibleRange(g, isInitial) {
+	var range = g.xAxisRange();
+	var leftPoint = getPointByTime(range[0]);
+	var rightPoint = getPointByTime(range[1]);
+	var timeDiff = pointDifference(leftPoint, rightPoint, "sumDuration");
+	getAvailableData(FieldTypes.ALL).forEach(function(field) {
+		var fieldStatsEles = Array.from(document.getElementsByClassName("stats " + field));
+		fieldStatsEles.forEach(function(statsEle) {
+			if (isPace(field) || field == "hr" || field == "cad") {
+				var sumField = "sum" + field.charAt(0).toUpperCase() + field.slice(1); // pace -> sumPace
+				var avg = pointDifference(leftPoint, rightPoint, sumField) / timeDiff;
+				statsEle.innerHTML = format(avg, field);
+			}
+			else if (field == "elev" || field == "sumDuration" || field == "sumDistance") {
+				var difference = pointDifference(leftPoint, rightPoint, field);
+				statsEle.innerHTML = format(difference, field);
+			}
+		});
+	});
+}
+
+
+
+function getGraphFields(g) {
+	var field1 = g.getOption("labels")[1];
+	var field2 = g.getOption("labels")[2];
+	return [field1, field2];
 }

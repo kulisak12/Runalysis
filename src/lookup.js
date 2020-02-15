@@ -33,3 +33,42 @@ function getExtremes(field) {
 function pointDifference(point1, point2, field) {
 	return point2[field] - point1[field];
 }
+
+function getAvailableData(fieldType) {
+	var main = ["sumDuration", "sumDistance"];
+	var primary = ["pace"];
+	var secondary = [];
+	if (run.hasEle) {
+		primary.push("gap");
+		secondary.push("elev");
+	}
+	if (run.hasHr) {
+		secondary.push("hr");
+	}
+	if (run.hasCad) {
+		primary.push("cad");
+	}
+	if (run.hasTemp) {
+		secondary.push("temp");
+	}
+
+	if (fieldType == FieldTypes.ALL) {
+		return Array.prototype.concat(main, primary, secondary);
+	}
+	if (fieldType == FieldTypes.MAIN) {
+		return main;
+	}
+	if (fieldType == FieldTypes.DEPENDANT) {
+		return Array.prototype.concat(primary, secondary);
+	}
+	if (fieldType == FieldTypes.PRIMARY) {
+		return primary;
+	}
+	if (fieldType == FieldTypes.SECONDARY) {
+		return secondary;
+	}
+
+	// wrong value
+	console.warn("Wrong field type");
+	return null;
+}
