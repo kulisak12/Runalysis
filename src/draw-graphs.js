@@ -316,15 +316,33 @@ function swapFields(newField, g, fieldType) {
 	else {
 		oldField = oldFields[1];
 	}
-	var newFields = oldFields;
+	var newFields = oldFields.slice();
 	newFields[oldFields.indexOf(oldField)] = newField;
 
+	// change classes
+	var elementList = Array.from(document.getElementsByClassName(oldFields[0] + " " + oldFields[1]));
+	elementList.forEach(function(element) {
+		element.classList.remove(oldFields[0], oldFields[1]);
+		element.classList.add(newFields[0], newFields[1]);
+	});
+
+	// change field div
+	var graphBoxes = Array.from(document.getElementsByClassName("graph-box " + newFields[0] + " " + newFields[1]));
+	graphBoxes.forEach(function(graphBox) {
+		var replacedDiv = graphBox.getElementsByClassName("field-div " + oldField)[0];
+		var side = replacedDiv.classList[3];
+		var newDiv = createFieldDiv(newField, side);
+		graphBox.replaceChild(newDiv, replacedDiv);
+	});
+
+	// update everything
 	g.updateOptions({
 		file: getGraphData(newFields[0], newFields[1]),
 		labels: ["time", newFields[0], newFields[1]]
 	});
 	setOptions(g);
 	defaultZoom(g);
+	sync(graphs);
 }
 
 function getGraphFields(g) {
