@@ -53,7 +53,7 @@ function parseTrkPt(trkPt) {
 	const extensionsEle = trkPt.getElementsByTagName("gpxtpx:TrackPointExtension")[0];
 	if (extensionsEle != null) {
 		point.hr = parseExtension(extensionsEle.getElementsByTagName("gpxtpx:hr")[0]);
-		point.cad = parseExtension(extensionsEle.getElementsByTagName("gpxtpx:cad")[0]);
+		point.cad = 2 * parseExtension(extensionsEle.getElementsByTagName("gpxtpx:cad")[0]);
 		point.temp = parseExtension(extensionsEle.getElementsByTagName("gpxtpx:atemp")[0]);
 	}
 	return point;

@@ -3,8 +3,18 @@ const names = [
 	{id: "elev", name: "Elevation"},
 	{id: "gap", name: "GAP"},
 	{id: "hr", name: "Heart rate"},
+	{id: "cad", name: "Cadence"},
 	{id: "temp", name: "Temperature"},
 ];
+
+const colors = {
+	"pace": "blue",
+	"elev": "gray",
+	"gap": "green",
+	"hr": "red",
+	"cad": "purple",
+	"temp": "orange"
+};
 
 const FieldTypes = {
 	ALL: 1,

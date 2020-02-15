@@ -4,11 +4,14 @@ var graphs;
 function drawGraphs() {
 	addGraphBoxes();
 	graphs = addGraphs();
-	graphs.forEach(function(g) {defaultZoom(g);});
 
-	setColors(graphs);
-	setOptions(graphs);
-	addAxis(graphs);
+	graphs.forEach(function(g) {
+		defaultZoom(g);
+		setColors(g);
+		setOptions(g);
+	});
+
+	graphs.push(addAxis());
 	sync(graphs);
 
 	addSettings();
@@ -23,16 +26,7 @@ function addGraphs() {
 		// each graph shows two fields
 		var field1 = graphDiv.classList[1];
 		var field2 = graphDiv.classList[2];
-		// create data source for graph
-		var data = [];
-		for (var i = 0; i < run.points.length; i++) {
-			var point = run.points[i];
-			var pointArray = [];
-			pointArray.push(point.sumDuration);
-			pointArray.push(point[field1]);
-			pointArray.push(point[field2]);
-			data.push(pointArray);
-		}
+		var data = getGraphData(field1, field2);
 		
 		var g = new Dygraph(graphDiv, data, {
 			labels: ["time", field1, field2],
@@ -45,6 +39,20 @@ function addGraphs() {
 		graphs.push(g);
 	});
 	return graphs;
+}
+
+// create data source for graph
+function getGraphData(field1, field2) {
+	var data = [];
+	for (var i = 0; i < run.points.length; i++) {
+		var point = run.points[i];
+		var pointArray = [];
+		pointArray.push(point.sumDuration);
+		pointArray.push(point[field1]);
+		pointArray.push(point[field2]);
+		data.push(pointArray);
+	}
+	return data;
 }
 
 function addGraphBoxes() {	
@@ -118,52 +126,50 @@ function createFieldDiv(field, side) {
 
 // display adjustments
 
-function setOptions(graphs) {
-	graphs.forEach(function(g) {
-		g.plotter_.clear();
-		// get field names
-		var fields = getGraphFields(g);
-		var seriesObj = {};
-		seriesObj[fields[1]] = {
-			fillGraph: true,
-			strokeWidth: 0,
-			axis: "y2"
-		};
-		var axesObj = {};
-		var timeFormatter = {
-			axisLabelFormatter: formatTime,
-			ticker: timeTicker
-		};
-		if (isPace(fields[0])) {
-			axesObj["y"] = timeFormatter;
-		}
-		if (isPace(fields[1])) {
-			axesObj["y2"] = timeFormatter;
-		}
+function setOptions(g) {
+	g.plotter_.clear();
+	// get field names
+	var fields = getGraphFields(g);
 
-		g.updateOptions({
-			animatedZooms: true,
-			axes: axesObj,
-			series: seriesObj,
-			drawCallback: visibleRange,
-			highlightCallback: highlight,
-			//unhighlightCallback: unhighlight, // TODO: do I want to unhighlight?
-		});
+	var seriesObj = {};
+	seriesObj[fields[1]] = {
+		fillGraph: true,
+		strokeWidth: 0,
+		axis: "y2"
+	};
+
+	var axesObj = {};
+	var timeFormatter = {
+		axisLabelFormatter: formatTime,
+		ticker: timeTicker
+	};
+	var numberFormatter = {
+		ticker: Dygraph.numericTicks
+	}
+	if (isPace(fields[0])) {
+		axesObj["y"] = timeFormatter;
+	}
+	else {
+		axesObj["y"] = null;
+	}
+
+	g.updateOptions({
+		animatedZooms: true,
+		axes: axesObj,
+		series: seriesObj,
+		drawCallback: visibleRange,
+		highlightCallback: highlight,
+		//unhighlightCallback: unhighlight, // TODO: do I want to unhighlight?
 	});
 }
 
-function setColors(graphs) {
+function setColors(g) {
 	var seriesObj = {};
-	seriesObj["pace"] = {color: "blue"};
-	seriesObj["elev"] = {color: "gray"};
-	seriesObj["gap"] = {color: "green"};
-	seriesObj["hr"] = {color: "red"};
-	seriesObj["cad"] = {color: "purple"};
-
-	graphs.forEach(function(g) {
-		g.updateOptions({
-			series: seriesObj
-		});
+	Object.keys(colors).forEach(function(key) {
+		seriesObj[key] = {color: colors[key]};
+	});
+	g.updateOptions({
+		series: seriesObj
 	});
 }
 
@@ -176,7 +182,7 @@ function sync(graphs) {
 }
 
 // custom graph where only the axis is shown
-function addAxis(graphs) {
+function addAxis() {
 	var data = [];
 	for (var i = 0; i < run.points.length; i++) {
 		var point = run.points[i];
@@ -202,7 +208,7 @@ function addAxis(graphs) {
 		}
 	});
 
-	graphs.push(g);
+	return g;
 }
 
 // user interaction
@@ -260,7 +266,66 @@ function visibleRange(g, isInitial) {
 	});
 }
 
+// custom settings
 
+function addSettings() {
+	var fieldGraphs = [];
+	fieldGraphs.push(graphs[0]);
+	if (graphs.length > 1) {
+		fieldGraphs.push(graphs[1]);
+	}
+	var settingsDiv = document.getElementsByClassName("settings graphs")[0];
+
+	for (var i = 0; i < fieldGraphs.length; i++) {
+		let g = fieldGraphs[i];
+		var fields = getGraphFields(g);
+		var graphSettingsDiv = document.createElement("div");
+		graphSettingsDiv.classList.add("graph-settings");
+
+		var primarySelection = createSelection(FieldTypes.PRIMARY, fields[0]);
+		primarySelection.onchange = function() {swapFields(this.value, g, FieldTypes.PRIMARY)};
+		graphSettingsDiv.appendChild(primarySelection);
+		var secondarySelection = createSelection(FieldTypes.SECONDARY, fields[1]);
+		secondarySelection.onchange = function() {swapFields(this.value, g, FieldTypes.SECONDARY)};
+		graphSettingsDiv.appendChild(secondarySelection);
+
+		settingsDiv.appendChild(graphSettingsDiv);
+	}
+}
+
+function createSelection(fieldTypes, selected) {
+	var selection = document.createElement("select");
+	var index = 0;
+	getAvailableData(fieldTypes).forEach(function(field) {
+		var item = document.createElement("option");
+		item.value = field;
+		item.innerHTML = getFieldName(field);
+		selection.appendChild(item);
+	});
+	selection.classList.add("graph-selection");
+	selection.value = selected;
+	return selection;
+}
+
+function swapFields(newField, g, fieldType) {
+	var oldFields = getGraphFields(g);
+	var oldField;
+	if (fieldType == FieldTypes.PRIMARY) {
+		oldField = oldFields[0];
+	}
+	else {
+		oldField = oldFields[1];
+	}
+	var newFields = oldFields;
+	newFields[oldFields.indexOf(oldField)] = newField;
+
+	g.updateOptions({
+		file: getGraphData(newFields[0], newFields[1]),
+		labels: ["time", newFields[0], newFields[1]]
+	});
+	setOptions(g);
+	defaultZoom(g);
+}
 
 function getGraphFields(g) {
 	var field1 = g.getOption("labels")[1];
