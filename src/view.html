@@ -28,6 +28,9 @@
 			.field-div.axis {height: 1px; padding-top:0; padding-bottom: 0; visibility: hidden;}
 			.module {display: flex; margin: 1em;}
 			.settings {width: 9%; margin-left: 1%; padding: 0.5em; border-left: 2px solid gray;}
+			#settings-header {padding: 1em 0; margin: calc(4px - 0.5em) 0 0.5em 0;}
+			.graph-settings {height: calc(50% - 1.75em - 3px); margin-bottom: 21px;}
+			select {min-width: 60%; margin: 0.25em;}
 		</style>
 	</head>
 	<body onload="onLoad()">
@@ -45,7 +48,9 @@
 			</div>
 		</div>
 	</div>
-	<aside class="settings graphs"><b>Settings</b></aside>
+	<aside class="settings graphs">
+		<div id="settings-header"><b>Settings</b></div>
+	</aside>
 </div>
 
 	</body>
