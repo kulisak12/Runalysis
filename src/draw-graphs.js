@@ -84,7 +84,7 @@ function highlight(event, x, points, row, seriesName) {
 	if (x == 0) {
 		return;
 	}
-	getAvailableData().forEach(function(field) {
+	getAvailableData(FieldTypes.ALL).forEach(function(field) {
 		var fieldLegendEles = Array.from(document.getElementsByClassName("legend " + field));
 		fieldLegendEles.forEach(function(legendEle) {
 			legendEle.innerHTML = format(getPointByTime(x)[field], field);
@@ -116,7 +116,7 @@ function visibleRange(g, isInitial) {
 	var leftPoint = getPointByTime(range[0]);
 	var rightPoint = getPointByTime(range[1]);
 	var timeDiff = pointDifference(leftPoint, rightPoint, "sumDuration");
-	getAvailableData().forEach(function(field) {
+	getAvailableData(FieldTypes.ALL).forEach(function(field) {
 		var fieldStatsEles = Array.from(document.getElementsByClassName("stats " + field));
 		fieldStatsEles.forEach(function(statsEle) {
 			if (isPace(field) || field == "hr" || field == "cad") {
@@ -153,23 +153,53 @@ function getGraphFields(g) {
 	return [field1, field2];
 }
 
-function getAvailableData() {
-	var availableData = ["sumDuration", "sumDistance", "pace"];
-	if (run.hasEle) {availableData.push("elev", "gap");}
-	if (run.hasHr) {availableData.push("hr");}
-	if (run.hasCad) {availableData.push("cad");}
-	if (run.hasTemp) {availableData.push("temp");}
+function getAvailableData(fieldType) {
+	var main = ["sumDuration", "sumDistance"];
+	var primary = ["pace"];
+	var secondary = [];
+	if (run.hasEle) {
+		primary.push("gap");
+		secondary.push("elev");
+	}
+	if (run.hasHr) {
+		secondary.push("hr");
+	}
+	if (run.hasCad) {
+		primary.push("cad");
+	}
+	if (run.hasTemp) {
+		secondary.push("temp");
+	}
 
-	return availableData;
+	if (fieldType == FieldTypes.ALL) {
+		return Array.prototype.concat(main, primary, secondary);
+	}
+	if (fieldType == FieldTypes.MAIN) {
+		return main;
+	}
+	if (fieldType == FieldTypes.DEPENDANT) {
+		return Array.prototype.concat(primary, secondary);
+	}
+	if (fieldType == FieldTypes.PRIMARY) {
+		return primary;
+	}
+	if (fieldType == FieldTypes.SECONDARY) {
+		return secondary;
+	}
+
+	// wrong value
+	console.warn("Wrong field type");
+	return null;
 }
 
 function addGraphBoxes() {	
-	var availableData = getAvailableData();
-	availableData = availableData.slice(2); // remove sumDistance, sumDuration
+	var primaryFields = getAvailableData(FieldTypes.PRIMARY);
+	var secondaryFields = getAvailableData(FieldTypes.SECONDARY);
 	var graphsContainer = document.getElementById("graphs-container");
+	// TODO only one field (pace) available
 	// first graph
 	graphsContainer.appendChild(
-		createGraphBox(availableData[0], availableData[1])
+		createGraphBox(primaryFields[0], secondaryFields[0])
 	);
 	// x axis
 	var axisGraphBox = createGraphBox("axis", "axis");
@@ -179,15 +209,15 @@ function addGraphBoxes() {
 	graphsContainer.appendChild(axisGraphBox);
 
 	// second graph, field repeated
-	if (availableData.length == 3) {
+	if (primaryFields.length >= 2 && secondaryFields.length == 1) {
 		graphsContainer.appendChild(
-			createGraphBox(availableData[0], availableData[2])
+			createGraphBox(primaryFields[1], secondaryFields[0])
 		);
 	}
 	// second graph, two new fields
-	if (availableData.length > 3) {
+	else if (secondaryFields.length >= 2) {
 		graphsContainer.appendChild(
-			createGraphBox(availableData[2], availableData[3])
+			createGraphBox(primaryFields[1], secondaryFields[1])
 		);
 	}
 }
