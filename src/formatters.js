@@ -34,8 +34,8 @@ function formatTime(time) {
 	var hours = (time - mins) / 60;
 	
 	var result = mins.toString() + ":" + padZeros(secs.toString(), 2);
-	if (hours > 1) {
-		result = hours.toString() + padZeros(result, 5);
+	if (hours > 0) {
+		result = hours.toString() + ":" + padZeros(result, 5);
 	}
 	
 	return result;

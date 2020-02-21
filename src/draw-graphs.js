@@ -269,24 +269,29 @@ function visibleRange(g, isInitial) {
 // custom settings
 
 function addSettings() {
+	// get all graph elements
 	var fieldGraphs = [];
 	fieldGraphs.push(graphs[0]);
 	if (graphs.length > 1) {
 		fieldGraphs.push(graphs[1]);
 	}
+
+	var fieldGraphBoxes = getFieldGraphBoxes();
 	var settingsDiv = document.getElementsByClassName("settings graphs")[0];
 
+	// for each graph
 	for (var i = 0; i < fieldGraphs.length; i++) {
 		let g = fieldGraphs[i];
+		let graphBox = fieldGraphBoxes[i];
 		var fields = getGraphFields(g);
 		var graphSettingsDiv = document.createElement("div");
 		graphSettingsDiv.classList.add("graph-settings");
 
 		var primarySelection = createSelection(FieldTypes.PRIMARY, fields[0]);
-		primarySelection.onchange = function() {swapFields(this.value, g, FieldTypes.PRIMARY)};
+		primarySelection.onchange = function() {swapFields(this.value, g, graphBox, FieldTypes.PRIMARY)};
 		graphSettingsDiv.appendChild(primarySelection);
 		var secondarySelection = createSelection(FieldTypes.SECONDARY, fields[1]);
-		secondarySelection.onchange = function() {swapFields(this.value, g, FieldTypes.SECONDARY)};
+		secondarySelection.onchange = function() {swapFields(this.value, g, graphBox, FieldTypes.SECONDARY)};
 		graphSettingsDiv.appendChild(secondarySelection);
 
 		settingsDiv.appendChild(graphSettingsDiv);
@@ -307,7 +312,7 @@ function createSelection(fieldTypes, selected) {
 	return selection;
 }
 
-function swapFields(newField, g, fieldType) {
+function swapFields(newField, g, graphBox, fieldType) {
 	var oldFields = getGraphFields(g);
 	var oldField;
 	if (fieldType == FieldTypes.PRIMARY) {
@@ -320,20 +325,19 @@ function swapFields(newField, g, fieldType) {
 	newFields[oldFields.indexOf(oldField)] = newField;
 
 	// change classes
-	var elementList = Array.from(document.getElementsByClassName(oldFields[0] + " " + oldFields[1]));
+	var elementList = [];
+	elementList.push(graphBox);
+	elementList.push(graphBox.getElementsByClassName("graph-div")[0]);
 	elementList.forEach(function(element) {
 		element.classList.remove(oldFields[0], oldFields[1]);
 		element.classList.add(newFields[0], newFields[1]);
 	});
 
 	// change field div
-	var graphBoxes = Array.from(document.getElementsByClassName("graph-box " + newFields[0] + " " + newFields[1]));
-	graphBoxes.forEach(function(graphBox) {
-		var replacedDiv = graphBox.getElementsByClassName("field-div " + oldField)[0];
-		var side = replacedDiv.classList[3];
-		var newDiv = createFieldDiv(newField, side);
-		graphBox.replaceChild(newDiv, replacedDiv);
-	});
+	var replacedDiv = graphBox.getElementsByClassName("field-div " + oldField)[0];
+	var side = replacedDiv.classList[3];
+	var newDiv = createFieldDiv(newField, side);
+	graphBox.replaceChild(newDiv, replacedDiv);
 
 	// update everything
 	g.updateOptions({
@@ -345,8 +349,22 @@ function swapFields(newField, g, fieldType) {
 	sync(graphs);
 }
 
+// get methods
+
 function getGraphFields(g) {
 	var field1 = g.getOption("labels")[1];
 	var field2 = g.getOption("labels")[2];
 	return [field1, field2];
+}
+
+function getFieldGraphBoxes() {
+	var fieldGraphBoxes = Array.from(document.getElementsByClassName("graph-box"));
+	for (var i = 0; i < fieldGraphBoxes.length; i++) {
+		var classes = fieldGraphBoxes[i].classList;
+		if (classes.contains("top") || classes.contains("axis")) {
+			fieldGraphBoxes.splice(i, 1);
+			i--;
+		}
+	}
+	return fieldGraphBoxes;
 }
