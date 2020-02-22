@@ -10,15 +10,19 @@
 		<link rel="stylesheet" src="dygraph/dygraph.css" />
 		<script type="text/javascript" src="dygraph/dygraph.js"></script>
 		<script type="text/javascript" src="dygraph/synchronizer.js"></script>
+
+		<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
+		<script type="text/javascript" src="show-map.js"></script>
+
 		<style>
 			body {margin: 0;}
-			header {width: 100%; background-color: #563d7c; margin-bottom: 1em;
-			box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
-			font-weight: bold; font-size: 1.8em; padding: 0.5em; color: lightgrey;}
+			header {width: 100%; background-color: #563d7c; margin-bottom: 1.5em;
+				box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);
+					font-weight: bold; font-size: 1.8em; padding: 0.5em; color: lightgrey;}
 			#graphs-container {width: 90%;}
 			.graph-box {width: 100%; display: flex;}
 			.field-div {background-color: #f0f0f0; padding: 1em; border-top: 4px solid #c0c0c0;
-			box-shadow: 2px 3px 2px -1px rgba(0,0,0,0.1);}
+				box-shadow: 2px 3px 2px -1px rgba(0,0,0,0.1);}
 			.field-div.side {width: 15%;}
 			.field-div.top {width: calc(50% - 0.25em); margin-bottom: 0.5em;}
 			.field-div.top.left {margin-right: 0.25em;}
@@ -26,11 +30,15 @@
 			.graph-div {width: 70%; height: 15em;}
 			#axis-div {width: 70%; height: 21px;}
 			.field-div.axis {height: 1px; padding-top:0; padding-bottom: 0; visibility: hidden;}
-			.module {display: flex; margin: 1em;}
+			.module {margin: 1em 6em;}
+			.module.graphs {display: flex;}
 			.settings {width: 9%; margin-left: 1%; padding: 0.5em; border-left: 2px solid gray;}
 			#settings-header {padding: 1em 0; margin: calc(4px - 0.5em) 0 0.5em 0;}
 			.graph-settings {height: calc(50% - 1.75em - 3px); margin-bottom: 21px;}
 			select {min-width: 60%; margin: 0.25em;}
+			
+			.module.map {height: 30em;}
+			#map {display: inline-block; width: 50%; height: 100%;}
 		</style>
 	</head>
 	<body onload="onLoad()">
@@ -51,6 +59,9 @@
 	<aside class="settings graphs">
 		<div id="settings-header"><b>Settings</b></div>
 	</aside>
+</div>
+<div class="module map">
+	<div id="map"></div>
 </div>
 
 	</body>
