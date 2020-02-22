@@ -1,4 +1,5 @@
 Loader.load();
+var markerLayer = null;
 
 function addGps() {
     var center = SMap.Coords.fromWGS84(14.400307, 50.071853);
@@ -6,16 +7,22 @@ function addGps() {
     map.addDefaultLayer(SMap.DEF_TURIST).enable();
     map.addDefaultControls();
 
+    // automatic map resizing
     var sync = new SMap.Control.Sync();
     map.addControl(sync);
     
+    // add gps track
     var value = createGpx();
     var xmlDoc = JAK.XML.createDocument(value);
-    
     var gpx = new SMap.Layer.GPX(xmlDoc, null, {maxPoints:500, colors:["#ff0000"]});
     map.addLayer(gpx);
     gpx.enable();
     gpx.fit();
+
+    // layer for highlighted points
+    markerLayer = new SMap.Layer.Marker();
+    map.addLayer(markerLayer);
+    markerLayer.enable();
 }
 
 function createGpx() {

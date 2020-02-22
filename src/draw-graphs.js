@@ -159,7 +159,7 @@ function setOptions(g) {
 		series: seriesObj,
 		drawCallback: visibleRange,
 		highlightCallback: highlight,
-		//unhighlightCallback: unhighlight, // TODO: do I want to unhighlight?
+		unhighlightCallback: unhighlight,
 	});
 }
 
@@ -218,12 +218,37 @@ function highlight(event, x, points, row, seriesName) {
 	if (x == 0) {
 		return;
 	}
+	var point = getPointByTime(x);
 	getAvailableData(FieldTypes.ALL).forEach(function(field) {
 		var fieldLegendEles = Array.from(document.getElementsByClassName("legend " + field));
 		fieldLegendEles.forEach(function(legendEle) {
-			legendEle.innerHTML = format(getPointByTime(x)[field], field);
+			legendEle.innerHTML = format(point[field], field);
 		});
 	});
+
+	// highlight point on the map
+	var coords = SMap.Coords.fromWGS84(point.lon, point.lat);
+	if (markerLayer.getMarkers().length == 0) {
+		// add a marker
+		var marker = new SMap.Marker(coords, "highlighter");
+		markerLayer.addMarker(marker);
+	}
+	else {
+		// move the marker
+		markerLayer.getMarkers()[0].setCoords(coords);
+	}
+
+}
+
+function unhighlight(event) {
+	getAvailableData(FieldTypes.ALL).forEach(function(field) {
+		var fieldLegendEles = Array.from(document.getElementsByClassName("legend " + field));
+		fieldLegendEles.forEach(function(legendEle) {
+			legendEle.innerHTML = "--";
+		});
+	});
+
+	markerLayer.removeAll();
 }
 
 function defaultZoom(g) {
