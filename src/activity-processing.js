@@ -11,7 +11,7 @@ function onLoad() {
 	calculatePrefixSums();
 
 	drawGraphs();
-	addGps();
+	setTimeout(addGps, 1000);
 }
 
 // calculate time and distance differences between two consecutive points
