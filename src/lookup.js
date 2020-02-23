@@ -30,6 +30,20 @@ function getExtremes(field) {
 	return [min, max];
 }
 
+function rangeStats(point1, point2, field) {
+	// weighted average
+	if (isPace(field) || field == "hr" || field == "cad") {
+		var timeDiff = pointDifference(point1, point2, "sumDuration");
+		var sumField = "sum" + field.charAt(0).toUpperCase() + field.slice(1); // pace -> sumPace
+		var avg = pointDifference(point1, point2, sumField) / timeDiff;
+		return (isPace(field)) ? 1 / avg : avg;
+	}
+	// difference
+	else if (field == "elev" || field.startsWith("sum")) {
+		return pointDifference(point1, point2, field);
+	}
+}
+
 function pointDifference(point1, point2, field) {
 	return point2[field] - point1[field];
 }

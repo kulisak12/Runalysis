@@ -5,6 +5,11 @@ const names = [
 	{id: "hr", name: "Heart rate"},
 	{id: "cad", name: "Cadence"},
 	{id: "temp", name: "Temperature"},
+	{id: "sumDistance", name: "Distance"},
+	{id: "sumDuration", name: "Time"},
+	{id: "elapsed", name: "Elapsed time"},
+	{id: "sumElevGain", name: "Elev gain"},
+	{id: "trimp", name: "Trimp"},
 ];
 
 const colors = {
@@ -26,4 +31,5 @@ const FieldTypes = {
 
 const pausedThreshold = 10;
 const slowestPaceToShow = 60 * 10;
+const maxPace = 60 * 60;
 const paceAxisPadding = 20;

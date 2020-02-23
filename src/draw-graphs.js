@@ -274,19 +274,12 @@ function visibleRange(g, isInitial) {
 	var range = g.xAxisRange();
 	var leftPoint = getPointByTime(range[0]);
 	var rightPoint = getPointByTime(range[1]);
-	var timeDiff = pointDifference(leftPoint, rightPoint, "sumDuration");
+	
 	getAvailableData(FieldTypes.ALL).forEach(function(field) {
 		var fieldStatsEles = Array.from(document.getElementsByClassName("stats " + field));
 		fieldStatsEles.forEach(function(statsEle) {
-			if (isPace(field) || field == "hr" || field == "cad") {
-				var sumField = "sum" + field.charAt(0).toUpperCase() + field.slice(1); // pace -> sumPace
-				var avg = pointDifference(leftPoint, rightPoint, sumField) / timeDiff;
-				statsEle.innerHTML = format(avg, field);
-			}
-			else if (field == "elev" || field == "sumDuration" || field == "sumDistance") {
-				var difference = pointDifference(leftPoint, rightPoint, field);
-				statsEle.innerHTML = format(difference, field);
-			}
+			var stat = rangeStats(leftPoint, rightPoint, field);
+			statsEle.innerHTML = format(stat, field);
 		});
 	});
 }

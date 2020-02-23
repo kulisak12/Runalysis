@@ -3,13 +3,13 @@ function toggleModule(sender) {
 	var module = document.getElementsByClassName("module " + moduleName)[0];
 	var state = (module.style.display != "none");
 
+	// show module
 	if (state == 0) {
-		// show module
 		module.style.display = "";
 		sender.style.filter = "";
 	}
+	// hide module
 	else {
-		// hide module
 		module.style.display = "none";
 		sender.style.filter = "invert(50%)";
 	}

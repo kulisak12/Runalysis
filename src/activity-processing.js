@@ -10,8 +10,9 @@ function onLoad() {
 	}
 	calculatePrefixSums();
 
+	addGps();
+	addNumbers();
 	drawGraphs();
-	setTimeout(addGps, 1000);
 }
 
 // calculate time and distance differences between two consecutive points
@@ -36,6 +37,9 @@ function calculatePace() {
 		
 		point.pace = point.duration / point.distance * 1000;
 		point.incline = point.elevDiff / point.distance;
+		if (isNaN(point.incline)) {
+			point.incline = 0;
+		}
 		point.gap = calculateGap(point.pace, point.incline);
 	}
 
@@ -59,10 +63,10 @@ function calculatePrefixSums() {
 	calculatePrefixSum("duration", "sumDuration");
 	calculatePrefixSum("distance", "sumDistance");
 	calculatePrefixSum("elevDiff", "sumElevGain");
-	calculateWeightedPrefixSum("pace", "sumPace");
-	calculateWeightedPrefixSum("gap", "sumGap");
 	calculateWeightedPrefixSum("hr", "sumHr");
 	calculateWeightedPrefixSum("cad", "sumCad");
+	calculatePacePrefixSum("pace", "sumPace");
+	calculatePacePrefixSum("gap", "sumGap");
 }
 
 function calculatePrefixSum(value, sumValue) {
@@ -80,6 +84,16 @@ function calculateWeightedPrefixSum(value, sumValue) {
 	for (var i = 0; i < run.points.length; i++) {
 		if (!run.points[i].ignore) {
 			sum += run.points[i][value] * run.points[i].duration;
+		}
+		run.points[i][sumValue] = sum;
+	}
+}
+
+function calculatePacePrefixSum(value, sumValue) {
+	var sum = 0;
+	for (var i = 0; i < run.points.length; i++) {
+		if (!run.points[i].ignore) {
+			sum += run.points[i].duration / run.points[i][value];
 		}
 		run.points[i][sumValue] = sum;
 	}

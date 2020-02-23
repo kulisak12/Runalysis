@@ -1,4 +1,3 @@
-Loader.load();
 var markerLayer = null;
 
 function addGps() {
@@ -36,4 +35,65 @@ function createGpx() {
     });
     gpx += "</trkseg></trk></gpx>"
     return gpx;
+}
+
+
+// number stats
+
+function addNumbers() {
+	var numbersContainer = document.getElementById("numbers-container");
+	// date
+	var date = new Date(run.startTime);
+	var options = {dateStyle: "full", timeStyle: "medium"};
+	var dateBox = document.createElement("div");
+	dateBox.classList.add("date-box");
+	var dateValue = document.createElement("p");
+	dateValue.innerHTML = date.toLocaleString("en-GB", options);
+	dateBox.appendChild(dateValue);
+	numbersContainer.appendChild(dateBox);
+
+	// other fields
+	var fields = ["sumDistance", "sumDuration", "pace", "sumElevGain", "elapsed"];
+	if (run.hasHr) {
+		fields.push("trimp");
+	}
+	fields.forEach(function(field) {
+		var numberBox = createNumberBox(field);
+		numbersContainer.appendChild(numberBox);
+	});
+}
+
+function createNumberBox(field) {
+	var numberBox = document.createElement("div");
+	numberBox.classList.add("number-box");
+
+	var value = document.createElement("p");
+	value.classList.add("number-value");
+	value.innerHTML = format(getOverallStat(field), field);
+	numberBox.appendChild(value);
+
+	var desc = document.createElement("p");
+	desc.classList.add("number-desc");
+	desc.innerHTML = getFieldName(field);
+	numberBox.appendChild(desc);
+
+	return numberBox;
+}
+
+function getOverallStat(field) {
+	var firstPoint = run.points[0];
+	var lastPoint = run.points[run.points.length - 1];
+	if (field == "elapsed") {
+		return calculateDuration(firstPoint, lastPoint);
+	}
+	else if (field == "trimp") {
+		return calculateTrimp();
+	}
+	else {
+		return rangeStats(firstPoint, lastPoint, field);
+	}
+}
+
+function calculateTrimp() {
+	return 123;
 }

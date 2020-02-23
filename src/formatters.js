@@ -2,7 +2,7 @@ function format(value, field) {
 	if (isPace(field)) {
 		return formatPace(value);
 	}
-	else if (field == "elev") {
+	else if (field == "elev" || field == "sumElevGain") {
 		return formatElevation(value);
 	}
 	else if (field == "hr") {
@@ -14,11 +14,14 @@ function format(value, field) {
 	else if (field == "temp") {
 		return formatTemperature(value);
 	}
-	else if (field == "sumDuration") {
+	else if (field == "sumDuration" || field == "elapsed") {
 		return formatTime(value);
 	}
 	else if (field == "sumDistance") {
 		return formatDistance(value);
+	}
+	else if (field == "trimp") {
+		return value;
 	}
 	else {
 		console.warn("Default formatter: " + field);
