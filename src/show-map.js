@@ -95,5 +95,15 @@ function getOverallStat(field) {
 }
 
 function calculateTrimp() {
-	return 123;
+	var trimp = 0;
+	run.points.forEach(function(point) {
+		if (!point.ignore) {
+			trimp += trimpCurve(point.hr) * point.duration;
+		}
+	});
+	return Math.round(trimp);
+}
+
+function trimpCurve(hr) {
+	return 0.000058 * Math.pow(Math.E, 0.038 * hr);
 }
