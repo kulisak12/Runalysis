@@ -33,3 +33,4 @@ const pausedThreshold = 10;
 const slowestPaceToShow = 60 * 10;
 const maxPace = 60 * 60;
 const paceAxisPadding = 20;
+const numZones = 5;

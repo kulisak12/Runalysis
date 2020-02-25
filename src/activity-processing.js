@@ -13,6 +13,7 @@ function onLoad() {
 	addGps();
 	addNumbers();
 	drawGraphs();
+	addZones();
 }
 
 // calculate time and distance differences between two consecutive points

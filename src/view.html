@@ -11,12 +11,13 @@
 		<script type="text/javascript" src="lookup.js"></script>
 		<script type="text/javascript" src="modules.js"></script>
 		<script type="text/javascript" src="show-map.js"></script>
-		<script type="text/javascript" src="intensities.js"></script>
+		<script type="text/javascript" src="zones.js"></script>
 
 
-		<link rel="stylesheet" src="dygraph/dygraph.css" />
-		<script type="text/javascript" src="dygraph/dygraph.js"></script>
-		<script type="text/javascript" src="dygraph/synchronizer.js"></script>
+		<link rel="stylesheet" src="lib/dygraph.css" />
+		<script type="text/javascript" src="lib/dygraph.js"></script>
+		<script type="text/javascript" src="lib/synchronizer.js"></script>
+		<script type="text/javascript" src="lib/tinycolor.js"></script>
 
 
 		<style>
@@ -43,7 +44,7 @@
 			.module {margin: 1em 6em;}
 			.module.graphs,
 			.module.map,
-			.module.intensities {display: flex;}
+			.module.zones {display: flex;}
 			.settings {width: 9%; margin-left: 1%; padding: 0.5em; border-left: 1px solid #d0d0d0;}
 			#settings-header {padding: 1em 0; margin: calc(4px - 0.5em) 0 0.5em 0;}
 			.graph-settings {height: calc(50% - 1.75em - 3px); margin-bottom: 21px;}
@@ -57,10 +58,11 @@
 			.number-box {width: calc(100% / 3); text-align: center;}
 			.number-value {font-size: 2em;}
 
-			#intensities-container {width: 90%;}
-			.intensities td {text-align: center; vertical-align: bottom;}
-			.intensity-column div {width: 2em; margin: auto;}
-			.intensity-column td {width: 3em; height: 10em;}
+			#zones-container {display: flex; width: 90%;}
+			table.zones {width: 30%; margin: 0 calc(10% / 6);}
+			table.zones td {width: 20%; text-align: center;}
+			.zone-column div {width: 66%; margin: auto;}
+			.zone-column td {height: 12em; vertical-align: bottom;}
 		</style>
 	</head>
 	<body onload="onLoad()">
@@ -74,7 +76,7 @@
 		<div class="icon-box graphs" onclick="toggleModule(this)">
 			<object type="image/svg+xml" data="icons/chart.svg"></object>
 		</div>
-		<div class="icon-box intensities" onclick="toggleModule(this)">
+		<div class="icon-box zones" onclick="toggleModule(this)">
 			<object type="image/svg+xml" data="icons/columns.svg"></object>
 		</div>
 	</span>
@@ -101,24 +103,9 @@
 	</aside>
 </div>
 
-<div class="module intensities">
-	<div id="intensities-container">
-		<table class="intensities pace">
-			<tr class="intensity-column">
-				<td><div style="height: 80%; background-color: lightskyblue"></div></td>
-				<td><div style="height: 50%; background-color: blue"></div></td>
-			</tr>
-			<tr class="intensity-time">
-				<td>15:20</td><td>3:40</td>
-			</tr>
-			<tr class="intensity-dist">
-				<td>3.05</td><td>0.98</td>
-			</tr>
-		</table>
-	</div>
-	<aside class="settings intensities">
-
-	</aside>
+<div class="module zones">
+	<div id="zones-container"></div>
+	<aside class="settings zones"></aside>
 </div>
 
 <!-- <div class="module laps"></div> -->
