@@ -13,12 +13,22 @@ function createZoneTable(field) {
 	var table = document.createElement("table");
 	table.classList.add("zones", field);
 
+	table.appendChild(createZoneHeaderRow(field));
 	var columnRow = createZoneColumnRow(colors[field]);
 	table.appendChild(columnRow);
 	table.appendChild(createZoneDataRow("zone-time"));
 	table.appendChild(createZoneDataRow("zone-dist"));
 
 	return table;
+}
+
+function createZoneHeaderRow(field) {
+	var row = document.createElement("tr");
+	var cell = document.createElement("td");
+	cell.colSpan = numZones.toString();
+	cell.innerHTML = getFieldName(field) + " zones";
+	row.appendChild(cell);
+	return row;
 }
 
 function createZoneColumnRow(baseColor) {
@@ -35,9 +45,14 @@ function createZoneColumnRow(baseColor) {
 
 function createZoneColumn(color) {
 	var cell = document.createElement("td");
+
 	var columnDiv = document.createElement("div");
 	columnDiv.style.backgroundColor = color;
 	cell.appendChild(columnDiv);
+
+	var zoneInfo = document.createElement("span");
+	//zoneInfo.innerHTML = "Z1<br>3:30 - 4:05";
+	cell.appendChild(zoneInfo);
 	return cell;
 }
 
@@ -64,6 +79,11 @@ function refreshZones(field) {
 		var columnDiv = columns[i].getElementsByTagName("div")[0];
 		var percentage = Math.ceil(100 * zoneData.time[i] / maxTimeInZone);
 		columnDiv.style.height = percentage.toString() + "%";
+
+		var columnInfoBox = columns[i].getElementsByTagName("span")[0];
+		var infoText = "Z" + (i + 1) + "<br>";
+		infoText += thresholdsString(i, field);
+		columnInfoBox.innerHTML = infoText; 
 	}
 
 	// time and dist
@@ -120,5 +140,16 @@ function getZoneThresholds(field) {
 	}
 	if (field == "hr") {
 		return [128, 143, 159, 174, 190];
+	}
+}
+
+function thresholdsString(zone, field) {
+	var zones = getZoneThresholds(field);
+	var isFlipped = (zones[1] > zones[2]);
+	if (zone == zones.length - 1) {
+		return (isFlipped ? "<" : ">") + " " + format(zones[zone], field);
+	}
+	else {
+		return removeUnit(format(zones[zone], field)) + " - " + format(zones[zone + 1], field);
 	}
 }

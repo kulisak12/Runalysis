@@ -70,6 +70,10 @@ function formatTemperature(temp) {
 	return Math.round(temp) + " °C";
 }
 
+function removeUnit(value) {
+	return value.substr(0, value.indexOf(" "));
+}
+
 function padZeros(str, zeros) {
 	while (str.length < zeros) {
 		str = "0" + str;
