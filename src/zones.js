@@ -166,6 +166,11 @@ function thresholdsString(zone, field) {
 	}
 }
 
+function changeZoneSettings(field, changedEle) {
+	localStorage.setItem(changedEle.id, parseInt(changedEle.value));
+	refreshZones(field);
+}
+
 function addZoneSettings() {
 	var settingsDiv = document.getElementsByClassName("settings zones")[0];
 	// heart rate
@@ -182,8 +187,10 @@ function addZoneSettings() {
 		maxHrInput.id = "maxhr";
 		maxHrInput.type = "number";
 		maxHrInput.value = 200;
+		var userMaxHr = localStorage.getItem("maxhr");
+		if (userMaxHr) {maxHrInput.value = userMaxHr};
 		maxHrInput.min = 0;
-		maxHrInput.onchange = function() {refreshZones("hr");};
+		maxHrInput.onchange = function() {changeZoneSettings("hr", this);};
 		maxHrDiv.appendChild(maxHrInput);
 		settingsDiv.appendChild(maxHrDiv);
 
@@ -193,8 +200,10 @@ function addZoneSettings() {
 		restHrInput.id = "resthr";
 		restHrInput.type = "number";
 		restHrInput.value = 50;
+		var userRestHr = localStorage.getItem("resthr");
+		if (userRestHr) {restHrInput.value = userRestHr};
 		restHrInput.min = 0;
-		restHrInput.onchange = function() {refreshZones("hr");};
+		restHrInput.onchange = function() {changeZoneSettings("hr", this);};
 		restHrDiv.appendChild(restHrInput);
 		settingsDiv.appendChild(restHrDiv);
 	}
