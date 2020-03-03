@@ -1,4 +1,6 @@
 function addZones() {
+	addZoneSettings();
+
 	var zonesContainer = document.getElementById("zones-container");
 	var zoneFields = ["pace", "gap"];
 	if (run.hasHr) {zoneFields.push("hr")};
@@ -7,6 +9,7 @@ function addZones() {
 		zonesContainer.appendChild(createZoneTable(field));
 		refreshZones(field);
 	});
+
 }
 
 function createZoneTable(field) {
@@ -139,7 +142,16 @@ function getZoneThresholds(field) {
 		return [600, 315, 270, 240, 210];
 	}
 	if (field == "hr") {
-		return [128, 143, 159, 174, 190];
+		var maxHr = parseInt(document.getElementById("maxhr").value);
+		var restHr = parseInt(document.getElementById("resthr").value);
+		var hrReserve = maxHr - restHr;
+		var percents = [50, 60, 70, 80, 90];
+		var thresholds = [];
+		for (var i = 0; i < numZones; i++) {
+			var threshold = 0.01 * percents[i] * hrReserve + restHr;
+			thresholds.push(Math.round(threshold));
+		}
+		return thresholds;
 	}
 }
 
@@ -151,5 +163,39 @@ function thresholdsString(zone, field) {
 	}
 	else {
 		return removeUnit(format(zones[zone], field)) + " - " + format(zones[zone + 1], field);
+	}
+}
+
+function addZoneSettings() {
+	var settingsDiv = document.getElementsByClassName("settings zones")[0];
+	// heart rate
+	if (run.hasHr) {
+		var header = document.createElement("b");
+		header.innerHTML = "Heart rate";
+		var headerDiv = document.createElement("div");
+		headerDiv.appendChild(header);
+		settingsDiv.appendChild(headerDiv);
+
+		var maxHrDiv = document.createElement("div");
+		maxHrDiv.innerHTML = "Max: ";
+		var maxHrInput = document.createElement("input");
+		maxHrInput.id = "maxhr";
+		maxHrInput.type = "number";
+		maxHrInput.value = 200;
+		maxHrInput.min = 0;
+		maxHrInput.onchange = function() {refreshZones("hr");};
+		maxHrDiv.appendChild(maxHrInput);
+		settingsDiv.appendChild(maxHrDiv);
+
+		var restHrDiv = document.createElement("div");
+		restHrDiv.innerHTML = "Rest: ";
+		var restHrInput = document.createElement("input");
+		restHrInput.id = "resthr";
+		restHrInput.type = "number";
+		restHrInput.value = 50;
+		restHrInput.min = 0;
+		restHrInput.onchange = function() {refreshZones("hr");};
+		restHrDiv.appendChild(restHrInput);
+		settingsDiv.appendChild(restHrDiv);
 	}
 }

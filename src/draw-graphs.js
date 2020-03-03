@@ -14,7 +14,7 @@ function drawGraphs() {
 	graphs.push(addAxis());
 	sync(graphs);
 
-	addSettings();
+	addGraphSettings();
 }
 
 // graph creation
@@ -286,7 +286,7 @@ function visibleRange(g, isInitial) {
 
 // custom settings
 
-function addSettings() {
+function addGraphSettings() {
 	// get all graph elements
 	var fieldGraphs = [];
 	fieldGraphs.push(graphs[0]);
