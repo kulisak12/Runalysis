@@ -49,7 +49,7 @@
 			.graph-div {width: 70%; height: 15em;}
 			#axis-div {width: 70%; height: 21px;}
 			.field-div.axis {height: 1px; padding-top:0; padding-bottom: 0; visibility: hidden;}
-			#settings-header {padding: 1em 0; margin: calc(4px - 0.5em) 0 0.5em 0;}
+			.settings.graphs .header {padding: 1em 0; margin: calc(4px - 0.5em) 0 0.5em 0;}
 			.graph-settings {height: calc(50% - 1.75em - 3px); margin-bottom: 21px;}
 			
 			.module.map {height: 30em;}
@@ -67,10 +67,12 @@
 			table.zones td {width: 20%; text-align: center;}
 			.zone-column div {width: 66%; margin: auto;}
 			.zone-column td {height: 12em; vertical-align: bottom; position: relative;}
-			.zone-column span {display: none; position: absolute; bottom: 2em;}
-			.zone-column td:hover span {display: block; background-color: white; padding: 5px;
+			.zone-column span {display: none; background-color: white; padding: 5px; width: 5em;
+				position: absolute; bottom: 2em; left: calc(50% - 2.5em - 5px);}
+			.zone-column td:hover span {display: block; z-index: 1;
 				border-radius: 0.3rem; box-shadow: 1px 1px 2px 2px rgba(0,0,0,0.2);}
 			.zone-column td:hover div {filter: brightness(90%); outline: 1px solid black;}
+			.settings.zones .header {margin: 1em 0;}
 		</style>
 	</head>
 	<body onload="onLoad()">
@@ -107,7 +109,7 @@
 		</div>
 	</div>
 	<aside class="settings graphs">
-		<div id="settings-header"><b>Settings</b></div>
+		<div class="header"><b>Settings</b></div>
 	</aside>
 </div>
 

@@ -175,36 +175,36 @@ function addZoneSettings() {
 	var settingsDiv = document.getElementsByClassName("settings zones")[0];
 	// heart rate
 	if (run.hasHr) {
-		var header = document.createElement("b");
-		header.innerHTML = "Heart rate";
-		var headerDiv = document.createElement("div");
-		headerDiv.appendChild(header);
-		settingsDiv.appendChild(headerDiv);
-
-		var maxHrDiv = document.createElement("div");
-		maxHrDiv.innerHTML = "Max: ";
-		var maxHrInput = document.createElement("input");
-		maxHrInput.id = "maxhr";
-		maxHrInput.type = "number";
-		maxHrInput.value = 200;
-		var userMaxHr = localStorage.getItem("maxhr");
-		if (userMaxHr) {maxHrInput.value = userMaxHr};
-		maxHrInput.min = 0;
-		maxHrInput.onchange = function() {changeZoneSettings("hr", this);};
-		maxHrDiv.appendChild(maxHrInput);
-		settingsDiv.appendChild(maxHrDiv);
-
-		var restHrDiv = document.createElement("div");
-		restHrDiv.innerHTML = "Rest: ";
-		var restHrInput = document.createElement("input");
-		restHrInput.id = "resthr";
-		restHrInput.type = "number";
-		restHrInput.value = 50;
-		var userRestHr = localStorage.getItem("resthr");
-		if (userRestHr) {restHrInput.value = userRestHr};
-		restHrInput.min = 0;
-		restHrInput.onchange = function() {changeZoneSettings("hr", this);};
-		restHrDiv.appendChild(restHrInput);
-		settingsDiv.appendChild(restHrDiv);
+		settingsDiv.appendChild(createHeader("Heart rate"));
+		settingsDiv.appendChild(createHrInput("maxhr", "Max"));
+		settingsDiv.appendChild(createHrInput("resthr", "Rest"));
 	}
+	// pace
+	settingsDiv.appendChild(createHeader("Pace"));
+}
+
+function createHeader(text) {
+	var header = document.createElement("b");
+	header.innerHTML = text;
+	var headerDiv = document.createElement("div");
+	headerDiv.classList.add("header");
+	headerDiv.appendChild(header);
+	return headerDiv;
+}
+
+function createHrInput(id, label) {
+	var hrDiv = document.createElement("div");
+	hrDiv.innerHTML = label + ": ";
+
+	var hrInput = document.createElement("input");
+	hrInput.id = id;
+	hrInput.type = "number";
+	hrInput.value = (id == "maxhr") ? 200 : 50;
+	var userHr = localStorage.getItem(id);
+	if (userHr) {hrInput.value = userHr};
+	hrInput.min = 0;
+	hrInput.onchange = function() {changeZoneSettings("hr", this);};
+
+	hrDiv.appendChild(hrInput);
+	return hrDiv;
 }
