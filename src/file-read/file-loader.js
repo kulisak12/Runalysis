@@ -1,17 +1,24 @@
-// check uploaded file
-function getFile() {
-	var file = document.getElementById("file").files[0];
-	
-	if (file == null) {
-		return;
-	}
+function dropzoneInit() {
+	var options = {
+		paramName: "file",
+		maxFilesize: 20, // MB
+		maxFiles: 1,
+		autoProcessQueue: false,
+		acceptedFiles: ".gpx",
+		init: function() {
+			this.on("addedfile", processFile);
+		  }
+	};
 
+	Dropzone.options.gps = options;
+}
+
+// send dropzone events
+function processFile(file) {
+	gps.dropzone.emit("success", file, "success", null);
+	gps.dropzone.emit("complete", file);
 	if (file.name.endsWith(".gpx")) {
 		readFile(file, gpxParser);
-	}
-	else { // unsupported format
-		document.getElementById("error").innerHTML = "Please upload a .gpx file.";
-		return;
 	}
 }
 
@@ -22,9 +29,7 @@ function sampleFile() {
 			if(file.status === 200 || file.status == 0){
 				var fileText = file.responseText;
 				var run = gpxParser(fileText);
-				sessionStorage.setItem("runData", JSON.stringify(run));
-				
-				document.getElementById("error").innerHTML = "";
+				sessionStorage.setItem("runData", JSON.stringify(run));				
 				window.location.href = "view.html";
             }
         }
@@ -39,10 +44,7 @@ function readFile(file, parser) {
 	reader.onload = function() {
 		var run = parser(reader.result);
 		sessionStorage.setItem("runData", JSON.stringify(run));
-
-		document.getElementById("error").innerHTML = "";
-		document.getElementById("file").value = "";
 		window.location.href = "view.html";
 	};
-	reader.readAsText(file);
+	setTimeout(function() {reader.readAsText(file)}, 1000);
 }
