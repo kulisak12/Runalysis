@@ -14,3 +14,22 @@ function toggleModule(sender) {
 		sender.style.filter = "invert(50%)";
 	}
 }
+
+function addShareLink() {
+	var fields = ["sumDistance", "sumDuration", "pace", "sumElevGain", "elapsed"];
+	if (run.hasHr) {
+		fields.push("hr");
+	}
+	if (run.hasCad) {
+		fields.push("cad");
+	}
+
+	var shareString = "share.html?";
+	shareString += "date=" + run.startTime;
+	fields.forEach(function(field) {
+		shareString += "&" + field + "=" + Math.round(getOverallStat(field));
+	});
+
+	var shareAnchor = document.getElementById("share").getElementsByTagName("a")[0];
+	shareAnchor.href = shareString;
+}

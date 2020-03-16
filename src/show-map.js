@@ -63,13 +63,16 @@ function addNumbers() {
 	});
 }
 
-function createNumberBox(field) {
+function createNumberBox(field, stat) {
 	var numberBox = document.createElement("div");
 	numberBox.classList.add("number-box");
 
 	var value = document.createElement("p");
 	value.classList.add("number-value");
-	value.innerHTML = format(getOverallStat(field), field);
+	if (stat == null) {
+		stat = format(getOverallStat(field), field);
+	}
+	value.innerHTML = stat;
 	numberBox.appendChild(value);
 
 	var desc = document.createElement("p");

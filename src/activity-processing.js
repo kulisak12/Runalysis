@@ -12,6 +12,7 @@ function onLoad() {
 
 	addGps();
 	addNumbers();
+	addShareLink();
 	drawGraphs();
 	addZones();
 }
