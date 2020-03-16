@@ -1,13 +1,15 @@
 function dropzoneInit() {
 	var options = {
-		paramName: "file",
 		maxFilesize: 20, // MB
 		maxFiles: 1,
 		autoProcessQueue: false,
 		acceptedFiles: ".gpx",
-		init: function() {
-			this.on("addedfile", processFile);
-		  }
+		dictDefaultMessage: "Drop a .gpx file here",
+		dictInvalidFileType: "Unsupported format, please use .gpx.",
+		accept: function(file, done) {
+			done();
+			processFile(file);
+		}
 	};
 
 	Dropzone.options.gps = options;
@@ -17,6 +19,7 @@ function dropzoneInit() {
 function processFile(file) {
 	gps.dropzone.emit("success", file, "success", null);
 	gps.dropzone.emit("complete", file);
+
 	if (file.name.endsWith(".gpx")) {
 		readFile(file, gpxParser);
 	}
