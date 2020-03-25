@@ -1,7 +1,7 @@
 var markerLayer = null;
 
 function addGps() {
-    var center = SMap.Coords.fromWGS84(14.400307, 50.071853);
+    var center = SMap.Coords.fromWGS84(14.0, 50.0);
     let map = new SMap(JAK.gel("map"), center, 5);
     map.addDefaultLayer(SMap.DEF_TURIST).enable();
     map.addDefaultControls();
