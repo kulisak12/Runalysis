@@ -72,7 +72,14 @@ function createNumberBox(field, stat) {
 	if (stat == null) {
 		stat = format(getOverallStat(field), field);
 	}
-	value.innerHTML = stat;
+	var parts = stat.split(" ");
+	value.innerHTML = parts[0];
+	if (parts.length > 1) {
+		var unit = document.createElement("span");
+		unit.classList.add("number-unit");
+		unit.innerHTML = " " + parts[1];
+		value.appendChild(unit);
+	}
 	numberBox.appendChild(value);
 
 	var desc = document.createElement("p");

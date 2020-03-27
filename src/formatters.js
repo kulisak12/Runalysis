@@ -21,7 +21,7 @@ function format(value, field) {
 		return formatDistance(value);
 	}
 	else if (field == "trimp") {
-		return value;
+		return value.toString();;
 	}
 	else {
 		console.warn("Default formatter: " + field);
