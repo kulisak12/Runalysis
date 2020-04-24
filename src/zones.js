@@ -1,5 +1,8 @@
 function addZones() {
-	addZoneSettings();
+	if (run.hasHr) {
+		addZoneSettings("hr");
+	}
+	addZoneSettings("pace");
 
 	var zonesContainer = document.getElementById("zones-container");
 	var zoneFields = ["pace", "gap"];
@@ -138,20 +141,17 @@ function getZone(zones, value) {
 }
 
 function getZoneThresholds(field) {
-	if (isPace(field)) {
-		return [600, 315, 270, 240, 210];
-	}
-	if (field == "hr") {
-		var maxHr = parseInt(document.getElementById("maxhr").value);
-		var restHr = parseInt(document.getElementById("resthr").value);
-		var hrReserve = maxHr - restHr;
-		var percents = [50, 60, 70, 80, 90];
-		var thresholds = [];
-		for (var i = 0; i < numZones; i++) {
-			var threshold = 0.01 * percents[i] * hrReserve + restHr;
-			thresholds.push(Math.round(threshold));
+	var zones = localStorage.getItem(field);
+	if (zones == null) {
+		if (isPace(field)) {
+			return [600, 315, 270, 240, 210];
 		}
-		return thresholds;
+		else if (field == "hr") {
+			return [125, 140, 155, 170, 185];
+		}
+	}
+	else {
+		return zones;
 	}
 }
 
@@ -166,45 +166,44 @@ function thresholdsString(zone, field) {
 	}
 }
 
-function changeZoneSettings(field, changedEle) {
-	localStorage.setItem(changedEle.id, parseInt(changedEle.value));
-	refreshZones(field);
+function openPopup(field) {
+	document.getElementById("popup").style.display = "block";
 }
 
-function addZoneSettings() {
+function closePopup() {
+	// save
+	document.getElementById("popup").style.display = "none";
+}
+
+function addZoneSettings(field) {
 	var settingsDiv = document.getElementsByClassName("settings zones")[0];
-	// heart rate
-	if (run.hasHr) {
-		settingsDiv.appendChild(createHeader("Heart rate"));
-		settingsDiv.appendChild(createHrInput("maxhr", "Max"));
-		settingsDiv.appendChild(createHrInput("resthr", "Rest"));
+	var hrSettings = localStorage.getItem(field);
+	settingsDiv.appendChild(createHeader(field));
+	settingsDiv.appendChild(createCustomizedLabel(field));
+	if (hrSettings != null) {
+		settingsDiv.getElementsByClassName("zones-customized")[0].innerHTML = "Customized zones";
 	}
-	// pace
-	settingsDiv.appendChild(createHeader("Pace"));
+	settingsDiv.appendChild(createPopupButton(field));
 }
 
-function createHeader(text) {
+function createHeader(field) {
 	var header = document.createElement("b");
-	header.innerHTML = text;
-	var headerDiv = document.createElement("div");
-	headerDiv.classList.add("header");
-	headerDiv.appendChild(header);
-	return headerDiv;
+	header.innerHTML = (field == "hr") ? "Heart rate" : "Pace";
+	header.classList.add("header");
+	return header;
 }
 
-function createHrInput(id, label) {
-	var hrDiv = document.createElement("div");
-	hrDiv.innerHTML = label + ": ";
+function createCustomizedLabel(field) {
+	var label = document.createElement("i");
+	label.innerHTML = "Default zones";
+	label.classList.add("zones-customized", field);
+	return label;
+}
 
-	var hrInput = document.createElement("input");
-	hrInput.id = id;
-	hrInput.type = "number";
-	hrInput.value = (id == "maxhr") ? 200 : 50;
-	var userHr = localStorage.getItem(id);
-	if (userHr) {hrInput.value = userHr};
-	hrInput.min = 0;
-	hrInput.onchange = function() {changeZoneSettings("hr", this);};
-
-	hrDiv.appendChild(hrInput);
-	return hrDiv;
+function createPopupButton(field) {
+	var button = document.createElement("button");
+	button.innerHTML = "Customize";
+	button.classList.add("customize-button");
+	button.onclick = function() {openPopup(field)};
+	return button;
 }

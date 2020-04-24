@@ -25,7 +25,7 @@
 		<style>
 			html {overflow-y: scroll;}
 			body {margin: 0;}
-			header {background-color: #563d7c; margin-bottom: 1.5em; padding: 0.5em;
+			header {background-color: #523d7c; margin-bottom: 1.5em; padding: 0.5em;
 				box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);}
 			#title {float: left; margin-left: 6rem; font-weight: bold; font-size: 1.8em; color: lightgrey; text-decoration: none;}
 			.icon-container {display: flex; margin-left: 18em; width: 20%;}
@@ -86,7 +86,20 @@
 			.zone-column td:hover span {display: block; z-index: 1;
 				border-radius: 0.3rem; box-shadow: 1px 1px 2px 2px rgba(0,0,0,0.2);}
 			.zone-column td:hover div {filter: brightness(90%); outline: 1px solid black;}
-			.settings.zones .header {margin: 1em 0;}
+			.settings.zones .header,
+			.settings.zones .zones-customized {display:block; margin: 1em 0;}
+			
+			#popup {display: none;}
+			#dialogue {background-color: white; z-index: 1;
+				border-radius: 2rem; box-shadow: 2px 2px 8px 1px rgba(0,0,0,0.14);
+				position: fixed; top: 25%; right: 25%; bottom: 25%; left: 25%;}
+			#mask {background: rgba(0, 0, 0, 0.3); position: fixed; 
+				z-index:1; top: 0; right: 0; bottom: 0; left: 0;}
+			.close {position: absolute; top: 1em; right: 1em; width: 2em; height: 2em;
+			cursor: pointer; border-radius: 1em; 
+			background: -webkit-linear-gradient(-45deg, transparent 0%, transparent 48%, gray 48%,  gray 52%,transparent 52%, transparent 100%),
+			-webkit-linear-gradient(45deg, transparent 0%, transparent 48%, gray 48%,  gray 52%,transparent 52%, transparent 100%);}
+			.close:hover {background-color: lightgray;}
 		</style>
 	</head>
 	<body onload="onLoad()">
@@ -135,6 +148,13 @@
 <div class="module zones">
 	<div id="zones-container"></div>
 	<aside class="settings zones"></aside>
+</div>
+
+<div id="popup">
+	<div id="mask"></div>
+	<div id="dialogue">
+		<span class="close" onclick="closePopup()"></span>
+	</div>
 </div>
 
 <!-- <div class="module laps"></div> -->
