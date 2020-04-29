@@ -141,9 +141,12 @@ function getZone(zones, value) {
 }
 
 function getZoneThresholds(field) {
+	if (isPace(field)) {
+		field = "pace";
+	}
 	var zones = localStorage.getItem(field);
 	if (zones == null) {
-		if (isPace(field)) {
+		if (field == "pace") {
 			return [600, 315, 270, 240, 210];
 		}
 		else if (field == "hr") {
@@ -151,7 +154,7 @@ function getZoneThresholds(field) {
 		}
 	}
 	else {
-		return zones;
+		return JSON.parse(zones);
 	}
 }
 
@@ -168,20 +171,71 @@ function thresholdsString(zone, field) {
 
 function openPopup(field) {
 	document.getElementById("popup").style.display = "block";
+	var dialogue = document.getElementById("dialogue");
+	dialogue.getElementsByClassName("save")[0].onclick = function() {saveZoneSettings(field);};
+	dialogue.getElementsByClassName("reset")[0].onclick = function() {resetZoneSettings(field);};
+
+	var options = {
+		start: getZoneThresholds(field),
+		step: 1,
+		tooltips: true,
+		format: {
+			to: function(value) {
+				return Math.round(value);
+			},
+			from: function(value) {
+				return value;
+			}
+		}
+	};
+	if (isPace(field)) {
+		options.start.reverse();
+		options.direction = "rtl";
+		options.range = {"min": 120, "75%": 420, "max": 900};
+	}
+	if (field == "hr") {
+		options.direction = "ltr";
+		options.range = {"min": 80, "max": 220};
+	}
+
+	noUiSlider.create(document.getElementById("slider"), options);
 }
 
 function closePopup() {
-	// save
+	document.getElementById("slider").noUiSlider.destroy();
 	document.getElementById("popup").style.display = "none";
+}
+
+function saveZoneSettings(field) {
+	var values = document.getElementById("slider").noUiSlider.get();
+	if (isPace(field)) {
+		values.reverse();
+		field = "pace";
+	}
+	localStorage.setItem(field, JSON.stringify(values));
+	document.getElementsByClassName("zones-customized " + field)[0].innerHTML = "Customized zones";
+	refreshZones(field);
+	refreshZones("gap");
+
+	closePopup();
+}
+
+function resetZoneSettings(field) {
+	localStorage.removeItem(field);
+	document.getElementsByClassName("zones-customized " + field)[0].innerHTML = "Default zones";
+	refreshZones(field);
+	refreshZones("gap");
+
+	closePopup();
 }
 
 function addZoneSettings(field) {
 	var settingsDiv = document.getElementsByClassName("settings zones")[0];
-	var hrSettings = localStorage.getItem(field);
+	var zones = localStorage.getItem(field);
 	settingsDiv.appendChild(createHeader(field));
 	settingsDiv.appendChild(createCustomizedLabel(field));
-	if (hrSettings != null) {
-		settingsDiv.getElementsByClassName("zones-customized")[0].innerHTML = "Customized zones";
+	if (zones != null) {
+		settingsDiv.getElementsByClassName("zones-customized " + field)[0].innerHTML = "Customized zones";
 	}
 	settingsDiv.appendChild(createPopupButton(field));
 }
