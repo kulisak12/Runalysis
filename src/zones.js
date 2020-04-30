@@ -174,28 +174,31 @@ function openPopup(field) {
 	var dialogue = document.getElementById("dialogue");
 	dialogue.getElementsByClassName("save")[0].onclick = function() {saveZoneSettings(field);};
 	dialogue.getElementsByClassName("reset")[0].onclick = function() {resetZoneSettings(field);};
+	dialogue.getElementsByClassName("header")[0].innerHTML = getFieldName(field) + " zone settings";
 
+	var toTimeFormat = {
+		to: function(value) {return formatTime(value);},
+		from: function(value) {return value;}
+	};
 	var options = {
 		start: getZoneThresholds(field),
 		step: 1,
-		tooltips: true,
 		format: {
-			to: function(value) {
-				return Math.round(value);
-			},
-			from: function(value) {
-				return value;
-			}
+			to: function(value) {return Math.round(value);},
+			from: function(value) {return value;}
 		}
 	};
+	
 	if (isPace(field)) {
 		options.start.reverse();
 		options.direction = "rtl";
-		options.range = {"min": 120, "75%": 420, "max": 900};
+		options.range = {"min": [120, 1], "75%": [420, 1], "max": [900, 1]};
+		options.tooltips = fillArray(toTimeFormat, 5);
 	}
 	if (field == "hr") {
 		options.direction = "ltr";
 		options.range = {"min": 80, "max": 220};
+		options.tooltips = fillArray(true, 5);
 	}
 
 	noUiSlider.create(document.getElementById("slider"), options);
@@ -260,4 +263,12 @@ function createPopupButton(field) {
 	button.classList.add("customize-button");
 	button.onclick = function() {openPopup(field)};
 	return button;
+}
+
+function fillArray(value, length) {
+	var arr = [];
+	for (var i = 0; i < length; i++) {
+		arr.push(value);
+	}
+	return arr;
 }

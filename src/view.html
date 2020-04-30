@@ -56,10 +56,10 @@
 			.field-div.axis {height: 1px; padding-top:0; padding-bottom: 0; visibility: hidden;}
 			.settings.graphs .header {padding: 1em 0; margin: calc(4px - 0.5em) 0 0.5em 0;}
 			.graph-settings {height: calc(50% - 1.75em - 3px); margin-bottom: 21px;}
-			.graph-selection {display: block; font-size: 90%; width: 100%;
+			.graph-selection {display: block; font-size: 90%; width: 100%; transition-duration: 0.2s;
 				margin-bottom: 1em; padding: .2em 1.0em .2em .6em; border: none; border-radius: 0.3rem;
 				-moz-appearance: none; -webkit-appearance: none; appearance: none;
-				box-shadow: 0.5px 0.5px 5px 1px rgba(0,0,0,0.14); background-color: white;
+				box-shadow: 0.5px 0.5px 5px 1px rgba(0,0,0,0.2); background-color: white;
 				background-image: url(icons/triangle.svg); background-repeat: no-repeat, repeat; 
 				background-position: right .7em top 50%, 0 0; background-size: .65em auto, 100%;}
 			.graph-selection::-ms-expand {display: none;}
@@ -90,6 +90,10 @@
 			.zone-column td:hover div {filter: brightness(90%); outline: 1px solid black;}
 			.settings.zones .header,
 			.settings.zones .zones-customized {display:block; margin: 1em 0;}
+			button {background-color: white; border: none; border-radius: 0.3rem;
+				font-size: 90%; padding: .2em .6em; transition-duration: 0.2s;
+				box-shadow: 0.5px 0.5px 5px 1px rgba(0,0,0,0.25);}
+			button:hover {box-shadow: 0 0 1px 3px rgba(86, 61, 124, .7);}
 			
 			#popup {display: none;}
 			#dialogue {background-color: white; z-index: 1;
@@ -102,6 +106,10 @@
 			background: -webkit-linear-gradient(-45deg, transparent 0%, transparent 48%, gray 48%,  gray 52%,transparent 52%, transparent 100%),
 			-webkit-linear-gradient(45deg, transparent 0%, transparent 48%, gray 48%,  gray 52%,transparent 52%, transparent 100%);}
 			.close:hover {background-color: lightgray;}
+			#slider {margin: auto; width: 90%; margin-top: 14%;}
+			#dialogue h2 {text-align: center;}
+			.buttons-container {margin-top: 10%; display: flex; padding: 0 30%;}
+			.buttons-container button {display: block; margin: auto; font-size: 110%;}
 		</style>
 	</head>
 	<body onload="onLoad()">
@@ -156,9 +164,12 @@
 	<div id="mask"></div>
 	<div id="dialogue">
 		<span class="close" onclick="closePopup()"></span>
+		<h2 class="header"></h2>
 		<div id="slider"></div>
-		<button class="save">Save</button>
-		<button class="reset">Default</button>
+		<div class="buttons-container">
+			<button class="save">Save</button>
+			<button class="reset">Default</button>
+		</div>
 	</div>
 </div>
 
