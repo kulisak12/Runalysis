@@ -30,8 +30,8 @@ const FieldTypes = {
 };
 
 const pausedThreshold = 10;
-const slowestPaceToShow = 60 * 10;
-const maxPace = 60 * 60;
-const paceAxisPadding = 20;
+const spikeRemoveThreshold = 20;
+const maxPace = 60 * 60; // unused?
+const axisPadding = 20;
 const numZones = 5;
 const shareCoordAccuracy = 1e5;

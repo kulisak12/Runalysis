@@ -252,21 +252,27 @@ function unhighlight(event) {
 }
 
 function defaultZoom(g) {
-	var fields = getGraphFields(g);
-	if (!isPace(fields[0])) {
+	var mainField = getGraphFields(g)[0];
+	if (!isPace(mainField) && mainField != "cad") {
 		g.resetZoom();
 		return;
 	}
 	// find optimal value range
-	var extremes = getExtremes(fields[0]);
-	var min = extremes[0] - paceAxisPadding;
-	var max = extremes[1] + paceAxisPadding;
-	if (max > slowestPaceToShow) {
-		max = slowestPaceToShow;
+	var extremes = getExtremes(mainField);
+	var min = Math.round(extremes[0]);
+	var max = Math.round(extremes[1]);
+	var cutoff = searchForBestCutoff(min, max, mainField);
+
+	var range;
+	if (isPace(mainField)) {
+		range = [cutoff + axisPadding * 2, min - axisPadding];
+	}
+	else { // cad
+		range = [cutoff - axisPadding / 2, max + axisPadding / 2];
 	}
 	g.updateOptions({
 		dateWindow: g.xAxisExtremes(),
-		axes: {"y": {valueRange: [max, min]}}
+		axes: {"y": {valueRange: range}}
 	});
 }
 
@@ -385,4 +391,40 @@ function getFieldGraphBoxes() {
 		}
 	}
 	return fieldGraphBoxes;
+}
+
+function searchForBestCutoff(min, max, field) {
+	// binary search
+	while (min < max) {
+		var center = Math.floor((min + max) / 2);
+		var inUpper = cutsOnlySpikes(center, field) !== isPace(field); // pace inverts it
+		if (inUpper) {
+			min = center + 1;
+		}
+		else {
+			max = center - 1;
+		}
+	}
+	return min;
+}
+
+function cutsOnlySpikes(cutoff, field) {
+	var streak = 0;
+	for (var i = 0; i < run.points.length; i++) {
+		var point = run.points[i];
+		if (point.ignore) {
+			continue;
+		}
+		var value = point[field];
+		if (isPace(field) !== (value < cutoff)) { // for non-pace accept value < cutoff, for face value > cutoff
+			streak += point.duration;
+			if (streak >= spikeRemoveThreshold) {
+				return false;
+			}
+		}
+		else {
+			streak = 0;
+		}
+	}
+	return true;
 }
