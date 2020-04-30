@@ -259,9 +259,9 @@ function defaultZoom(g) {
 	}
 	// find optimal value range
 	var extremes = getExtremes(mainField);
-	var min = Math.round(extremes[0]);
-	var max = Math.round(extremes[1]);
-	var cutoff = searchForBestCutoff(min, max, mainField);
+	var min = extremes[0];
+	var max = extremes[1];
+	var cutoff = searchForBestCutoff(mainField);
 
 	var range;
 	if (isPace(mainField)) {
@@ -393,38 +393,61 @@ function getFieldGraphBoxes() {
 	return fieldGraphBoxes;
 }
 
-function searchForBestCutoff(min, max, field) {
-	// binary search
-	while (min < max) {
-		var center = Math.floor((min + max) / 2);
-		var inUpper = cutsOnlySpikes(center, field) !== isPace(field); // pace inverts it
-		if (inUpper) {
-			min = center + 1;
+function searchForBestCutoff(field) {
+	var sum = 0;
+	var sumSquares = 0;
+	var duration = 0;
+	var addedIndex = -1;
+	// get first 60
+	while (addedIndex < cutoffArea) {
+		addedIndex++;
+		var addedPoint = run.points[addedIndex];
+		while (addedPoint.ignore) {
+			addedIndex++;
+			addedPoint = run.points[addedIndex];
 		}
-		else {
-			max = center - 1;
+
+		sum += addedPoint[field] * addedPoint.duration;
+		sumSquares += addedPoint[field] * addedPoint[field] * addedPoint.duration;
+		duration += addedPoint.duration;
+	}
+	var cutoff = getLocalCutoff(sum, sumSquares, duration, isPace(field));
+
+	var removedIndex = -1;
+	// shift point by point
+	while (addedIndex < run.points.legth) {
+		addedIndex++;
+		var addedPoint = run.points[addedIndex];
+		while (addedPoint.ignore) {
+			addedIndex++;
+			addedPoint = run.points[addedIndex];
+		}
+		removedIndex++;
+		var removedPoint = run.points[removedIndex];
+		while (removedPoint.ignore) {
+			removedIndex++;
+			removedPoint = run.points[removedIndex];
+		}
+
+		sum += addedPoint[field] * addedPoint.duration - removedPoint[field] * removedPoint.duration;
+		sumSquares += addedPoint[field] * addedPoint[field] * addedPoint.duration - removedPoint[field] * removedPoint[field] * removedPoint.duration;
+		duration += addedPoint.duration - removedPoint.duration;
+		var localCutoff = getLocalCutoff(sum, sumSquares, duration, isPace(field));
+		if (isPace(field) !== localCutoff < cutoff) {
+			cutoff = localCutoff;
 		}
 	}
-	return min;
+
+	return cutoff;
 }
 
-function cutsOnlySpikes(cutoff, field) {
-	var streak = 0;
-	for (var i = 0; i < run.points.length; i++) {
-		var point = run.points[i];
-		if (point.ignore) {
-			continue;
-		}
-		var value = point[field];
-		if (isPace(field) !== (value < cutoff)) { // for non-pace accept value < cutoff, for face value > cutoff
-			streak += point.duration;
-			if (streak >= spikeRemoveThreshold) {
-				return false;
-			}
-		}
-		else {
-			streak = 0;
-		}
+function getLocalCutoff(sum, sumSquares, duration, isPace) {
+	var avg = sum / duration;
+	var deviation = Math.sqrt(sumSquares / duration - avg * avg);
+	if (isPace) {
+		return avg + 1.5 * deviation;
 	}
-	return true;
+	else {
+		return avg - 1.5 * deviation;
+	}
 }

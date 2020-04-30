@@ -30,7 +30,7 @@ const FieldTypes = {
 };
 
 const pausedThreshold = 10;
-const spikeRemoveThreshold = 20;
+const cutoffArea = 60;
 const maxPace = 60 * 60; // unused?
 const axisPadding = 20;
 const numZones = 5;
