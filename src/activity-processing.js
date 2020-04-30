@@ -39,7 +39,7 @@ function calculatePace() {
 		
 		point.pace = point.duration / point.distance * 1000;
 		point.incline = point.elevDiff / point.distance;
-		if (isNaN(point.incline)) {
+		if (isNaN(point.incline) || !isFinite(point.incline)) {
 			point.incline = 0;
 		}
 		point.gap = calculateGap(point.pace, point.incline);
