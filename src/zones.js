@@ -193,12 +193,12 @@ function openPopup(field) {
 		options.start.reverse();
 		options.direction = "rtl";
 		options.range = {"min": [120, 1], "75%": [420, 1], "max": [900, 1]};
-		options.tooltips = fillArray(toTimeFormat, 5);
+		options.tooltips = fillArray(toTimeFormat, numZones);
 	}
 	if (field == "hr") {
 		options.direction = "ltr";
 		options.range = {"min": 80, "max": 220};
-		options.tooltips = fillArray(true, 5);
+		options.tooltips = fillArray(true, numZones);
 	}
 
 	noUiSlider.create(document.getElementById("slider"), options);

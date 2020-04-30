@@ -19,6 +19,9 @@ function getExtremes(field) {
 	var min, max;
 	min = max = run.points[0][field];
 	for (var i = 0; i < run.points.length; i++) {
+		if (run.points[i].ignore) {
+			continue;
+		}
 		var value = run.points[i][field];
 		if (value < min) {
 			min = value;

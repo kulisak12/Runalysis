@@ -52,7 +52,7 @@ function calculatePace() {
 
 function ignorePaused() {
 	for (var i = 0; i < run.points.length; i++) {
-		if (run.points[i].duration > pausedThreshold || run.points[i].duration == 0) {
+		if (run.points[i].duration > pausedThreshold || run.points[i].distance == 0) {
 			run.points[i].ignore = true;
 		}
 		else {
