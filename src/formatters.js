@@ -45,7 +45,7 @@ function formatTime(time) {
 }
 
 function formatPace(pace) {
-	return formatTime(pace) + " min/km";
+	return formatTime(toPace(pace)) + " min/km";
 }
 
 function formatDistance(distance) {
@@ -95,6 +95,14 @@ function getFieldId(name) {
 			return names[i].id;
 		}
 	}
+}
+
+function toSpeed(pace) {
+	return 3600 / pace;
+}
+
+function toPace(speed) {
+	return 3600 / speed;
 }
 
 function isPace(field) {

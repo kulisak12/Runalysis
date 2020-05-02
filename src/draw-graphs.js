@@ -155,7 +155,7 @@ function setOptions(g) {
 
 	g.updateOptions({
 		animatedZooms: true,
-		axes: axesObj,
+		//axes: axesObj,
 		series: seriesObj,
 		drawCallback: visibleRange,
 		highlightCallback: highlight,
@@ -265,7 +265,7 @@ function defaultZoom(g) {
 
 	var range;
 	if (isPace(mainField)) {
-		range = [cutoff + axisPadding * 2, min - axisPadding];
+		range = [cutoff, max];
 	}
 	else { // cad
 		range = [cutoff - axisPadding / 2, max + axisPadding / 2];
@@ -411,7 +411,7 @@ function searchForBestCutoff(field) {
 		sumSquares += addedPoint[field] * addedPoint[field] * addedPoint.duration;
 		duration += addedPoint.duration;
 	}
-	var cutoff = getLocalCutoff(sum, sumSquares, duration, isPace(field));
+	var cutoff = getLocalCutoff(sum, sumSquares, duration);
 
 	var removedIndex = -1;
 	// shift point by point
@@ -432,8 +432,8 @@ function searchForBestCutoff(field) {
 		sum += addedPoint[field] * addedPoint.duration - removedPoint[field] * removedPoint.duration;
 		sumSquares += addedPoint[field] * addedPoint[field] * addedPoint.duration - removedPoint[field] * removedPoint[field] * removedPoint.duration;
 		duration += addedPoint.duration - removedPoint.duration;
-		var localCutoff = getLocalCutoff(sum, sumSquares, duration, isPace(field));
-		if (isPace(field) !== localCutoff < cutoff) {
+		var localCutoff = getLocalCutoff(sum, sumSquares, duration);
+		if (localCutoff < cutoff) {
 			cutoff = localCutoff;
 		}
 	}
@@ -441,13 +441,8 @@ function searchForBestCutoff(field) {
 	return cutoff;
 }
 
-function getLocalCutoff(sum, sumSquares, duration, isPace) {
+function getLocalCutoff(sum, sumSquares, duration) {
 	var avg = sum / duration;
 	var deviation = Math.sqrt(sumSquares / duration - avg * avg);
-	if (isPace) {
-		return avg + 1.5 * deviation;
-	}
-	else {
-		return avg - 1.5 * deviation;
-	}
+	return avg - 1.5 * deviation;
 }

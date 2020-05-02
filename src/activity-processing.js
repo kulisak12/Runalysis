@@ -37,9 +37,9 @@ function calculatePace() {
 	for (var i = 1; i < run.points.length; i++) {
 		var point = run.points[i];
 		
-		point.pace = point.duration / point.distance * 1000;
+		point.pace = point.distance / point.duration * 3.6; // storing pace as speed
 		point.incline = point.elevDiff / point.distance;
-		if (isNaN(point.incline) || !isFinite(point.incline)) {
+		if (point.distance == 0) {
 			point.incline = 0;
 		}
 		point.gap = calculateGap(point.pace, point.incline);
@@ -67,8 +67,8 @@ function calculatePrefixSums() {
 	calculatePrefixSum("elevDiff", "sumElevGain");
 	calculateWeightedPrefixSum("hr", "sumHr");
 	calculateWeightedPrefixSum("cad", "sumCad");
-	calculatePacePrefixSum("pace", "sumPace");
-	calculatePacePrefixSum("gap", "sumGap");
+	calculateWeightedPrefixSum("pace", "sumPace");
+	calculateWeightedPrefixSum("gap", "sumGap");
 }
 
 function calculatePrefixSum(value, sumValue) {
@@ -91,16 +91,6 @@ function calculateWeightedPrefixSum(value, sumValue) {
 	}
 }
 
-function calculatePacePrefixSum(value, sumValue) {
-	var sum = 0;
-	for (var i = 0; i < run.points.length; i++) {
-		if (!run.points[i].ignore) {
-			sum += run.points[i].duration / run.points[i][value];
-		}
-		run.points[i][sumValue] = sum;
-	}
-}
-
 // conversion functions
 Number.prototype.toRadians = function() {
     return this * Math.PI / 180;
@@ -113,7 +103,7 @@ function square(x) {
 // grade adjusted pace
 function calculateGap(pace, gradient) {
 	var coefficient = 1 + 2.8 * gradient + 16.1 * Math.pow(gradient, 2) + 5 * Math.pow(gradient, 3) + 25 * Math.pow(gradient, 4);
-	return pace / coefficient;
+	return pace * coefficient;
 }
 
 function calculateDistance(point1, point2) {

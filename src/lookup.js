@@ -38,8 +38,7 @@ function rangeStats(point1, point2, field) {
 	if (isPace(field) || field == "hr" || field == "cad") {
 		var timeDiff = pointDifference(point1, point2, "sumDuration");
 		var sumField = "sum" + field.charAt(0).toUpperCase() + field.slice(1); // pace -> sumPace
-		var avg = pointDifference(point1, point2, sumField) / timeDiff;
-		return (isPace(field)) ? 1 / avg : avg;
+		return pointDifference(point1, point2, sumField) / timeDiff;
 	}
 	// difference
 	else if (field == "elev" || field.startsWith("sum")) {

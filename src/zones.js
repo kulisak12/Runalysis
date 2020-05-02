@@ -131,10 +131,8 @@ function getZoneData(field) {
 }
 
 function getZone(zones, value) {
-	var isFlipped = (zones[1] > zones[2]);
 	var zone = 0;
-	while (zone < numZones &&
-		(isFlipped !== value > zones[zone])) {
+	while (zone < numZones && value > zones[zone]) {
 		zone++;
 	}
 	return zone;
@@ -147,7 +145,7 @@ function getZoneThresholds(field) {
 	var zones = localStorage.getItem(field);
 	if (zones == null) {
 		if (field == "pace") {
-			return [600, 315, 270, 240, 210];
+			return [toSpeed(600), toSpeed(315), toSpeed(270), toSpeed(240), toSpeed(210)];
 		}
 		else if (field == "hr") {
 			return [125, 140, 155, 170, 185];
@@ -190,6 +188,9 @@ function openPopup(field) {
 	};
 	
 	if (isPace(field)) {
+		for (var i = 0; i < numZones; i++) {
+			options.start[i] = Math.round(toPace(options.start[i]));
+		}
 		options.start.reverse();
 		options.direction = "rtl";
 		options.range = {"min": [120, 1], "75%": [420, 1], "max": [900, 1]};
@@ -199,6 +200,7 @@ function openPopup(field) {
 		options.direction = "ltr";
 		options.range = {"min": 80, "max": 220};
 		options.tooltips = fillArray(true, numZones);
+		options.margin = 3;
 	}
 
 	noUiSlider.create(document.getElementById("slider"), options);
@@ -212,7 +214,9 @@ function closePopup() {
 function saveZoneSettings(field) {
 	var values = document.getElementById("slider").noUiSlider.get();
 	if (isPace(field)) {
-		values.reverse();
+		for (var i = 0; i < numZones; i++) {
+			values[i] = toSpeed(values[i]);
+		}
 		field = "pace";
 	}
 	localStorage.setItem(field, JSON.stringify(values));

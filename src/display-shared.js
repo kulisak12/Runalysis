@@ -49,6 +49,9 @@ function displaySharedData() {
 		}
 		else {
 			var stat = parseInt(parameters[i][1]);
+			if (field == "pace") {
+				stat /= 100;
+			}
 			var numberBox = createNumberBox(field, format(stat, field));
 			numbersContainer.appendChild(numberBox);
 		}

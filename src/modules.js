@@ -29,7 +29,11 @@ function addShareLink() {
 	var shareString = "share.html?";
 	shareString += "date=" + run.startTime;
 	fields.forEach(function(field) {
-		shareString += "&" + field + "=" + Math.round(getOverallStat(field));
+		var overall = getOverallStat(field);
+		if (field == "pace") {
+			overall *= 100;
+		}
+		shareString += "&" + field + "=" + Math.round(overall);
 	});
 
 	// points
