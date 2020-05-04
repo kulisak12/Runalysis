@@ -31,6 +31,7 @@ const FieldTypes = {
 
 const pausedThreshold = 10;
 const cutoffArea = 60;
+const slowestSpeed = 1;
 const maxPace = 60 * 60; // unused?
 const axisPadding = 20;
 const numZones = 5;

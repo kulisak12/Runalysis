@@ -138,24 +138,19 @@ function setOptions(g) {
 		axis: "y2"
 	};
 
-	var axesObj = {};
-	var timeFormatter = {
-		axisLabelFormatter: formatTime,
-		ticker: timeTicker
+	var axesObj = {
+		"y": {
+			//axisLabelFormatter: function(value) {return removeUnit(formatPace(value));},
+			ticker: paceTicker
+		}
 	};
-	var numberFormatter = {
-		ticker: Dygraph.numericTicks
-	}
-	if (isPace(fields[0])) {
-		axesObj["y"] = timeFormatter;
-	}
-	else {
+	if (!isPace(fields[0])) {
 		axesObj["y"] = null;
 	}
 
 	g.updateOptions({
 		animatedZooms: true,
-		//axes: axesObj,
+		axes: axesObj,
 		series: seriesObj,
 		drawCallback: visibleRange,
 		highlightCallback: highlight,

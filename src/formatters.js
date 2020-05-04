@@ -149,7 +149,81 @@ function timeTicker(a, b, pixels, opts, dygraph, vals) {
 	return ticks;
 }
 
+function paceTicker(speedA, speedB, pixels, opts, dygraph, vals) {
+	var units = Math.abs(speedB - speedA);
+	var pixelsPerTick = opts("pixelsPerLabel");
+	var unitsPerTick = units * pixelsPerTick / pixels;
+	
+	// avoid infinite pace
+	if (speedA < slowestSpeed) {
+		speedA = slowestSpeed;
+	}
+	var paceA = toPace(speedA);
+	var paceB = toPace(speedB);
+	var base = 60;
+	var mults = [1, 2, 3, 4, 5, 10, 15, 30];
+	
+	// snap A to nearest nice number
+	var baseScale = getBaseScale(paceA, base);
+	var snapA;
+	for (var i = mults.length - 1; i >= 0; i--) {
+		snapA = baseScale * mults[i];
+		if (snapA <= paceA) {
+			break;
+		}
+	}
+
+	var ticks = getPaceTicks(snapA, paceB, unitsPerTick, base, mults);
+	//ticks.push(paceB); // upper bound is never added in subfunctions
+	for (var i = 0; i < ticks.length; i++) {
+		var tickObj = {
+			v: toSpeed(ticks[i]),
+			label: formatTime(ticks[i])
+		}
+		ticks[i] = tickObj;
+	}
+	return ticks;
+}
+
+// recursively fill axis with ticks
+// get a range, add a tick to the start and call subfunctions
+function getPaceTicks(paceA, paceB, unitsPerTick, base, mults) {
+	var speedA = toSpeed(paceA);
+	var speedB = toSpeed(paceB);
+	var baseScale = 1;
+	var multIndex = 0;
+	var step;
+	while (true) {
+		step = baseScale * mults[multIndex];
+		var speedSplit = toSpeed(paceA - step);
+		if (speedB - speedSplit < unitsPerTick) { // can't split
+			return [paceA];
+		}
+		if (speedSplit - speedA >= unitsPerTick) {
+			break;
+		}
+		if (multIndex == mults.length - 1) {
+			multIndex = 0;
+			baseScale *= base;
+		}
+		else {
+			multIndex++;
+		}
+	}
+
+	var split = paceA - step;
+	var lowerTicks = getPaceTicks(paceA, split, unitsPerTick, base, mults);
+	var upperTicks = getPaceTicks(split, paceB, unitsPerTick, base, mults);
+	return lowerTicks.concat(upperTicks);
+
+}
+
 function emptyTicker(a, b, pixels, opts, dygraph, vals) {
 	var ticks = [];
 	return ticks;
+}
+
+function getBaseScale(value, base) {
+	var basePower = Math.floor(Math.log(value) / Math.log(base));
+	return Math.pow(base, basePower);
 }
