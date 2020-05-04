@@ -4,6 +4,7 @@ var run = {};
 function displaySharedData() {
 	var url = window.location.href;
 	var parametersString = url.substr(url.indexOf("?") + 1);
+	parametersString = parametersString.replace(/_/g, "+");
 	parametersString = LZString.decompressFromEncodedURIComponent(parametersString);
 
 	var parameters = parametersString.split("&");

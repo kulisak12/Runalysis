@@ -52,7 +52,9 @@ function addShareLink() {
 	}
 
 	var shareAnchor = document.getElementById("share").getElementsByTagName("a")[0];
-	shareAnchor.href = "share.html?" + LZString.compressToEncodedURIComponent(shareString);
+	shareString = LZString.compressToEncodedURIComponent(shareString);
+	shareString = shareString.replace(/\+/g, "_"); // + chars get sometimes converted to %20
+	shareAnchor.href = "share.html?" + shareString;
 }
 
 function roundCoord(coordDiff) {
