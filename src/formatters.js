@@ -115,8 +115,8 @@ function timeTicker(a, b, pixels, opts, dygraph, vals) {
 	var pixelsPerTick = opts("pixelsPerLabel")
 	var maxTicks = Math.ceil(pixels / pixelsPerTick);
 	var unitsPerTick = Math.abs(b - a) / maxTicks;
-	var base = 60; // time is base 60
-	var mults = [1, 2, 5, 10, 15, 20, 30, 60]; // pretty numbers
+	const base = 60; // time is base 60
+	const mults = [1, 2, 5, 10, 15, 20, 30, 60]; // pretty numbers
 	var basePower = Math.floor(Math.log(unitsPerTick) / Math.log(base));
 	var baseScale = Math.pow(base, basePower);
 	
@@ -158,30 +158,20 @@ function paceTicker(speedA, speedB, pixels, opts, dygraph, vals) {
 	if (speedA < slowestSpeed) {
 		speedA = slowestSpeed;
 	}
-	var base = 60;
-	var mults = [1, 2, 5, 10, 15, 20, 30];
 
-	var ticks = [];
 	var speed = speedA;
+	var ticks = [];
+
+	// construct ticker array
 	while (speed <= speedB) {
-		speed = snap(speed, unitsPerTick, base, mults);
-		ticks.push(speed);
+		speed = snap(speed, unitsPerTick); // round to a nice number
+		ticks.push({
+			v: speed,
+			label: removeUnit(formatPace(speed))
+		});
 		speed += unitsPerTick;
 	}
 
-	// construct ticker array
-	for (var i = 0; i < ticks.length; i++) {
-		var tickObj = {
-			v: ticks[i],
-			label: removeUnit(formatPace(ticks[i]))
-		}
-		ticks[i] = tickObj;
-	}
-	return ticks;
-}
-
-function emptyTicker(a, b, pixels, opts, dygraph, vals) {
-	var ticks = [];
 	return ticks;
 }
 
@@ -190,7 +180,10 @@ function getBaseScale(value, base) {
 	return Math.pow(base, basePower);
 }
 
-function snap(speed, unitsPerTick, base, mults) {
+function snap(speed, unitsPerTick) {
+	const base = 60;
+	const mults = [1, 2, 5, 10, 15, 20, 30];
+	
 	var pace = toPace(speed);
 	var step = pace - toPace(speed + unitsPerTick);
 	var baseScale = getBaseScale(step, base);
@@ -200,4 +193,9 @@ function snap(speed, unitsPerTick, base, mults) {
 			return toSpeed(Math.floor(pace / scale) * scale);
 		}
 	}
+}
+
+function emptyTicker(a, b, pixels, opts, dygraph, vals) {
+	var ticks = [];
+	return ticks;
 }
