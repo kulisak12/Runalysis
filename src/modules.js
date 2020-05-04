@@ -26,8 +26,7 @@ function addShareLink() {
 	}
 
 	// stats
-	var shareString = "share.html?";
-	shareString += "date=" + run.startTime;
+	var shareString = "date=" + run.startTime;
 	fields.forEach(function(field) {
 		var overall = getOverallStat(field);
 		if (field == "pace") {
@@ -40,7 +39,7 @@ function addShareLink() {
 	var startLat = roundCoord(run.points[0].lat);
 	var startLon = roundCoord(run.points[0].lon);
 	shareString += "&start=" + createCoordPair(startLat, startLon);
-	shareString += "&moves=[0+0";
+	shareString += "&moves=0b0";
 	
 	var approxLat = startLat;
 	var approxLon = startLon;
@@ -49,12 +48,11 @@ function addShareLink() {
 		var diffLon = roundCoord(run.points[i].lon) - approxLon;
 		approxLat += diffLat; // make sure errors due to rounding don't increase
 		approxLon += diffLon;
-		shareString += "," + createCoordPair(diffLat, diffLon);
+		shareString += "+" + createCoordPair(diffLat, diffLon);
 	}
-	shareString += "]";
 
 	var shareAnchor = document.getElementById("share").getElementsByTagName("a")[0];
-	shareAnchor.href = shareString;
+	shareAnchor.href = "share.html?" + LZString.compressToEncodedURIComponent(shareString);
 }
 
 function roundCoord(coordDiff) {
@@ -62,5 +60,15 @@ function roundCoord(coordDiff) {
 }
 
 function createCoordPair(lat, lon) {
-	return lat.toString() + "+" + lon.toString();
+	var signFlag = 0;
+	if (lat < 0) {
+		signFlag += 2;
+		lat *= -1;
+	}
+	if (lon < 0) {
+		signFlag += 1;
+		lon *= -1;
+	}
+	var joinChar = String.fromCharCode(98 + signFlag); // b, c, d, e
+	return lat.toString() + joinChar + lon.toString();
 }

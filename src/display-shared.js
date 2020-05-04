@@ -4,6 +4,7 @@ var run = {};
 function displaySharedData() {
 	var url = window.location.href;
 	var parametersString = url.substr(url.indexOf("?") + 1);
+	parametersString = LZString.decompressFromEncodedURIComponent(parametersString);
 
 	var parameters = parametersString.split("&");
 	for (var i = 0; i < parameters.length; i++) {
@@ -33,8 +34,7 @@ function displaySharedData() {
 		}
 		else if (field == "moves") {
 			var movesString = parameters[i][1];
-			movesString = movesString.substr(1, movesString.length - 2); // delete []
-			var moves = movesString.split(",");
+			var moves = movesString.split("+");
 			moves.forEach(function(move) {
 				var coords = splitCoordPair(move);
 				lat += coords[0];
@@ -60,8 +60,16 @@ function displaySharedData() {
 }
 
 function splitCoordPair(pair) {
-	var parts = pair.split("+");
+	var joinChar = pair.match(/[bcde]/)[0];
+	var parts = pair.split(/[bcde]/);
 	var lat = parseInt(parts[0]);
 	var lon = parseInt(parts[1]);
+	var signFlag = joinChar.charCodeAt(0) - 98;
+	if (signFlag >= 2) {
+		lat *= -1;
+	}
+	if (signFlag % 2 == 1) {
+		lon *= -1;
+	}
 	return [lat, lon];
 }
