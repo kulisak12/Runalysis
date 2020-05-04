@@ -158,64 +158,26 @@ function paceTicker(speedA, speedB, pixels, opts, dygraph, vals) {
 	if (speedA < slowestSpeed) {
 		speedA = slowestSpeed;
 	}
-	var paceA = toPace(speedA);
-	var paceB = toPace(speedB);
 	var base = 60;
-	var mults = [1, 2, 3, 4, 5, 10, 15, 30];
-	
-	// snap A to nearest nice number
-	var baseScale = getBaseScale(paceA, base);
-	var snapA;
-	for (var i = mults.length - 1; i >= 0; i--) {
-		snapA = baseScale * mults[i];
-		if (snapA <= paceA) {
-			break;
-		}
+	var mults = [1, 2, 5, 10, 15, 20, 30];
+
+	var ticks = [];
+	var speed = speedA;
+	while (speed <= speedB) {
+		speed = snap(speed, unitsPerTick, base, mults);
+		ticks.push(speed);
+		speed += unitsPerTick;
 	}
 
-	var ticks = getPaceTicks(snapA, paceB, unitsPerTick, base, mults);
-	//ticks.push(paceB); // upper bound is never added in subfunctions
+	// construct ticker array
 	for (var i = 0; i < ticks.length; i++) {
 		var tickObj = {
-			v: toSpeed(ticks[i]),
-			label: formatTime(ticks[i])
+			v: ticks[i],
+			label: removeUnit(formatPace(ticks[i]))
 		}
 		ticks[i] = tickObj;
 	}
 	return ticks;
-}
-
-// recursively fill axis with ticks
-// get a range, add a tick to the start and call subfunctions
-function getPaceTicks(paceA, paceB, unitsPerTick, base, mults) {
-	var speedA = toSpeed(paceA);
-	var speedB = toSpeed(paceB);
-	var baseScale = 1;
-	var multIndex = 0;
-	var step;
-	while (true) {
-		step = baseScale * mults[multIndex];
-		var speedSplit = toSpeed(paceA - step);
-		if (speedB - speedSplit < unitsPerTick) { // can't split
-			return [paceA];
-		}
-		if (speedSplit - speedA >= unitsPerTick) {
-			break;
-		}
-		if (multIndex == mults.length - 1) {
-			multIndex = 0;
-			baseScale *= base;
-		}
-		else {
-			multIndex++;
-		}
-	}
-
-	var split = paceA - step;
-	var lowerTicks = getPaceTicks(paceA, split, unitsPerTick, base, mults);
-	var upperTicks = getPaceTicks(split, paceB, unitsPerTick, base, mults);
-	return lowerTicks.concat(upperTicks);
-
 }
 
 function emptyTicker(a, b, pixels, opts, dygraph, vals) {
@@ -226,4 +188,16 @@ function emptyTicker(a, b, pixels, opts, dygraph, vals) {
 function getBaseScale(value, base) {
 	var basePower = Math.floor(Math.log(value) / Math.log(base));
 	return Math.pow(base, basePower);
+}
+
+function snap(speed, unitsPerTick, base, mults) {
+	var pace = toPace(speed);
+	var step = pace - toPace(speed + unitsPerTick);
+	var baseScale = getBaseScale(step, base);
+	for (var i = mults.length - 1; i >= 0; i--) {
+		var scale = baseScale * mults[i];
+		if (scale <= step) {
+			return toSpeed(Math.floor(pace / scale) * scale);
+		}
+	}
 }

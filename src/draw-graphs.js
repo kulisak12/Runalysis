@@ -6,7 +6,6 @@ function drawGraphs() {
 	graphs = addGraphs();
 
 	graphs.forEach(function(g) {
-		defaultZoom(g);
 		setColors(g);
 		setOptions(g);
 	});
@@ -246,31 +245,6 @@ function unhighlight(event) {
 	markerLayer.removeAll();
 }
 
-function defaultZoom(g) {
-	var mainField = getGraphFields(g)[0];
-	if (!isPace(mainField) && mainField != "cad") {
-		g.resetZoom();
-		return;
-	}
-	// find optimal value range
-	var extremes = getExtremes(mainField);
-	var min = extremes[0];
-	var max = extremes[1];
-	var cutoff = searchForBestCutoff(mainField);
-
-	var range;
-	if (isPace(mainField)) {
-		range = [cutoff, max];
-	}
-	else { // cad
-		range = [cutoff - axisPadding / 2, max + axisPadding / 2];
-	}
-	g.updateOptions({
-		dateWindow: g.xAxisExtremes(),
-		axes: {"y": {valueRange: range}}
-	});
-}
-
 function visibleRange(g, isInitial) {
 	var range = g.xAxisRange();
 	var leftPoint = getPointByTime(range[0]);
@@ -364,7 +338,6 @@ function swapFields(newField, g, graphBox, fieldType) {
 		labels: ["time", newFields[0], newFields[1]]
 	});
 	setOptions(g);
-	defaultZoom(g);
 	sync(graphs);
 }
 
