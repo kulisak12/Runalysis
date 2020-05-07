@@ -3,118 +3,38 @@
 	<head>
 		<meta charset="utf8">
 		<title>Runalysis</title>
+
+		<!-- LIBRARIES -->
 		<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
-		<script type="text/javascript">Loader.load()</script>
-
-		<script type="text/javascript" src="globals.js"></script>
-		<script type="text/javascript" src="activity-processing.js"></script>
-		<script type="text/javascript" src="draw-graphs.js"></script>
-		<script type="text/javascript" src="formatters.js"></script>
-		<script type="text/javascript" src="lookup.js"></script>
-		<script type="text/javascript" src="modules.js"></script>
-		<script type="text/javascript" src="show-map.js"></script>
-		<script type="text/javascript" src="zones.js"></script>
-
-
-		<link rel="stylesheet" type="text/css" href="lib/dygraph.css">
-		<link rel="stylesheet" type="text/css" href="lib/nouislider.css">
+		<script type="text/javascript">Loader.load()</script> <!-- has to be initialized first -->
 		<script type="text/javascript" src="lib/dygraph.js"></script>
+		<link rel="stylesheet" type="text/css" href="lib/dygraph.css">
 		<script type="text/javascript" src="lib/synchronizer.js"></script>
 		<script type="text/javascript" src="lib/nouislider.js"></script>
+		<link rel="stylesheet" type="text/css" href="lib/nouislider.css">
 		<script type="text/javascript" src="lib/tinycolor.js"></script>
 		<script type="text/javascript" src="lib/lz-string.js"></script>
 
+		<!-- SCRIPT -->
+		<script type="text/javascript" src="globals.js"></script>
+		<script type="text/javascript" src="formatters.js"></script>
+		<script type="text/javascript" src="lookup.js"></script>
+		<script type="text/javascript" src="modules.js"></script>
+		<script type="text/javascript" src="activity-processing.js"></script>
+		<script type="text/javascript" src="draw-graphs.js"></script>
+		<script type="text/javascript" src="show-map.js"></script>
+		<script type="text/javascript" src="zones.js"></script>
 
+		<link rel="stylesheet" type="text/css" href="runalysis.css">
 		<style>
-			html {overflow-y: scroll;}
-			body {margin: 0;}
-			header {background-color: #523d7c; margin-bottom: 1.5em; padding: 0.5em;
-				box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);}
-			#title {float: left; margin-left: 6rem; font-weight: bold; font-size: 1.8em; color: lightgrey; text-decoration: none;}
-			.icon-container {display: flex; margin-left: 18em; width: 20%;}
-			.icon-box {width: 2em; display: block; margin-right: 1em;}
-			.icon-box object {height: 2em; pointer-events: none; filter: invert(80%);}
-			#share {position: absolute; right: 6em; top: 0.5em;}
-			#share a:hover object {filter: invert(50%);}
-			
-			.module {margin: 1em 6em;}
-			.module.graphs,
-			.module.map,
-			.module.zones {display: flex;}
-			.settings {width: 9%; margin-left: 1%; padding: 0.5em; border-left: 1px solid #d0d0d0;}
-			.settings input {width: 4em;}
-
-			#graphs-container {width: 90%;}
-			.graph-box {width: 100%; display: flex;}
-			.field-div {background-color: #f0f0f0; padding: 1em; border-top: 4px solid #c0c0c0;
-				box-shadow: 2px 3px 2px -1px rgba(0,0,0,0.1);}
-			.field-div.side {width: 15%;}
-			.field-div.top {width: calc(50% - 0.25em); margin-bottom: 0.5em;}
-			.field-div.top.left {margin-right: 0.25em;}
-			.field-div.top.right {margin-left: 0.25em;}
-			.graph-div {width: 70%; height: 15em;}
-			#axis-div {width: 70%; height: 21px;}
-			.field-div.axis {height: 1px; padding-top:0; padding-bottom: 0; visibility: hidden;}
-			.settings.graphs .header {padding: 1em 0; margin: calc(4px - 0.5em) 0 0.5em 0;}
-			.graph-settings {height: calc(50% - 1.75em - 3px); margin-bottom: 21px;}
-			.graph-selection {display: block; font-size: 90%; width: 100%; transition-duration: 0.2s;
-				margin-bottom: 1em; padding: .2em 1.0em .2em .6em; border: none; border-radius: 0.3rem;
-				-moz-appearance: none; -webkit-appearance: none; appearance: none;
-				box-shadow: 0.5px 0.5px 5px 1px rgba(0,0,0,0.2); background-color: white;
-				background-image: url(icons/triangle.svg); background-repeat: no-repeat, repeat; 
-				background-position: right .7em top 50%, 0 0; background-size: .65em auto, 100%;}
-			.graph-selection::-ms-expand {display: none;}
-			.graph-selection:hover {box-shadow: 0 0 1px 3px rgba(86, 61, 124, .7);}
-			.graph-selection:focus {outline: none;}
-			.graph-selection option {font-weight: normal;}
-			
-			.module.map {height: 30em;}
-			#map {display: inline-block; width: 49%; margin-right: 1%; height: 100%;}
-			#numbers-container {display: flex; flex-wrap: wrap; width: 49%; margin-left: 1%; height: 100%;}
-			.date-box {width: 100%; height: 1.5em;}
-			.date-box {font-size: 1.5em; text-align: center;}
-			.number-box {width: calc(100% / 3); text-align: center;}
-			.number-value {font-size: 2em;}
-			.number-unit {font-size: 70%;}
-
-			#zones-container {display: flex; width: 90%;}
-			table.zones {width: 30%; margin-left: 5%;
-				border-radius: 0.5rem; box-shadow: 0.5px 0.5px 5px 1px rgba(0,0,0,0.14);}
-			table.zones:first-child {margin-left: 0;}
-			table.zones td {width: 20%; text-align: center;}
-			.zone-column div {width: 66%; margin: auto;}
-			.zone-column td {height: 12em; vertical-align: bottom; position: relative;}
-			.zone-column span {display: none; background-color: white; padding: 5px; width: 5em;
-				position: absolute; bottom: 2em; left: calc(50% - 2.5em - 5px);}
-			.zone-column td:hover span {display: block; z-index: 1;
-				border-radius: 0.3rem; box-shadow: 1px 1px 2px 2px rgba(0,0,0,0.2);}
-			.zone-column td:hover div {filter: brightness(90%); outline: 1px solid black;}
-			.settings.zones .header,
-			.settings.zones .zones-customized {display:block; margin: 1em 0;}
-			button {background-color: white; border: none; border-radius: 0.3rem;
-				font-size: 90%; padding: .3em .7em; transition-duration: 0.2s;
-				box-shadow: 0.5px 0.5px 5px 1px rgba(0,0,0,0.25);}
-			button:hover {box-shadow: 0 0 1px 3px rgba(86, 61, 124, .7);}
-			
-			#popup {display: none;}
-			#dialogue {background-color: white; z-index: 1;
-				border-radius: 2rem; box-shadow: 2px 2px 8px 1px rgba(0,0,0,0.14);
-				position: fixed; top: 25%; right: 25%; bottom: 25%; left: 25%;}
-			#mask {background: rgba(0, 0, 0, 0.3); position: fixed; 
-				z-index:1; top: 0; right: 0; bottom: 0; left: 0;}
-			.close {position: absolute; top: 1em; right: 1em; width: 2em; height: 2em;
-			cursor: pointer; border-radius: 1em; 
-			background: -webkit-linear-gradient(-45deg, transparent 0%, transparent 48%, gray 48%,  gray 52%,transparent 52%, transparent 100%),
-			-webkit-linear-gradient(45deg, transparent 0%, transparent 48%, gray 48%,  gray 52%,transparent 52%, transparent 100%);}
-			.close:hover {background-color: lightgray;}
-			#slider {margin: auto; width: 90%; margin-top: 14%;}
-			#dialogue h2 {text-align: center;}
-			.buttons-container {margin-top: 10%; display: flex; padding: 0 30%;}
-			.buttons-container button {display: block; margin: auto; font-size: 110%;}
+			html {
+				overflow-y: scroll;
+			}
 		</style>
 	</head>
 	<body onload="onLoad()">
 
+<!-- SITE HEADER -->
 <header>
 	<a id="title" href="index.html">Runalysis</a>
 	<span class="icon-container">
@@ -135,11 +55,13 @@
 	</span>
 </header>
 
+<!-- MAP MODULE -->
 <div class="module map">
 	<div id="map"></div>
 	<div id="numbers-container"></div>
 </div>
 
+<!-- GRAPHS MODULE -->
 <div class="module graphs">
 	<div id="graphs-container">
 		<div class="graph-box top">
@@ -156,11 +78,13 @@
 	</aside>
 </div>
 
+<!-- ZONES MODULE -->
 <div class="module zones">
 	<div id="zones-container"></div>
 	<aside class="settings zones"></aside>
 </div>
 
+<!-- CUSTOMIZATION POPUP -->
 <div id="popup">
 	<div id="mask"></div>
 	<div id="dialogue">
@@ -174,7 +98,7 @@
 	</div>
 </div>
 
-<!-- <div class="module laps"></div> -->
+<!-- TODO laps -->
 
 	</body>
 </html>

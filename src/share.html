@@ -3,31 +3,20 @@
 	<head>
 		<meta charset="utf8">
 		<title>Runalysis</title>
-		<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
-		<script type="text/javascript">Loader.load()</script>
 
+		<!-- LIBRARIES -->
+		<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
+		<script type="text/javascript">Loader.load()</script> <!-- has to be initialized first -->
+		<script type="text/javascript" src="lib/lz-string.js"></script>
+		
+		<!-- SCRIPT -->
+		<script type="text/javascript" src="globals.js"></script>
+		<script type="text/javascript" src="formatters.js"></script>
 		<script type="text/javascript" src="display-shared.js"></script>
 		<script type="text/javascript" src="show-map.js"></script>
-		<script type="text/javascript" src="formatters.js"></script>
-		<script type="text/javascript" src="globals.js"></script>
-
-		<script type="text/javascript" src="lib/lz-string.js"></script>
-
+		
+		<link rel="stylesheet" type="text/css" href="runalysis.css">
 		<style>
-			body {margin: 0;}
-			header {background-color: #563d7c; margin-bottom: 1.5em; padding: 0.5em;
-				box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12);}
-			#title {margin-left: 6rem; font-weight: bold; font-size: 1.8em; color: lightgrey; text-decoration: none;}
-			
-			.module {margin: 1em 6em;}
-			.module.map {display: flex;}
-			.module.map {height: 30em;}
-			#map {display: inline-block; width: 49%; margin-right: 1%; height: 100%;}
-			#numbers-container {display: flex; flex-wrap: wrap; width: 50%; margin: auto;}
-			.date-box {width: 100%; height: 1.5em;}
-			.date-box {font-size: 1.5em; text-align: center;}
-			.number-box {width: calc(100% / 3); text-align: center;}
-			.number-value {font-size: 2em;}
 		</style>
 	</head>
 	<body onload="displaySharedData()">
