@@ -20,6 +20,11 @@ header {
 	font-weight: bold;
 	color: lightgrey;
 	text-decoration: none;
+	transition-duration: 0.2s;
+	transition-property: color;
+}
+#title:hover {
+	color: #999;
 }
 .icon-container {
 	display: flex;
@@ -36,12 +41,15 @@ header {
 	pointer-events: none;
 	filter: invert(80%);
 }
-#share {
+.link-icon {
 	position: absolute;
 	right: 6em;
 	top: 0.5em;
 }
-#share a:hover object {
+.link-icon a object {
+	transition-duration: 0.2s;
+}
+.link-icon a:hover object {
 	filter: invert(50%);
 }
 
