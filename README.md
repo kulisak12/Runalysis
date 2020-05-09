@@ -40,7 +40,7 @@ Momentálně lze nahrávat pouze soubory formátu `.gpx`.
 
 ## Licence
 
-&copy; 2020 David Klement, [Apache Licence 2.0](https://github.com/kulisak12/Runalysis/blob/master/LICENCE)
+&copy; 2020 David Klement, [Apache Licence 2.0](https://github.com/kulisak12/Runalysis/blob/master/LICENSE)
 
 ## Použité knihovny
 
