@@ -4,4 +4,4 @@
 
 ## Ignore sample GPS files
 
-.gpx
+*.gpx
