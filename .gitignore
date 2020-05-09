@@ -1,0 +1,7 @@
+## Ignore VS Code settings files
+
+.vscode
+
+## Ignore sample GPS files
+
+.gpx
