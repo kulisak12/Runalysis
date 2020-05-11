@@ -5,14 +5,14 @@
 		<title>Runalysis</title>
 		
 		<!-- LIBRARIES -->
-		<script type="text/javascript" src="lib/dropzone.js"></script>
-		<link rel="stylesheet" type="text/css" href="lib/dropzone.css">
+		<script type="text/javascript" src="/Runalysis/lib/dropzone.js"></script>
+		<link rel="stylesheet" type="text/css" href="/Runalysis/lib/dropzone.css">
 		
 		<!-- SCRIPT -->
-		<script type="text/javascript" src="file-read/file-loader.js"></script>
-		<script type="text/javascript" src="file-read/gpx-parser.js"></script>
+		<script type="text/javascript" src="/Runalysis/src/file-read/file-loader.js"></script>
+		<script type="text/javascript" src="/Runalysis/src/file-read/gpx-parser.js"></script>
 
-		<link rel="stylesheet" type="text/css" href="runalysis.css">
+		<link rel="stylesheet" type="text/css" href="/Runalysis/src/runalysis.css">
 		<style>
 			.dz-success-mark {
 				filter: brightness(0.6) sepia(1) hue-rotate(65deg) saturate(4);
@@ -39,15 +39,15 @@
 	<body>
 
 <header>
-	<a id="title" href="index.html">Runalysis</a>
+	<a id="title" href="/Runalysis/">Runalysis</a>
 	<span class="link-icon">
-		<a class="icon-box" href="about.html">
-			<object type="image/svg+xml" data="icons/info.svg"></object>
+		<a class="icon-box" href="/Runalysis/about/">
+			<object type="image/svg+xml" data="/Runalysis/icons/info.svg"></object>
 		</a>
 	</span>
 </header>
 
-<form action="view.html" class="dropzone" id="gps"></form>
+<form action="/Runalysis/view/" class="dropzone" id="gps"></form>
 
 <script>
 	dropzoneInit();

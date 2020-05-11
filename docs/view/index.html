@@ -7,25 +7,25 @@
 		<!-- LIBRARIES -->
 		<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
 		<script type="text/javascript">Loader.load()</script> <!-- has to be initialized first -->
-		<script type="text/javascript" src="lib/dygraph.js"></script>
-		<link rel="stylesheet" type="text/css" href="lib/dygraph.css">
-		<script type="text/javascript" src="lib/synchronizer.js"></script>
-		<script type="text/javascript" src="lib/nouislider.js"></script>
-		<link rel="stylesheet" type="text/css" href="lib/nouislider.css">
-		<script type="text/javascript" src="lib/tinycolor.js"></script>
-		<script type="text/javascript" src="lib/lz-string.js"></script>
+		<script type="text/javascript" src="/Runalysis/lib/dygraph.js"></script>
+		<link rel="stylesheet" type="text/css" href="/Runalysis/lib/dygraph.css">
+		<script type="text/javascript" src="/Runalysis/lib/synchronizer.js"></script>
+		<script type="text/javascript" src="/Runalysis/lib/nouislider.js"></script>
+		<link rel="stylesheet" type="text/css" href="/Runalysis/lib/nouislider.css">
+		<script type="text/javascript" src="/Runalysis/lib/tinycolor.js"></script>
+		<script type="text/javascript" src="/Runalysis/lib/lz-string.js"></script>
 
 		<!-- SCRIPT -->
-		<script type="text/javascript" src="globals.js"></script>
-		<script type="text/javascript" src="formatters.js"></script>
-		<script type="text/javascript" src="lookup.js"></script>
-		<script type="text/javascript" src="modules.js"></script>
-		<script type="text/javascript" src="activity-processing.js"></script>
-		<script type="text/javascript" src="draw-graphs.js"></script>
-		<script type="text/javascript" src="show-map.js"></script>
-		<script type="text/javascript" src="zones.js"></script>
+		<script type="text/javascript" src="/Runalysis/src/utility/globals.js"></script>
+		<script type="text/javascript" src="/Runalysis/src/utility/formatters.js"></script>
+		<script type="text/javascript" src="/Runalysis/src/utility/lookup.js"></script>
+		<script type="text/javascript" src="/Runalysis/src/activity-load/activity-processing.js"></script>
+		<script type="text/javascript" src="/Runalysis/src/modules/modules.js"></script>
+		<script type="text/javascript" src="/Runalysis/src/modules/draw-graphs.js"></script>
+		<script type="text/javascript" src="/Runalysis/src/modules/show-map.js"></script>
+		<script type="text/javascript" src="/Runalysis/src/modules/zones.js"></script>
 
-		<link rel="stylesheet" type="text/css" href="runalysis.css">
+		<link rel="stylesheet" type="text/css" href="/Runalysis/src/runalysis.css">
 		<style>
 			html {
 				overflow-y: scroll;
@@ -36,21 +36,21 @@
 
 <!-- SITE HEADER -->
 <header>
-	<a id="title" href="index.html">Runalysis</a>
+	<a id="title" href="/Runalysis/">Runalysis</a>
 	<span class="icon-container">
 		<div class="icon-box map" onclick="toggleModule(this)">
-			<object type="image/svg+xml" data="icons/map.svg"></object>
+			<object type="image/svg+xml" data="/Runalysis/icons/map.svg"></object>
 		</div>
 		<div class="icon-box graphs" onclick="toggleModule(this)">
-			<object type="image/svg+xml" data="icons/chart.svg"></object>
+			<object type="image/svg+xml" data="/Runalysis/icons/chart.svg"></object>
 		</div>
 		<div class="icon-box zones" onclick="toggleModule(this)">
-			<object type="image/svg+xml" data="icons/columns.svg"></object>
+			<object type="image/svg+xml" data="/Runalysis/icons/columns.svg"></object>
 		</div>
 	</span>
 	<span id="share" class="link-icon">
 		<a class="icon-box">
-			<object type="image/svg+xml" data="icons/share.svg"></object>
+			<object type="image/svg+xml" data="/Runalysis/icons/share.svg"></object>
 		</a>
 	</span>
 </header>
