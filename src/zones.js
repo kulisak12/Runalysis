@@ -105,10 +105,7 @@ function refreshZones(field) {
 
 function getZoneData(field) {
 	var zones = getZoneThresholds(field);
-	var zeroArray = [];
-	for (var i = 0; i < numZones + 1; i++) { // including zone 0
-		zeroArray.push(0);
-	}
+	var zeroArray = fillArray(0, numZones + 1); // including zone 0
 	var zoneData = {
 		time: zeroArray.slice(), // copy of the array
 		dist: zeroArray.slice()
@@ -118,8 +115,7 @@ function getZoneData(field) {
 		if (point.ignore) {
 			return;
 		}
-		var zone = getZone
-		(zones, point[field]);
+		var zone = getZone(zones, point[field]);
 		zoneData.time[zone] += point.duration;
 		zoneData.dist[zone] += point.distance;
 	});
