@@ -21,11 +21,19 @@ const colors = {
 	"temp": "orange"
 };
 
+/**
+ * Enumerate for field types based on where in graphs they are plotted
+ * @enum {number}
+ */
 const FieldTypes = {
 	ALL: 1,
+	/** Fields on the x axis */
 	MAIN: 2,
+	/** Fields on the y axis */
 	DEPENDANT: 3,
+	/** Fields drawn with a line */
 	PRIMARY: 4,
+	/** Fields drawn using a filled area */
 	SECONDARY: 5
 };
 
