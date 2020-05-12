@@ -2,7 +2,7 @@
 
 Runalysis je webová aplikace, která zpracovává zaznamenané sportovní aktivity jako běh či jízda na kole a nabízí jejich podrobnou analýzu.
 
-Aplikaci můžete najít [zde](https://kulisak12.github.io/Runalysis/src/).
+Aplikaci můžete najít [zde](https://kulisak12.github.io/Runalysis/).
 
 ## Zobrazení aktivity
 

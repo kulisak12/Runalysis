@@ -31,7 +31,7 @@ function readFile(file, parser) {
 	reader.onload = function() {
 		var run = parser(reader.result);
 		sessionStorage.setItem("runData", JSON.stringify(run));
-		window.location.href = "/Runalysis/view";
+		window.location.href = "view";
 	};
 	setTimeout(function() {reader.readAsText(file)}, 1000);
 }
