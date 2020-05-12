@@ -1,12 +1,17 @@
 var markerLayer = null; // unused, just so I can reuse a function
 var run = {};
 
+/**
+ * Parse the url and display the activity
+ */
 function displaySharedData() {
+	// decode url
 	var url = window.location.href;
 	var parametersString = url.substr(url.indexOf("?") + 1);
 	parametersString = parametersString.replace(/_/g, "+");
 	parametersString = LZString.decompressFromEncodedURIComponent(parametersString);
 
+	// split into individual parameters
 	var parameters = parametersString.split("&");
 	for (var i = 0; i < parameters.length; i++) {
 		parameters[i] = parameters[i].split("=");
@@ -29,11 +34,13 @@ function displaySharedData() {
 	for (var i = 1; i < parameters.length; i++) {
 		var field = parameters[i][0];
 		if (field == "start") {
+			// get the gps recording start
 			var coords = splitCoordPair(parameters[i][1]);
 			lat = coords[0];
 			lon = coords[1];
 		}
 		else if (field == "moves") {
+			// reconstruct the gps recording from individual moves
 			var movesString = parameters[i][1];
 			var moves = movesString.split("+");
 			moves.forEach(function(move) {
@@ -49,6 +56,7 @@ function displaySharedData() {
 			addGps();
 		}
 		else {
+			// display stat
 			var stat = parseInt(parameters[i][1]);
 			if (field == "pace") {
 				stat /= 100;
@@ -60,6 +68,11 @@ function displaySharedData() {
 	}
 }
 
+/**
+ * Split encoded pair of numbers
+ * @param {string} pair 
+ * @returns {number[]} Lat and lon, in this order
+ */
 function splitCoordPair(pair) {
 	var joinChar = pair.match(/[bcde]/)[0];
 	var parts = pair.split(/[bcde]/);

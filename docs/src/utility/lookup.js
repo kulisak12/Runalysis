@@ -1,3 +1,8 @@
+/**
+ * Find a point closest to the specified time
+ * @param {number} time 
+ * @returns {Point} 
+ */
 function getPointByTime(time) {
 	// binary search, returns closest point
 	var begin = 0;
@@ -15,6 +20,11 @@ function getPointByTime(time) {
 	return run.points[center];
 }
 
+/**
+ * Get the min and max value of a field in the entire run
+ * @param {string} field 
+ * @returns {number[]} Min and max value, in this order
+ */
 function getExtremes(field) {
 	var min, max;
 	min = max = run.points[0][field];
@@ -33,6 +43,13 @@ function getExtremes(field) {
 	return [min, max];
 }
 
+/**
+ * Get the stat for a given field to be shown when a range is selected
+ * @param {Point} point1 Beginning of the range
+ * @param {Point} point2 End of the range
+ * @param {string} field 
+ * @returns {number} Average field value or difference in values
+ */
 function rangeStats(point1, point2, field) {
 	// weighted average
 	if (isPace(field) || field == "hr" || field == "cad") {
@@ -46,11 +63,24 @@ function rangeStats(point1, point2, field) {
 	}
 }
 
+/**
+ * Get the change in field value over a range
+ * @param {Point} point1 Beginning of the range
+ * @param {Point} point2 End of the range
+ * @param {string} field 
+ * @returns {number} Difference in field values
+ */
 function pointDifference(point1, point2, field) {
 	return point2[field] - point1[field];
 }
 
+/**
+ * Get a list of available fields of given type
+ * @param {FieldTypes} fieldType Selector for fields, must be an enumerated value of {@link FieldTypes}
+ * @returns {string[]} Array of fields
+ */
 function getAvailableData(fieldType) {
+	// get all available fields
 	var main = ["sumDuration", "sumDistance"];
 	var primary = ["pace"];
 	var secondary = [];
@@ -68,6 +98,7 @@ function getAvailableData(fieldType) {
 		secondary.push("temp");
 	}
 
+	// return fields according to type
 	if (fieldType == FieldTypes.ALL) {
 		return Array.prototype.concat(main, primary, secondary);
 	}

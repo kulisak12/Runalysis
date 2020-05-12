@@ -1,3 +1,7 @@
+/**
+ * Hide or show the module
+ * @param {HTMLElement} sender The clicked element
+ */
 function toggleModule(sender) {
 	var moduleName = sender.classList[1];
 	var module = document.getElementsByClassName("module " + moduleName)[0];
@@ -15,6 +19,9 @@ function toggleModule(sender) {
 	}
 }
 
+/**
+ * Generate link for sharing
+ */
 function addShareLink() {
 	// select fields to show
 	var fields = ["sumDistance", "sumDuration", "pace", "sumElevGain", "elapsed"];
@@ -57,10 +64,21 @@ function addShareLink() {
 	shareAnchor.href = "share?" + shareString;
 }
 
+/**
+ * Save coordinate difference as integer
+ * @param {number} coordDiff Unscaled coordinate difference
+ * @returns {number} Rounded upscaled difference
+ */
 function roundCoord(coordDiff) {
 	return Math.round(coordDiff * shareCoordAccuracy);
 }
 
+/**
+ * Encode a pair of coordinates
+ * @param {number} lat Latitude
+ * @param {number} lon Longitude
+ * @returns {string} Encoded pair
+ */
 function createCoordPair(lat, lon) {
 	var signFlag = 0;
 	if (lat < 0) {

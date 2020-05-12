@@ -1,8 +1,11 @@
 "use strict";
 var graphs;
 
+/**
+ * Create content of the graph module
+ */
 function drawGraphs() {
-	addGraphBoxes();
+	addGraphBoxes(); // containers
 	graphs = addGraphs();
 
 	graphs.forEach(function(g) {
@@ -10,14 +13,17 @@ function drawGraphs() {
 		setOptions(g);
 	});
 
-	graphs.push(addAxis());
+	graphs.push(addAxis()); // x axis
 	sync(graphs);
 
 	addGraphSettings();
 }
 
-// graph creation
+// PAGE BUILDING
 
+/**
+ * Create graphs using the Dygraph library
+ */
 function addGraphs() {
 	var graphDivs = Array.from(document.getElementsByClassName("graph-div"));
 	var graphs = [];
@@ -27,6 +33,7 @@ function addGraphs() {
 		var field2 = graphDiv.classList[2];
 		var data = getGraphData(field1, field2);
 		
+		// add graph
 		var g = new Dygraph(graphDiv, data, {
 			labels: ["time", field1, field2],
 			legend: "never",
@@ -40,7 +47,12 @@ function addGraphs() {
 	return graphs;
 }
 
-// create data source for graph
+/**
+ * Get the dataset of data to be graphed
+ * @param {string} field1 Primary field
+ * @param {string} field2 Secondary field
+ * @returns {Array[]} Array of values for each point: time, field1 and field2
+ */
 function getGraphData(field1, field2) {
 	var data = [];
 	for (var i = 0; i < run.points.length; i++) {
@@ -54,6 +66,9 @@ function getGraphData(field1, field2) {
 	return data;
 }
 
+/**
+ * Create container divs for every graph
+ */
 function addGraphBoxes() {	
 	var primaryFields = getAvailableData(FieldTypes.PRIMARY);
 	var secondaryFields = getAvailableData(FieldTypes.SECONDARY);
@@ -84,6 +99,12 @@ function addGraphBoxes() {
 	}
 }
 
+/**
+ * Create divs for the graph and for field stats
+ * @param {string} field1 Primary field
+ * @param {string} field2 Secondary field
+ * @returns {HTMLDivElement} Graph box
+ */
 function createGraphBox(field1, field2) {
 	var graphBox = document.createElement("div");
 	graphBox.classList.add("graph-box", field1, field2);
@@ -99,6 +120,12 @@ function createGraphBox(field1, field2) {
 	return graphBox;
 }
 
+/**
+ * Create div for field stats
+ * @param {string} field 
+ * @param {string} side Left or right
+ * @returns {HTMLDivElement} Field div
+ */
 function createFieldDiv(field, side) {
 	var fieldDiv = document.createElement("div");
 	fieldDiv.classList.add("field-div", field, "side", side);
@@ -123,8 +150,10 @@ function createFieldDiv(field, side) {
 	return fieldDiv;
 }
 
-// display adjustments
-
+/**
+ * Set display and formatting options for graph
+ * @param {*} g Graph
+ */
 function setOptions(g) {
 	g.plotter_.clear();
 	// get field names
@@ -157,6 +186,10 @@ function setOptions(g) {
 	});
 }
 
+/**
+ * Set plot colors for graph
+ * @param {*} g Graph
+ */
 function setColors(g) {
 	var seriesObj = {};
 	Object.keys(colors).forEach(function(key) {
@@ -167,6 +200,10 @@ function setColors(g) {
 	});
 }
 
+/**
+ * Use the synchronize library to keep x axis in sync
+ * @param {Array} graphs 
+ */
 function sync(graphs) {
 	var sync = Dygraph.synchronize(graphs, {
 		selection: true,
@@ -175,8 +212,12 @@ function sync(graphs) {
 	});
 }
 
-// custom graph where only the axis is shown
+/**
+ * Add the x axis
+ * @returns {Object} Graph
+ */
 function addAxis() {
+	// get time values
 	var data = [];
 	for (var i = 0; i < run.points.length; i++) {
 		var point = run.points[i];
@@ -186,6 +227,7 @@ function addAxis() {
 		data.push(pointArray);
 	}
 	
+	// add graph
 	var g = new Dygraph(document.getElementById("axis-div"), data, {
 		labels: ["time", "second"],
 		legend: "never",
@@ -205,8 +247,17 @@ function addAxis() {
 	return g;
 }
 
-// user interaction
+// USER INTERACTION
 
+/**
+ * Callback when user hovers over a point in a graph
+ * Display values of fields, highlight point on the map
+ * @param {Event} event Mouse move event
+ * @param {number} x Selected time
+ * @param {*} points Unused
+ * @param {*} row Unused
+ * @param {*} seriesName Unused
+ */
 function highlight(event, x, points, row, seriesName) {
 	// the first point is missing some information
 	if (x == 0) {
@@ -234,6 +285,11 @@ function highlight(event, x, points, row, seriesName) {
 
 }
 
+/**
+ * Callback when user moves mouse out of graph area
+ * Reset displayed values of fields
+ * @param {Event} event Mouse move event
+ */
 function unhighlight(event) {
 	getAvailableData(FieldTypes.ALL).forEach(function(field) {
 		var fieldLegendEles = Array.from(document.getElementsByClassName("legend " + field));
@@ -245,6 +301,12 @@ function unhighlight(event) {
 	markerLayer.removeAll();
 }
 
+/**
+ * Callback whenever the graph is updated
+ * Update field stats for selected range
+ * @param {*} g Graph
+ * @param {boolean} isInitial Whether this is the first time drawing the graph
+ */
 function visibleRange(g, isInitial) {
 	var range = g.xAxisRange();
 	var leftPoint = getPointByTime(range[0]);
@@ -259,8 +321,9 @@ function visibleRange(g, isInitial) {
 	});
 }
 
-// custom settings
-
+/**
+ * Create a sidebar with custom user settings
+ */
 function addGraphSettings() {
 	// get all graph elements
 	var fieldGraphs = [];
@@ -279,7 +342,8 @@ function addGraphSettings() {
 		var fields = getGraphFields(g);
 		var graphSettingsDiv = document.createElement("div");
 		graphSettingsDiv.classList.add("graph-settings");
-
+		
+		// option to change displayed field
 		var primarySelection = createSelection(FieldTypes.PRIMARY, fields[0]);
 		primarySelection.onchange = function() {swapFields(this.value, g, graphBox, FieldTypes.PRIMARY)};
 		graphSettingsDiv.appendChild(primarySelection);
@@ -291,6 +355,12 @@ function addGraphSettings() {
 	}
 }
 
+/**
+ * Create a dropdown for changing the displayed field
+ * @param {FieldTypes} fieldTypes Selector for options in dropdown
+ * @param {string} selected Currently selected field
+ * @returns {HTMLSelectElement} Graph selection
+ */
 function createSelection(fieldTypes, selected) {
 	var selection = document.createElement("select");
 	var index = 0;
@@ -305,6 +375,13 @@ function createSelection(fieldTypes, selected) {
 	return selection;
 }
 
+/**
+ * Change the field plotted in a graph
+ * @param {string} newField 
+ * @param {*} g Graph 
+ * @param {HTMLDivElement} graphBox Container div
+ * @param {FieldType} fieldType Type of the field being changed (same for old and new field)
+ */
 function swapFields(newField, g, graphBox, fieldType) {
 	var oldFields = getGraphFields(g);
 	var oldField;
@@ -341,14 +418,23 @@ function swapFields(newField, g, graphBox, fieldType) {
 	sync(graphs);
 }
 
-// get methods
+// GET METHODS
 
+/**
+ * Get the fields plotted in a graph
+ * @param {*} g Graph 
+ * @returns {string[]} Primary and secondary field, in this order
+ */
 function getGraphFields(g) {
 	var field1 = g.getOption("labels")[1];
 	var field2 = g.getOption("labels")[2];
 	return [field1, field2];
 }
 
+/**
+ * Get only the two main graph boxes, exclude top and axis
+ * @returns {HTMLDivElement[]} Field graph boxes
+ */
 function getFieldGraphBoxes() {
 	var fieldGraphBoxes = Array.from(document.getElementsByClassName("graph-box"));
 	for (var i = 0; i < fieldGraphBoxes.length; i++) {
@@ -361,6 +447,12 @@ function getFieldGraphBoxes() {
 	return fieldGraphBoxes;
 }
 
+/**
+ * Determine the initial y axis range
+ * Try to cut off thin spikes
+ * @param {string} field
+ * @returns {number} Cutoff value
+ */
 function searchForBestCutoff(field) {
 	var sum = 0;
 	var sumSquares = 0;
@@ -409,6 +501,13 @@ function searchForBestCutoff(field) {
 	return cutoff;
 }
 
+/**
+ * Calculate average and deviation in a range, suggest cutoff point
+ * @param {number} sum Sum of values in the range
+ * @param {number} sumSquares Sum of squares of values in the range
+ * @param {number} duration Duration of the range
+ * @returns {number} Cutoff for given range
+ */
 function getLocalCutoff(sum, sumSquares, duration) {
 	var avg = sum / duration;
 	var deviation = Math.sqrt(sumSquares / duration - avg * avg);

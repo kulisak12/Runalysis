@@ -1,5 +1,10 @@
+// MAP
+
 var markerLayer = null;
 
+/**
+ * Create the map and add the gps recording to it
+ */
 function addGps() {
     var center = SMap.Coords.fromWGS84(14.0, 50.0);
     let map = new SMap(JAK.gel("map"), center, 5);
@@ -25,6 +30,9 @@ function addGps() {
 
 }
 
+/**
+ * Build a gpx file
+ */
 function createGpx() {
     var gpx = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><gpx><trk><trkseg>";
     run.points.forEach(function(point) {
@@ -38,8 +46,11 @@ function createGpx() {
 }
 
 
-// number stats
+// NUMBER STATS
 
+/**
+ * Create activity summaries
+ */
 function addNumbers() {
 	var numbersContainer = document.getElementById("numbers-container");
 	// date
@@ -63,6 +74,12 @@ function addNumbers() {
 	});
 }
 
+/**
+ * Create div for a stat
+ * @param {string} field 
+ * @param {(null|string)} stat Formatted string to display. If missing, it will be calculated.
+ * @returns {HTMLDivElement} Number box
+ */
 function createNumberBox(field, stat) {
 	var numberBox = document.createElement("div");
 	numberBox.classList.add("number-box");
@@ -90,6 +107,11 @@ function createNumberBox(field, stat) {
 	return numberBox;
 }
 
+/**
+ * Calculate statistics for the entire activity
+ * @param {string} field 
+ * @returns {number} Average or total value for the given field.
+ */
 function getOverallStat(field) {
 	var firstPoint = run.points[0];
 	var lastPoint = run.points[run.points.length - 1];
@@ -104,6 +126,10 @@ function getOverallStat(field) {
 	}
 }
 
+/**
+ * Calculate training impulse for the entire activity
+ * @returns {number} Trimp
+ */
 function calculateTrimp() {
 	var trimp = 0;
 	run.points.forEach(function(point) {
@@ -114,6 +140,11 @@ function calculateTrimp() {
 	return Math.round(trimp);
 }
 
+/**
+ * Formula to calculate intensity from heart rate
+ * @param {number} hr Heart rate
+ * @returns {number} Trimp unit
+ */
 function trimpCurve(hr) {
 	return 0.000058 * Math.pow(Math.E, 0.038 * hr);
 }

@@ -1,16 +1,22 @@
-// create a run object
+/**
+ * Parser for the .gpx format
+ * @param {string} fileContent Text in .gpx format
+ * @returns {Run} Parsed run object
+ */
 function gpxParser(fileContent) {
 	var run = {};
 	
+	// gpx is in xml format, use a built-in parser
 	var parser = new DOMParser();
 	const xmlDom = parser.parseFromString(fileContent, "text/xml");
 
-	// general
+	// general tags
 	const gpx = xmlDom.getElementsByTagName("gpx")[0];
 	const startTime = gpx.getElementsByTagName("metadata")[0].getElementsByTagName("time")[0].innerHTML;
 	run.startTime = new Date(startTime);
 	run.source = "gpx";
 	
+	// track
 	const trk = gpx.getElementsByTagName("trk")[0];
 	run.name = trk.getElementsByTagName("name")[0].innerHTML;
 	
@@ -31,7 +37,11 @@ function gpxParser(fileContent) {
 	return run;
 }
 
-// get an array of track points from one segment
+/**
+ * Get all the points from a gpx segment
+ * @param {HTMLElement} trkSeg Gpx segment element
+ * @returns {Point[]} 
+ */
 function parseTrkSeg(trkSeg) {
 	var points = [];
 	const trkPts = trkSeg.getElementsByTagName("trkpt");
@@ -41,7 +51,12 @@ function parseTrkSeg(trkSeg) {
 	return points;
 }
 
-// create a track point object
+
+/**
+ * Get data from a track point
+ * @param {HTMLElement} trkPt Gpx track point element
+ * @return {Point} 
+ */
 function parseTrkPt(trkPt) {
 	var point = {};
 	point.lat = parseFloat(trkPt.getAttribute("lat"));
@@ -49,7 +64,7 @@ function parseTrkPt(trkPt) {
 	point.elev = parseFloat(trkPt.getElementsByTagName("ele")[0].innerHTML);
 	point.date = new Date(trkPt.getElementsByTagName("time")[0].innerHTML).getTime();
 	
-	// extra information
+	// extra information, may not be present
 	const extensionsEle = trkPt.getElementsByTagName("gpxtpx:TrackPointExtension")[0];
 	if (extensionsEle != null) {
 		point.hr = parseExtension(extensionsEle.getElementsByTagName("gpxtpx:hr")[0]);
@@ -58,8 +73,11 @@ function parseTrkPt(trkPt) {
 	}
 	return point;
 }
-
-// check if extension exists, return its value if it does
+/**
+ * Get an extension value, if it exists
+ * @param {HTMLElement} valueEle Gpx extension element
+ * @return {(null|number)} Extension value or null
+ */
 function parseExtension(valueEle) {
 	if (valueEle == null) {
 		return null;
