@@ -1,6 +1,7 @@
 /**
  * @category Processing
  * @module ActivityProcessing
+ * @description Calculates all necessary values within the activity.
  */
 
 var run;

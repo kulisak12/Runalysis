@@ -1,6 +1,7 @@
 /**
  * @category Utility
  * @module Formatting
+ * @description Formats values, converts between units and defines graph tickers.
  */
 
 /**

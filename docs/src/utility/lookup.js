@@ -1,6 +1,7 @@
 /**
  * @category Utility
  * @module Lookup
+ * @description Searches the run and calculates statistics.
  */
 
 

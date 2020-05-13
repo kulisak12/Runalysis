@@ -1,6 +1,7 @@
 /**
  * @category FileReading
  * @module GpxParser
+ * @description Parses the .gpx format.
  */
 
 /**

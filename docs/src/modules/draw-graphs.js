@@ -1,6 +1,7 @@
 /**
  * @category Modules
  * @module Graphs
+ * @description Creates a module with graphs showing measured values.
  */
 
 var graphs;

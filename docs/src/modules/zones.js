@@ -1,6 +1,7 @@
 /**
  * @category Modules
  * @module Zones
+ * @description Creates a module with instensity zones distribution.
  */
 
 

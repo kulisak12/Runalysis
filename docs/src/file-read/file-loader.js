@@ -1,6 +1,7 @@
 /**
  * @category FileReading
  * @module FileLoader
+ * @description Accepts an uploaded file and processes it.
  */
 
 /**

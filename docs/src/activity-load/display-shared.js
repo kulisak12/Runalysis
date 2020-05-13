@@ -1,6 +1,7 @@
 /**
  * @category Processing
  * @module DisplayShared
+ * @description Parses shared link and displays the shared activity.
  */
 
 var markerLayer = null; // unused, just so I can reuse a function

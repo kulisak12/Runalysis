@@ -1,6 +1,7 @@
 /**
  * @category Modules
  * @module Generic
+ * @description Allows toggling module visibility.
  */
 
 /**
@@ -27,6 +28,7 @@ function toggleModule(sender) {
 /**
  * @category Processing
  * @module GenerateLink
+ * @description Redirect user to a page with the shared activity.
  */
 
 // ACTIVITY SHARING

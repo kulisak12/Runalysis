@@ -1,6 +1,7 @@
 /**
  * @category Modules
  * @module Map
+ * @description Creates a module with activity map and summary.
  */
 
 
