@@ -1,0 +1,44 @@
+.page-container {
+	display: flex;
+	margin: 4em 15%;
+	font-family: Roboto, sans-serif;
+}
+
+article {
+	width: 70%;
+	color: #333;
+}
+
+aside {
+	width: 20%;
+	margin-left: 10%;
+	border-left: 1px solid #d0d0d0;
+}
+
+ul.menu {
+	list-style: none;
+}
+
+ul.menu li {
+	color: #7044c7;
+	margin: 0.2em 0;
+}
+
+a {
+	color: #333;
+	text-decoration: none;
+	transition-duration: 0.2s;
+}
+
+a:hover {
+	color: #888;
+}
+
+h1 {
+	margin-bottom: 1em;
+	font-size: 2em;
+}
+
+h2 {
+	border-bottom: 1px solid gray;
+}

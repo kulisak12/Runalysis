@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf8">
+		<title>Runalysis</title>
+		
+		<link rel="stylesheet" type="text/css" href="../src/runalysis.css">
+		<link rel="stylesheet" type="text/css" href="userdoc.css">
+	</head>
+	<body>
+
+<header>
+	<a id="title" href="../">Runalysis</a>
+</header>
+
+<div class="page-container">
+	<article>
+		<h1>Stránka aktivity</h1>
+		<p>Na stránce aktivity naleznete zobrazená data z nahraného záznamu.</p>
+	
+		<h2>Moduly</h2>
+		<p>Stránka je rozdělena do tří částí: Mapa a souhrn, Grafy a Zóny. Každý z těchto modulů se zaměřuje na jednotlivé prvky analýzy aktivity. Pro lepší přehlednost je možné některé části dočasně skrýt kliknutím na odpovídající ikonu v horním panelu. Zpětné zobrazení funguje stejným způsobem.</p>
+		
+		<h2>Metriky</h2>
+		<p>Aplikace používá některé specifické veličiny a jednotky, se kterými se možná setkáváte poprvé. Zde je jejich vysvětlení.</p>
+		
+		<h3>Tempo</h3>
+		<p>Zatímco u většiny sportů se používá rychlost vyjádřená v kilometrech za hodinu, v běhu je obvyklejší tempo. Udává se v minutách na kilometr a říká přesně to – za jak dlouho byste danou rychlostí uběhli jeden kilometr. Proto čím menší hodnota, tím rychlejší tempo.</p>
+		<p>Některá tempa a jejich přepočty:</p>
+		<ul>
+			<li>6:00 min/km = 10 km/h</li>
+			<li>5:00 min/km = 12 km/h</li>
+			<li>4:00 min/km = 15 km/h</li>
+			<li>3:00 min/km = 20 km/h</li>
+		</ul>
+		
+		<h3>GAP</h3>
+		<p>GAP je zkratka pro Grade Adjusted Pace. Jedná se o tempo, které je přepočítané podle stoupání či klesání tak, aby přesněji ukazovalo intenzitu v daný moment. Při běhu do kopce je tak GAP rychlejší než skutečné tempo, při seběhu z mírného kopce naopak pomalejší.</p>
+		
+		<h3>Kadence</h3>
+		<p>Kadence udává počet kroků za minutu.</p>
+		
+		<h3>Trimp</h3>
+		<p>Trimp neboli Training Impulse zhodnocuje náročnost aktivity na základě analýzy srdečního tepu. Čím delší je aktivita a čím vyšší je vaše tepová frekvence, tím vyšší hodnoty u kolonky Trimp uvidíte. Tato metrika slouží jako kontrola toho, že vaše aktivita byla tak těžká jak měla být. Obecným pravidlem je, že trénink by měl být polarizován: dvě třetiny aktivit by měly být jednoduché, tedy nizký Trimp, a třetina aktivit těžká, tedy výrazně vyšší Trimp. Čísla někde uprostřed by se měla objevovat méně často.</p>
+		
+		<h2>Mapa</h2>
+		<p>Celý záznam je zobrazen na mapovém podkladu. Mapu můžete posouvat a přibližovat zaprvé pomocí ovládacích prvků v pravém horním rohu, zadruhé pomocí myši a kolečka, respektive gest v případě mobilního zařízení. Při zvýraznění určitého bodu v grafu se označí i odpovídající místo na mapě.</p>
+	
+		<h2>Souhrn</h2>
+		<p>Vpravo od mapy najdete aktivitu vyjádřenou v několika číslech. Zjistíte zde datum a čas konání aktivity, její celkovou délku, čistý čas i dobu se započítáním přestávek, tempo, nasbírané výškové metry a vyhodnocenou náročnost v podobě Trimp.</p>
+	
+		<h2>Grafy</h2>
+		<p>Aplikace zobrazuje grafy naměřených veličin v čase. Každý graf zobrazuje dvě různé veličiny. Jejich rozložení lze u každého grafu přepínat kliknutím na název aktuální veličiny a vybráním nové.</p>
+		<p>Přejetím myší nad grafem zvýrazníte daný bod záznamu. V informačních polích se zobrazí hodnoty metrik pro tento bod a zároveň je dané místo označeno v mapě. Tato funkce není dostupná na mobilních zařízeních.</p>
+	
+		<h3>Přibližování</h3>
+		<p>Celý graf můžete přiblížit a tím blíže prozkoumat. Na počítači označte daný úsek myší, na mobilních zařízeních využijte přibližovacího gesta. Po přiblížení můžete zobrazený úsek posouvat podržením klávesy Shift a přetažením, na mobilu stačí přetáhnout jedním prstem.</p>
+		<p>Chcete-li získat statistiky pro daný úsek, přibližte graf tak, aby bylo vidět požadované rozmezí. V informačních polích poté najdete průměrné hodnoty metrik.</p>
+	
+		<h2>Zóny intenzit</h2>
+		<p>Pro tři veličiny – tempo, GAP a tepová frekvence – je k dispozici přehled zastoupení jednotlivých intenzitních zón během aktivity.</p>
+	
+		<h3>Nastavení zón</h3>
+		<p>Každý jedinec je jinak trénovaný a má tedy jiné zóny. Je tedy nutné si ty své prvně nastavit. Toho docílíte kliknutím na tlačítko <em>Customize</em> pro danou veličinu. Tempo a GAP mají nastavení společné.</p>
+		<p>Otevře se vám okno s posuvnou osou, na kterém můžete nastavit hranice mezi zónami. Oblast při levém okraji osy nespadá do žádné zóny. Následují postupně zóny 1 až 5, kde 1 je nejlehší a 5 nejtěžší. Hranice spadá vždy do lehčí zóny.</p>
+	
+		<h3>Zobrazení zón</h3>
+		<p>Zóny jsou seřazeny zleva doprava od nejlehčí po nejvyšší. Zastoupení dané zóny je znázorněno výškou odpovídajícího sloupce. Zároveň můžete pod sloupcem najít údaje o celkovém čase stráveném v dané zóně a celkové vzdálenosti. Při vybrání sloupce se zobrazí podrobnosti o zóně.</p>
+	</article>
+	<aside>
+		<ul class="menu">
+			<li><a href="upload.html">Nahrání aktivity</a></li>
+			<li>Stránka aktivity</li>
+			<li><a href="sharing.html">Sdílení</a></li>
+			<li><p> </p></li>
+			<li><a href="../devdoc/index.html">Vývojářská dokumentace</a></li>
+		</ul>
+	</aside>
+</div>
+
+</body>
+</html>
