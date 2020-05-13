@@ -1,0 +1,649 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> modules/draw-graphs.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">Runalysis: Developer documentation</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                <div class="dropdown is-hoverable is-right">
+                    <a class="dropdown-trigger link">
+                        Tutorials
+                        <i class="fas fa-chevron-down fa-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-content">
+                        
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-Types.html">Types</a></li></ul><h3>Global</h3><ul><li><a href="global.html#FieldTypes">FieldTypes</a></li></ul></div><div class="category"><h2>FileReading</h2><h3>Modules</h3><ul><li><a href="module-FileLoader.html">FileLoader</a></li><li><a href="module-GpxParser.html">GpxParser</a></li></ul></div><div class="category"><h2>Modules</h2><h3>Modules</h3><ul><li><a href="module-Generic.html">Generic</a></li><li><a href="module-Graphs.html">Graphs</a></li><li><a href="module-Map.html">Map</a></li><li><a href="module-Zones.html">Zones</a></li></ul></div><div class="category"><h2>Processing</h2><h3>Modules</h3><ul><li><a href="module-ActivityProcessing.html">ActivityProcessing</a></li><li><a href="module-DisplayShared.html">DisplayShared</a></li><li><a href="module-GenerateLink.html">GenerateLink</a></li></ul></div><div class="category"><h2>Utility</h2><h3>Modules</h3><ul><li><a href="module-Formatting.html">Formatting</a></li><li><a href="module-Lookup.html">Lookup</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>modules/draw-graphs.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @category Modules
+ * @module Graphs
+ * @description Creates a module with graphs showing measured values.
+ */
+
+var graphs;
+
+/**
+ * Create content of the graph module.
+ */
+function drawGraphs() {
+	addGraphBoxes(); // containers
+	graphs = addGraphs();
+
+	graphs.forEach(function(g) {
+		setColors(g);
+		setOptions(g);
+	});
+
+	graphs.push(addAxis()); // x axis
+	sync(graphs);
+
+	addGraphSettings();
+}
+
+// PAGE BUILDING
+
+/**
+ * Create graphs using the Dygraph library.
+ */
+function addGraphs() {
+	var graphDivs = Array.from(document.getElementsByClassName("graph-div"));
+	var graphs = [];
+	graphDivs.forEach(function(graphDiv) {
+		// each graph shows two fields
+		var field1 = graphDiv.classList[1];
+		var field2 = graphDiv.classList[2];
+		var data = getGraphData(field1, field2);
+		
+		// add graph
+		var g = new Dygraph(graphDiv, data, {
+			labels: ["time", field1, field2],
+			legend: "never",
+			axes: {
+				"x": {drawAxis: false, ticker: timeTicker},
+				"y2": {independentTicks: true}
+			}
+		});
+		graphs.push(g);
+	});
+	return graphs;
+}
+
+/**
+ * Get the dataset of data to be graphed.
+ * @param {string} field1 Primary field
+ * @param {string} field2 Secondary field
+ * @returns {Array[]} Array of values for each point: time, field1 and field2
+ */
+function getGraphData(field1, field2) {
+	var data = [];
+	for (var i = 0; i &lt; run.points.length; i++) {
+		var point = run.points[i];
+		var pointArray = [];
+		pointArray.push(point.sumDuration);
+		pointArray.push(point[field1]);
+		pointArray.push(point[field2]);
+		data.push(pointArray);
+	}
+	return data;
+}
+
+/**
+ * Create container divs for every graph.
+ */
+function addGraphBoxes() {	
+	var primaryFields = getAvailableData(FieldTypes.PRIMARY);
+	var secondaryFields = getAvailableData(FieldTypes.SECONDARY);
+	var graphsContainer = document.getElementById("graphs-container");
+	// TODO only one field (pace) available
+	// first graph
+	graphsContainer.appendChild(
+		createGraphBox(primaryFields[0], secondaryFields[0])
+	);
+	// x axis
+	var axisGraphBox = createGraphBox("axis", "axis");
+	var axisGraphDiv = axisGraphBox.children[1];
+	axisGraphDiv.classList.remove("graph-div");
+	axisGraphDiv.id = "axis-div";
+	graphsContainer.appendChild(axisGraphBox);
+
+	// second graph, field repeated
+	if (primaryFields.length >= 2 &amp;&amp; secondaryFields.length == 1) {
+		graphsContainer.appendChild(
+			createGraphBox(primaryFields[1], secondaryFields[0])
+		);
+	}
+	// second graph, two new fields
+	else if (secondaryFields.length >= 2) {
+		graphsContainer.appendChild(
+			createGraphBox(primaryFields[1], secondaryFields[1])
+		);
+	}
+}
+
+/**
+ * Create divs for the graph and for field stats.
+ * @param {string} field1 Primary field
+ * @param {string} field2 Secondary field
+ * @returns {HTMLDivElement} Graph box
+ */
+function createGraphBox(field1, field2) {
+	var graphBox = document.createElement("div");
+	graphBox.classList.add("graph-box", field1, field2);
+	
+	graphBox.appendChild(createFieldDiv(field1, "left"));
+
+	var graphDiv = document.createElement("div");
+	graphDiv.classList.add("graph-div", field1, field2);
+	graphBox.appendChild(graphDiv);
+
+	graphBox.appendChild(createFieldDiv(field2, "right"));
+
+	return graphBox;
+}
+
+/**
+ * Create div for field stats.
+ * @param {string} field 
+ * @param {string} side Left or right
+ * @returns {HTMLDivElement} Field div
+ */
+function createFieldDiv(field, side) {
+	var fieldDiv = document.createElement("div");
+	fieldDiv.classList.add("field-div", field, "side", side);
+
+	var graphName = document.createElement("b");
+	graphName.innerHTML = getFieldName(field) + ":";
+	fieldDiv.appendChild(graphName);
+
+	var legend = document.createElement("p");
+	legend.classList.add("legend", field);
+	legend.innerHTML = "--";
+	fieldDiv.appendChild(legend);
+	
+	var selectionText = document.createElement("b");
+	selectionText.innerHTML = "Selection:";
+	fieldDiv.appendChild(selectionText);
+	
+	var statsValue = document.createElement("p");
+	statsValue.classList.add("stats", field);
+	fieldDiv.appendChild(statsValue);
+
+	return fieldDiv;
+}
+
+/**
+ * Set display and formatting options for graph.
+ * @param {*} g Graph
+ */
+function setOptions(g) {
+	g.plotter_.clear();
+	// get field names
+	var fields = getGraphFields(g);
+
+	var seriesObj = {};
+	seriesObj[fields[1]] = {
+		fillGraph: true,
+		strokeWidth: 0,
+		axis: "y2"
+	};
+
+	var axesObj = {
+		"y": {
+			//axisLabelFormatter: function(value) {return removeUnit(formatPace(value));},
+			ticker: paceTicker
+		}
+	};
+	if (!isPace(fields[0])) {
+		axesObj["y"] = null;
+	}
+
+	g.updateOptions({
+		animatedZooms: true,
+		axes: axesObj,
+		series: seriesObj,
+		drawCallback: visibleRange,
+		highlightCallback: highlight,
+		unhighlightCallback: unhighlight,
+	});
+}
+
+/**
+ * Set plot colors for graph.
+ * @param {*} g Graph
+ */
+function setColors(g) {
+	var seriesObj = {};
+	Object.keys(colors).forEach(function(key) {
+		seriesObj[key] = {color: colors[key]};
+	});
+	g.updateOptions({
+		series: seriesObj
+	});
+}
+
+/**
+ * Use the synchronize library to keep x axis in sync.
+ * @param {Array} graphs 
+ */
+function sync(graphs) {
+	var sync = Dygraph.synchronize(graphs, {
+		selection: true,
+		zoom: true,
+		range: false
+	});
+}
+
+/**
+ * Add the x axis.
+ * @returns {Object} Graph
+ */
+function addAxis() {
+	// get time values
+	var data = [];
+	for (var i = 0; i &lt; run.points.length; i++) {
+		var point = run.points[i];
+		var pointArray = [];
+		pointArray.push(point.sumDuration);
+		pointArray.push(1);
+		data.push(pointArray);
+	}
+	
+	// add graph
+	var g = new Dygraph(document.getElementById("axis-div"), data, {
+		labels: ["time", "second"],
+		legend: "never",
+		visibility: [false],
+		series: {
+			"second": {
+				axis: "y2"
+			}
+		},
+		axes: {
+			"x": {drawAxis: true, ticker: timeTicker},
+			"y": {drawAxis: true, ticker: emptyTicker},
+			"y2": {drawAxis: true}
+		}
+	});
+
+	return g;
+}
+
+// USER INTERACTION
+
+/**
+ * Callback when user hovers over a point in a graph.
+ * Display values of fields, highlight point on the map.
+ * @param {Event} event Mouse move event
+ * @param {number} x Selected time
+ * @param {*} points Unused
+ * @param {*} row Unused
+ * @param {*} seriesName Unused
+ */
+function highlight(event, x, points, row, seriesName) {
+	// the first point is missing some information
+	if (x == 0) {
+		return;
+	}
+	var point = getPointByTime(x);
+	getAvailableData(FieldTypes.ALL).forEach(function(field) {
+		var fieldLegendEles = Array.from(document.getElementsByClassName("legend " + field));
+		fieldLegendEles.forEach(function(legendEle) {
+			legendEle.innerHTML = format(point[field], field);
+		});
+	});
+
+	// highlight point on the map
+	var coords = SMap.Coords.fromWGS84(point.lon, point.lat);
+	if (markerLayer.getMarkers().length == 0) {
+		// add a marker
+		var marker = new SMap.Marker(coords, "highlighter");
+		markerLayer.addMarker(marker);
+	}
+	else {
+		// move the marker
+		markerLayer.getMarkers()[0].setCoords(coords);
+	}
+
+}
+
+/**
+ * Callback when user moves mouse out of graph area.
+ * Reset displayed values of fields.
+ * @param {Event} event Mouse move event
+ */
+function unhighlight(event) {
+	getAvailableData(FieldTypes.ALL).forEach(function(field) {
+		var fieldLegendEles = Array.from(document.getElementsByClassName("legend " + field));
+		fieldLegendEles.forEach(function(legendEle) {
+			legendEle.innerHTML = "--";
+		});
+	});
+
+	markerLayer.removeAll();
+}
+
+/**
+ * Callback whenever the graph is updated.
+ * Update field stats for selected range.
+ * @param {*} g Graph
+ * @param {boolean} isInitial Whether this is the first time drawing the graph
+ */
+function visibleRange(g, isInitial) {
+	var range = g.xAxisRange();
+	var leftPoint = getPointByTime(range[0]);
+	var rightPoint = getPointByTime(range[1]);
+	
+	getAvailableData(FieldTypes.ALL).forEach(function(field) {
+		var fieldStatsEles = Array.from(document.getElementsByClassName("stats " + field));
+		fieldStatsEles.forEach(function(statsEle) {
+			var stat = rangeStats(leftPoint, rightPoint, field);
+			statsEle.innerHTML = format(stat, field);
+		});
+	});
+}
+
+/**
+ * Create a sidebar with custom user settings.
+ */
+function addGraphSettings() {
+	// get all graph elements
+	var fieldGraphs = [];
+	fieldGraphs.push(graphs[0]);
+	if (graphs.length > 1) {
+		fieldGraphs.push(graphs[1]);
+	}
+
+	var fieldGraphBoxes = getFieldGraphBoxes();
+	var settingsDiv = document.getElementsByClassName("settings graphs")[0];
+
+	// for each graph
+	for (var i = 0; i &lt; fieldGraphs.length; i++) {
+		let g = fieldGraphs[i];
+		let graphBox = fieldGraphBoxes[i];
+		var fields = getGraphFields(g);
+		var graphSettingsDiv = document.createElement("div");
+		graphSettingsDiv.classList.add("graph-settings");
+		
+		// option to change displayed field
+		var primarySelection = createSelection(FieldTypes.PRIMARY, fields[0]);
+		primarySelection.onchange = function() {swapFields(this.value, g, graphBox, FieldTypes.PRIMARY)};
+		graphSettingsDiv.appendChild(primarySelection);
+		var secondarySelection = createSelection(FieldTypes.SECONDARY, fields[1]);
+		secondarySelection.onchange = function() {swapFields(this.value, g, graphBox, FieldTypes.SECONDARY)};
+		graphSettingsDiv.appendChild(secondarySelection);
+
+		settingsDiv.appendChild(graphSettingsDiv);
+	}
+}
+
+/**
+ * Create a dropdown for changing the displayed field.
+ * @param {FieldTypes} fieldTypes Selector for options in dropdown
+ * @param {string} selected Currently selected field
+ * @returns {HTMLSelectElement} Graph selection
+ */
+function createSelection(fieldTypes, selected) {
+	var selection = document.createElement("select");
+	var index = 0;
+	getAvailableData(fieldTypes).forEach(function(field) {
+		var item = document.createElement("option");
+		item.value = field;
+		item.innerHTML = getFieldName(field);
+		selection.appendChild(item);
+	});
+	selection.classList.add("graph-selection");
+	selection.value = selected;
+	return selection;
+}
+
+/**
+ * Change the field plotted in a graph.
+ * @param {string} newField 
+ * @param {*} g Graph 
+ * @param {HTMLDivElement} graphBox Container div
+ * @param {FieldType} fieldType Type of the field being changed (same for old and new field)
+ */
+function swapFields(newField, g, graphBox, fieldType) {
+	var oldFields = getGraphFields(g);
+	var oldField;
+	if (fieldType == FieldTypes.PRIMARY) {
+		oldField = oldFields[0];
+	}
+	else {
+		oldField = oldFields[1];
+	}
+	var newFields = oldFields.slice();
+	newFields[oldFields.indexOf(oldField)] = newField;
+
+	// change classes
+	var elementList = [];
+	elementList.push(graphBox);
+	elementList.push(graphBox.getElementsByClassName("graph-div")[0]);
+	elementList.forEach(function(element) {
+		element.classList.remove(oldFields[0], oldFields[1]);
+		element.classList.add(newFields[0], newFields[1]);
+	});
+
+	// change field div
+	var replacedDiv = graphBox.getElementsByClassName("field-div " + oldField)[0];
+	var side = replacedDiv.classList[3];
+	var newDiv = createFieldDiv(newField, side);
+	graphBox.replaceChild(newDiv, replacedDiv);
+
+	// update everything
+	g.updateOptions({
+		file: getGraphData(newFields[0], newFields[1]),
+		labels: ["time", newFields[0], newFields[1]]
+	});
+	setOptions(g);
+	sync(graphs);
+}
+
+// GET METHODS
+
+/**
+ * Get the fields plotted in a graph.
+ * @param {*} g Graph 
+ * @returns {string[]} Primary and secondary field, in this order
+ */
+function getGraphFields(g) {
+	var field1 = g.getOption("labels")[1];
+	var field2 = g.getOption("labels")[2];
+	return [field1, field2];
+}
+
+/**
+ * Get only the two main graph boxes, exclude top and axis.
+ * @returns {HTMLDivElement[]} Field graph boxes
+ */
+function getFieldGraphBoxes() {
+	var fieldGraphBoxes = Array.from(document.getElementsByClassName("graph-box"));
+	for (var i = 0; i &lt; fieldGraphBoxes.length; i++) {
+		var classes = fieldGraphBoxes[i].classList;
+		if (classes.contains("top") || classes.contains("axis")) {
+			fieldGraphBoxes.splice(i, 1);
+			i--;
+		}
+	}
+	return fieldGraphBoxes;
+}
+
+/**
+ * Determine the initial y axis range.
+ * Try to cut off thin spikes.
+ * @param {string} field
+ * @returns {number} Cutoff value
+ */
+function searchForBestCutoff(field) {
+	var sum = 0;
+	var sumSquares = 0;
+	var duration = 0;
+	var addedIndex = -1;
+	// get first 60
+	while (addedIndex &lt; cutoffArea) {
+		addedIndex++;
+		var addedPoint = run.points[addedIndex];
+		while (addedPoint.ignore) {
+			addedIndex++;
+			addedPoint = run.points[addedIndex];
+		}
+
+		sum += addedPoint[field] * addedPoint.duration;
+		sumSquares += addedPoint[field] * addedPoint[field] * addedPoint.duration;
+		duration += addedPoint.duration;
+	}
+	var cutoff = getLocalCutoff(sum, sumSquares, duration);
+
+	var removedIndex = -1;
+	// shift point by point
+	while (addedIndex &lt; run.points.legth) {
+		addedIndex++;
+		var addedPoint = run.points[addedIndex];
+		while (addedPoint.ignore) {
+			addedIndex++;
+			addedPoint = run.points[addedIndex];
+		}
+		removedIndex++;
+		var removedPoint = run.points[removedIndex];
+		while (removedPoint.ignore) {
+			removedIndex++;
+			removedPoint = run.points[removedIndex];
+		}
+
+		sum += addedPoint[field] * addedPoint.duration - removedPoint[field] * removedPoint.duration;
+		sumSquares += addedPoint[field] * addedPoint[field] * addedPoint.duration - removedPoint[field] * removedPoint[field] * removedPoint.duration;
+		duration += addedPoint.duration - removedPoint.duration;
+		var localCutoff = getLocalCutoff(sum, sumSquares, duration);
+		if (localCutoff &lt; cutoff) {
+			cutoff = localCutoff;
+		}
+	}
+
+	return cutoff;
+}
+
+/**
+ * Calculate average and deviation in a range, suggest cutoff point.
+ * @param {number} sum Sum of values in the range
+ * @param {number} sumSquares Sum of squares of values in the range
+ * @param {number} duration Duration of the range
+ * @returns {number} Cutoff for given range
+ */
+function getLocalCutoff(sum, sumSquares, duration) {
+	var avg = sum / duration;
+	var deviation = Math.sqrt(sumSquares / duration - avg * avg);
+	return avg - 1.5 * deviation;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

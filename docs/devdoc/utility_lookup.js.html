@@ -1,0 +1,257 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> utility/lookup.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">Runalysis: Developer documentation</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                <div class="dropdown is-hoverable is-right">
+                    <a class="dropdown-trigger link">
+                        Tutorials
+                        <i class="fas fa-chevron-down fa-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-content">
+                        
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-Types.html">Types</a></li></ul><h3>Global</h3><ul><li><a href="global.html#FieldTypes">FieldTypes</a></li></ul></div><div class="category"><h2>FileReading</h2><h3>Modules</h3><ul><li><a href="module-FileLoader.html">FileLoader</a></li><li><a href="module-GpxParser.html">GpxParser</a></li></ul></div><div class="category"><h2>Modules</h2><h3>Modules</h3><ul><li><a href="module-Generic.html">Generic</a></li><li><a href="module-Graphs.html">Graphs</a></li><li><a href="module-Map.html">Map</a></li><li><a href="module-Zones.html">Zones</a></li></ul></div><div class="category"><h2>Processing</h2><h3>Modules</h3><ul><li><a href="module-ActivityProcessing.html">ActivityProcessing</a></li><li><a href="module-DisplayShared.html">DisplayShared</a></li><li><a href="module-GenerateLink.html">GenerateLink</a></li></ul></div><div class="category"><h2>Utility</h2><h3>Modules</h3><ul><li><a href="module-Formatting.html">Formatting</a></li><li><a href="module-Lookup.html">Lookup</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>utility/lookup.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @category Utility
+ * @module Lookup
+ * @description Searches the run and calculates statistics.
+ */
+
+
+/**
+ * Find a point closest to the specified time.
+ * @param {number} time 
+ * @returns {Point} 
+ */
+function getPointByTime(time) {
+	// binary search, returns closest point
+	var begin = 0;
+	var end = run.points.length - 1;
+	var center = Math.floor((begin + end) / 2);
+	while (begin &lt; end) {
+		if (run.points[center].sumDuration &lt; time) {
+			begin = center + 1;
+		}
+		else {
+			end = center;
+		}
+		center = Math.floor((begin + end) / 2);
+	}
+	return run.points[center];
+}
+
+/**
+ * Get the min and max value of a field in the entire run.
+ * @param {string} field 
+ * @returns {number[]} Min and max value, in this order
+ */
+function getExtremes(field) {
+	var min, max;
+	min = max = run.points[0][field];
+	for (var i = 0; i &lt; run.points.length; i++) {
+		if (run.points[i].ignore) {
+			continue;
+		}
+		var value = run.points[i][field];
+		if (value &lt; min) {
+			min = value;
+		}
+		else if (value > max) {
+			max = value;
+		}
+	}
+	return [min, max];
+}
+
+/**
+ * Get the stat for a given field to be shown when a range is selected.
+ * @param {Point} point1 Beginning of the range
+ * @param {Point} point2 End of the range
+ * @param {string} field 
+ * @returns {number} Average field value or difference in values
+ */
+function rangeStats(point1, point2, field) {
+	// weighted average
+	if (isPace(field) || field == "hr" || field == "cad") {
+		var timeDiff = pointDifference(point1, point2, "sumDuration");
+		var sumField = "sum" + field.charAt(0).toUpperCase() + field.slice(1); // pace -> sumPace
+		return pointDifference(point1, point2, sumField) / timeDiff;
+	}
+	// difference
+	else if (field == "elev" || field.startsWith("sum")) {
+		return pointDifference(point1, point2, field);
+	}
+}
+
+/**
+ * Get the change in field value over a range.
+ * @param {Point} point1 Beginning of the range
+ * @param {Point} point2 End of the range
+ * @param {string} field 
+ * @returns {number} Difference in field values
+ */
+function pointDifference(point1, point2, field) {
+	return point2[field] - point1[field];
+}
+
+/**
+ * Get a list of available fields of given type.
+ * @param {FieldTypes} fieldType Filter for returned fields
+ * @returns {string[]} Array of fields
+ */
+function getAvailableData(fieldType) {
+	// get all available fields
+	var main = ["sumDuration", "sumDistance"];
+	var primary = ["pace"];
+	var secondary = [];
+	if (run.hasEle) {
+		primary.push("gap");
+		secondary.push("elev");
+	}
+	if (run.hasHr) {
+		secondary.push("hr");
+	}
+	if (run.hasCad) {
+		primary.push("cad");
+	}
+	if (run.hasTemp) {
+		secondary.push("temp");
+	}
+
+	// return fields according to type
+	if (fieldType == FieldTypes.ALL) {
+		return Array.prototype.concat(main, primary, secondary);
+	}
+	if (fieldType == FieldTypes.MAIN) {
+		return main;
+	}
+	if (fieldType == FieldTypes.DEPENDANT) {
+		return Array.prototype.concat(primary, secondary);
+	}
+	if (fieldType == FieldTypes.PRIMARY) {
+		return primary;
+	}
+	if (fieldType == FieldTypes.SECONDARY) {
+		return secondary;
+	}
+
+	// wrong value
+	console.warn("Wrong field type");
+	return null;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

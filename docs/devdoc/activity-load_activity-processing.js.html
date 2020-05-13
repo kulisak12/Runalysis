@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> activity-load/activity-processing.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">Runalysis: Developer documentation</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                <div class="dropdown is-hoverable is-right">
+                    <a class="dropdown-trigger link">
+                        Tutorials
+                        <i class="fas fa-chevron-down fa-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-content">
+                        
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-Types.html">Types</a></li></ul><h3>Global</h3><ul><li><a href="global.html#FieldTypes">FieldTypes</a></li></ul></div><div class="category"><h2>FileReading</h2><h3>Modules</h3><ul><li><a href="module-FileLoader.html">FileLoader</a></li><li><a href="module-GpxParser.html">GpxParser</a></li></ul></div><div class="category"><h2>Modules</h2><h3>Modules</h3><ul><li><a href="module-Generic.html">Generic</a></li><li><a href="module-Graphs.html">Graphs</a></li><li><a href="module-Map.html">Map</a></li><li><a href="module-Zones.html">Zones</a></li></ul></div><div class="category"><h2>Processing</h2><h3>Modules</h3><ul><li><a href="module-ActivityProcessing.html">ActivityProcessing</a></li><li><a href="module-DisplayShared.html">DisplayShared</a></li><li><a href="module-GenerateLink.html">GenerateLink</a></li></ul></div><div class="category"><h2>Utility</h2><h3>Modules</h3><ul><li><a href="module-Formatting.html">Formatting</a></li><li><a href="module-Lookup.html">Lookup</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>activity-load/activity-processing.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @category Processing
+ * @module ActivityProcessing
+ * @description Calculates all necessary values within the activity.
+ */
+
+var run;
+
+/**
+ * Runs when the page loads
+ * Calculate point and section stats, build page
+ */
+function onLoad() {
+	run = JSON.parse(sessionStorage.getItem("runData"));
+	// precalculate all values
+	calculateMovements();
+	calculatePace();
+	if (run.source == "gpx") {
+		ignorePaused();
+	}
+	calculatePrefixSums();
+
+	// build page
+	addGps();
+	addNumbers();
+	addShareLink();
+	drawGraphs();
+	addZones();
+}
+
+/**
+ * Calculate time and distance for sections
+ */
+function calculateMovements() {
+	run.points[0].duration = 0;
+	run.points[0].distance = 0;
+	run.points[0].elevDiff = 0;
+	
+	for (var i = 1; i &lt; run.points.length; i++) {
+		var point = run.points[i];
+		var previousPoint = run.points[i - 1];
+		
+		point.duration = calculateDuration(previousPoint, point);
+		point.distance = calculateDistance(previousPoint, point);
+		point.elevDiff = point.elev - previousPoint.elev;
+	}
+}
+
+/**
+ * Calculate pace and gap
+ */
+function calculatePace() {
+	for (var i = 1; i &lt; run.points.length; i++) {
+		var point = run.points[i];
+		
+		point.pace = point.distance / point.duration * 3.6; // storing pace as speed
+		point.incline = point.elevDiff / point.distance;
+		if (point.distance == 0) {
+			point.incline = 0;
+		}
+		point.gap = calculateGap(point.pace, point.incline);
+	}
+
+	run.points[0].pace = run.points[1].pace;
+	run.points[0].incline = 0;
+	run.points[0].gap = run.points[1].gap;
+}
+
+/**
+ * If the duration of a section is too long, the recording was paused
+ * Mark this section as ignored
+ */
+function ignorePaused() {
+	for (var i = 0; i &lt; run.points.length; i++) {
+		if (run.points[i].duration > pausedThreshold || run.points[i].distance == 0) {
+			run.points[i].ignore = true;
+		}
+		else {
+			run.points[i].ignore = false;
+		}
+	}
+}
+
+/**
+ * Calculate prefix sums for all the fields
+ * Allows easy calculation of range stats
+ */
+function calculatePrefixSums() {
+	calculatePrefixSum("duration", "sumDuration");
+	calculatePrefixSum("distance", "sumDistance");
+	calculatePrefixSum("elevDiff", "sumElevGain");
+	calculateWeightedPrefixSum("hr", "sumHr");
+	calculateWeightedPrefixSum("cad", "sumCad");
+	calculateWeightedPrefixSum("pace", "sumPace");
+	calculateWeightedPrefixSum("gap", "sumGap");
+	calculateWeightedPrefixSum("temp", "sumTemp");
+}
+
+/**
+ * Calculate basic prefix sums
+ * @param {string} value Name of field
+ * @param {string} sumValue Name of sum field
+ */
+function calculatePrefixSum(value, sumValue) {
+	var sum = 0;
+	for (var i = 0; i &lt; run.points.length; i++) {
+		if (!run.points[i].ignore &amp;&amp; run.points[i][value] > 0) {
+			sum += run.points[i][value];
+		}
+		run.points[i][sumValue] = sum;
+	}
+}
+
+/**
+ * Calculate prefix sums weighted with respect to duration
+ * @param {string} value Name of field
+ * @param {string} sumValue Name of sum field
+ */
+function calculateWeightedPrefixSum(value, sumValue) {
+	var sum = 0;
+	for (var i = 0; i &lt; run.points.length; i++) {
+		if (!run.points[i].ignore) {
+			sum += run.points[i][value] * run.points[i].duration;
+		}
+		run.points[i][sumValue] = sum;
+	}
+}
+
+/**
+ * Formula to calculate grade adjusted pace
+ * @param {number} pace Real pace
+ * @param {number} gradient Incline, represented as a fraction
+ * @returns {number} Grade adjusted pace
+ */
+function calculateGap(pace, gradient) {
+	var coefficient = 1 + 2.8 * gradient + 16.1 * Math.pow(gradient, 2) + 5 * Math.pow(gradient, 3) + 25 * Math.pow(gradient, 4);
+	return pace * coefficient;
+}
+
+/**
+ * Formula to calculate the distance between two coordinates
+ * @param {Point} point1 
+ * @param {Point} point2 
+ * @returns {number} Distance in meters
+ */
+function calculateDistance(point1, point2) {
+	var lat1 = point1.lat.toRadians();
+	var lat2 = point2.lat.toRadians();
+	var latDiff = (point1.lat - point2.lat).toRadians();
+	var lonDiff = (point1.lon - point2.lon).toRadians();
+	
+	// use the haversine formula
+	const earthRadius = 6.371e6; // in meters
+	var a = square(Math.sin(latDiff/2)) +
+	square(Math.sin(lonDiff/2)) * Math.cos(lat1) * Math.cos(lat2);
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+	return c * earthRadius;
+}
+
+/**
+ * Get the difference between two timestamps
+ * @param {Point} point1 
+ * @param {Point} point2 
+ * @returns {number} Duration in seconds
+ */
+function calculateDuration(point1, point2) {
+	return (point2.date - point1.date) / 1000;
+}
+
+// conversion functions
+
+/**
+ * Add a conversion to radians for the number prototype
+ */
+Number.prototype.toRadians = function() {
+	return this * Math.PI / 180;
+}
+
+/**
+ * Calculate the square of a number
+ * @param {number} x 
+ * @returns {number} Square
+ */
+function square(x) {
+	return x * x;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

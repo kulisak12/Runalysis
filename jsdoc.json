@@ -33,7 +33,7 @@
 	},
 	"opts": {
 		"recurse": true,
-		"destination": "./out/",
+		"destination": "./docs/devdoc/",
 		"template": "node_modules/better-docs"
 	}
 }

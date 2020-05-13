@@ -1,0 +1,224 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> activity-load/display-shared.js</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">Runalysis: Developer documentation</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                <div class="dropdown is-hoverable is-right">
+                    <a class="dropdown-trigger link">
+                        Tutorials
+                        <i class="fas fa-chevron-down fa-xs"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-content">
+                        
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-Types.html">Types</a></li></ul><h3>Global</h3><ul><li><a href="global.html#FieldTypes">FieldTypes</a></li></ul></div><div class="category"><h2>FileReading</h2><h3>Modules</h3><ul><li><a href="module-FileLoader.html">FileLoader</a></li><li><a href="module-GpxParser.html">GpxParser</a></li></ul></div><div class="category"><h2>Modules</h2><h3>Modules</h3><ul><li><a href="module-Generic.html">Generic</a></li><li><a href="module-Graphs.html">Graphs</a></li><li><a href="module-Map.html">Map</a></li><li><a href="module-Zones.html">Zones</a></li></ul></div><div class="category"><h2>Processing</h2><h3>Modules</h3><ul><li><a href="module-ActivityProcessing.html">ActivityProcessing</a></li><li><a href="module-DisplayShared.html">DisplayShared</a></li><li><a href="module-GenerateLink.html">GenerateLink</a></li></ul></div><div class="category"><h2>Utility</h2><h3>Modules</h3><ul><li><a href="module-Formatting.html">Formatting</a></li><li><a href="module-Lookup.html">Lookup</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>activity-load/display-shared.js</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @category Processing
+ * @module DisplayShared
+ * @description Parses shared link and displays the shared activity.
+ */
+
+var markerLayer = null; // unused, just so I can reuse a function
+var run = {};
+
+/**
+ * Parse the url and display the activity
+ */
+function displaySharedData() {
+	// decode url
+	var url = window.location.href;
+	var parametersString = url.substr(url.indexOf("?") + 1);
+	parametersString = parametersString.replace(/_/g, "+");
+	parametersString = LZString.decompressFromEncodedURIComponent(parametersString);
+
+	// split into individual parameters
+	var parameters = parametersString.split("&amp;");
+	for (var i = 0; i &lt; parameters.length; i++) {
+		parameters[i] = parameters[i].split("=");
+	}
+
+	var numbersContainer = document.getElementById("numbers-container");
+	// date
+	var date = new Date(parameters[0][1]);
+	var options = {dateStyle: "full", timeStyle: "medium"};
+	var dateBox = document.createElement("div");
+	dateBox.classList.add("date-box");
+	var dateValue = document.createElement("p");
+	dateValue.innerHTML = date.toLocaleString("en-GB", options);
+	dateBox.appendChild(dateValue);
+	numbersContainer.appendChild(dateBox);
+
+	var lat, lon;
+	run.points = [];
+
+	for (var i = 1; i &lt; parameters.length; i++) {
+		var field = parameters[i][0];
+		if (field == "start") {
+			// get the gps recording start
+			var coords = splitCoordPair(parameters[i][1]);
+			lat = coords[0];
+			lon = coords[1];
+		}
+		else if (field == "moves") {
+			// reconstruct the gps recording from individual moves
+			var movesString = parameters[i][1];
+			var moves = movesString.split("+");
+			moves.forEach(function(move) {
+				var coords = splitCoordPair(move);
+				lat += coords[0];
+				lon += coords[1];
+				var pointObj = {};
+				pointObj["lat"] = lat / shareCoordAccuracy;
+				pointObj["lon"] = lon / shareCoordAccuracy;
+				run.points.push(pointObj);
+			});
+
+			addGps();
+		}
+		else {
+			// display stat
+			var stat = parseInt(parameters[i][1]);
+			if (field == "pace") {
+				stat /= 100;
+			}
+			var numberBox = createNumberBox(field, format(stat, field));
+			numbersContainer.appendChild(numberBox);
+		}
+
+	}
+}
+
+/**
+ * Split encoded pair of numbers
+ * @param {string} pair 
+ * @returns {number[]} Lat and lon, in this order
+ */
+function splitCoordPair(pair) {
+	var joinChar = pair.match(/[bcde]/)[0];
+	var parts = pair.split(/[bcde]/);
+	var lat = parseInt(parts[0]);
+	var lon = parseInt(parts[1]);
+	var signFlag = joinChar.charCodeAt(0) - 98;
+	if (signFlag >= 2) {
+		lat *= -1;
+	}
+	if (signFlag % 2 == 1) {
+		lon *= -1;
+	}
+	return [lat, lon];
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+</body>
+</html>

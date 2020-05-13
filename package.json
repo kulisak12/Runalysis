@@ -8,7 +8,7 @@
     "jsdoc": "^3.6.4"
   },
   "scripts": {
-    "doc": "rm -r out && jsdoc -c jsdoc.json"
+    "doc": "if [ -d docs/devdoc ]; then rm -Rf docs/devodc; fi && jsdoc -c jsdoc.json"
   },
   "repository": {
     "type": "git",
