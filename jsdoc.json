@@ -15,6 +15,7 @@
 	},
 	"opts": {
 	  "recurse": true,
-	  "destination": "./out/"
+	  "destination": "./out/",
+	  "template": "node_modules/better-docs"
 	}
   }

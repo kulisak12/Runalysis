@@ -52,5 +52,6 @@ Momentálně lze nahrávat pouze soubory formátu `.gpx`.
   - [API Mapy.cz](https://api.mapy.cz/), API pro vložení mapy do stránek, dostupné pod [touto licencí](https://api.mapy.cz/#pact).
   - [Font awesome](https://fontawesome.com), zdroj ikonek, dostupný pod [licencí CC BY 4.0](https://fontawesome.com/license).
   - [JSDoc](https://jsdoc.app/), program pro vytváření dokumentací, dostupný pod [licencí Apache 2.0](https://github.com/jsdoc/jsdoc/blob/master/LICENSE).
+  - [better-docs](https://github.com/SoftwareBrothers/better-docs), rozšíření pro JSDoc, dostupné pod [licencí MIT](https://github.com/SoftwareBrothers/better-docs/blob/master/LICENSE).
 
 ## Dokumentace
