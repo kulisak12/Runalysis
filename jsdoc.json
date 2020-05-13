@@ -34,6 +34,7 @@
 	"opts": {
 		"recurse": true,
 		"destination": "./docs/devdoc/",
-		"template": "node_modules/better-docs"
+		"template": "node_modules/better-docs",
+		"readme": "docs/devdoc.md"
 	}
 }

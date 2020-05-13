@@ -55,3 +55,6 @@ Momentálně lze nahrávat pouze soubory formátu `.gpx`.
   - [better-docs](https://github.com/SoftwareBrothers/better-docs), rozšíření pro JSDoc, dostupné pod [licencí MIT](https://github.com/SoftwareBrothers/better-docs/blob/master/LICENSE).
 
 ## Dokumentace
+
+[Uživatelská dokumentace](https://kulisak12.github.io/Runalysis/about/userdoc)
+[Vývojářská dokumentace](https://kulisak12.github.io/Runalysis/devdoc/index.html)
