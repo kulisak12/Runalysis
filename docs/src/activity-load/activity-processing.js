@@ -1,3 +1,8 @@
+/**
+ * @category Processing
+ * @module ActivityProcessing
+ */
+
 var run;
 
 /**

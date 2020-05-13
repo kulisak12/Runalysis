@@ -1,4 +1,9 @@
 /**
+ * @category Modules
+ * @module Generic
+ */
+
+/**
  * Hide or show the module.
  * @param {HTMLElement} sender The clicked element
  */
@@ -18,6 +23,11 @@ function toggleModule(sender) {
 		sender.style.filter = "invert(50%)";
 	}
 }
+
+/**
+ * @category Processing
+ * @module GenerateLink
+ */
 
 // ACTIVITY SHARING
 

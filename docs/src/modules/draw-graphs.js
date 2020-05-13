@@ -1,4 +1,8 @@
-"use strict";
+/**
+ * @category Modules
+ * @module Graphs
+ */
+
 var graphs;
 
 /**

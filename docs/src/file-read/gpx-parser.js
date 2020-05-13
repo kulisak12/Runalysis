@@ -1,4 +1,9 @@
 /**
+ * @category FileReading
+ * @module GpxParser
+ */
+
+/**
  * Parser for the .gpx format.
  * @param {string} fileContent Text in .gpx format
  * @returns {Run} Parsed run object

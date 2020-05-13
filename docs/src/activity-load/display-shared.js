@@ -1,3 +1,8 @@
+/**
+ * @category Processing
+ * @module DisplayShared
+ */
+
 var markerLayer = null; // unused, just so I can reuse a function
 var run = {};
 

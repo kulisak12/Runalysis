@@ -1,4 +1,10 @@
 /**
+ * @category Modules
+ * @module Zones
+ */
+
+
+/**
  * Create the zones module.
  */
 function addZones() {

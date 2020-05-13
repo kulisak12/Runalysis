@@ -1,4 +1,9 @@
 /**
+ * @category Utility
+ * @module Formatting
+ */
+
+/**
  * General field value formatter.
  * @param {number} value Value to be formatted
  * @param {string} field Field type, used to determine formatting

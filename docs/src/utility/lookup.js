@@ -1,4 +1,10 @@
 /**
+ * @category Utility
+ * @module Lookup
+ */
+
+
+/**
  * Find a point closest to the specified time.
  * @param {number} time 
  * @returns {Point} 

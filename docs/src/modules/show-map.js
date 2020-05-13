@@ -1,3 +1,9 @@
+/**
+ * @category Modules
+ * @module Map
+ */
+
+
 // MAP
 
 var markerLayer = null;
