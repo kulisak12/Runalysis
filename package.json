@@ -3,13 +3,8 @@
   "version": "1.0.0",
   "description": "Runalysis je webová aplikace, která zpracovává zaznamenané sportovní aktivity jako běh či jízda na kole a nabízí jejich podrobnou analýzu.",
   "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
-  "dependencies": {
-    "better-docs": "^2.0.1"
-  },
   "devDependencies": {
+    "better-docs": "^2.0.1",
     "jsdoc": "^3.6.4"
   },
   "scripts": {

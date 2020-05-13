@@ -7,15 +7,33 @@
 		"allowUnknownTags": ["category"]
 	},
 	"plugins": [
+		"plugins/markdown",
 		"node_modules/better-docs/category"
 	],
 	"templates": {
-	  "cleverLinks": true,
-	  "monospaceLinks": true
+		"cleverLinks": true,
+		"monospaceLinks": true,
+		"better-docs": {
+			"name": "Runalysis: Developer documentation",
+			"navigation": [
+				{
+					"label": "App",
+					"href": "https://kulisak12.github.io/Runalysis/"
+				},
+				{
+					"label": "Github",
+					"href": "https://github.com/kulisak12/Runalysis"
+				},
+				{
+					"label": "User documentation",
+					"href": "https://kulisak12.github.io/Runalysis/about/userdoc"
+				}
+			]
+		}
 	},
 	"opts": {
-	  "recurse": true,
-	  "destination": "./out/",
-	  "template": "node_modules/better-docs"
+		"recurse": true,
+		"destination": "./out/",
+		"template": "node_modules/better-docs"
 	}
-  }
+}
