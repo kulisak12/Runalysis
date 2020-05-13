@@ -1,0 +1,29 @@
+{
+  "name": "runalysis",
+  "version": "1.0.0",
+  "description": "Runalysis je webová aplikace, která zpracovává zaznamenané sportovní aktivity jako běh či jízda na kole a nabízí jejich podrobnou analýzu.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "better-docs": "^2.0.1"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.6.4"
+  },
+  "scripts": {
+    "doc": "rm -r out && jsdoc -c jsdoc.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kulisak12/Runalysis.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kulisak12/Runalysis/issues"
+  },
+  "homepage": "https://github.com/kulisak12/Runalysis#readme"
+}

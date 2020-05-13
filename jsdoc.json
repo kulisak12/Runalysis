@@ -1,0 +1,20 @@
+{
+	"source": {
+	  "include": ["docs/src"],
+	  "includePattern": ".js$"
+	},
+	"tags": {
+		"allowUnknownTags": ["category"]
+	},
+	"plugins": [
+		"node_modules/better-docs/category"
+	],
+	"templates": {
+	  "cleverLinks": true,
+	  "monospaceLinks": true
+	},
+	"opts": {
+	  "recurse": true,
+	  "destination": "./out/"
+	}
+  }

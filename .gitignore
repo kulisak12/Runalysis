@@ -5,3 +5,9 @@
 ## Ignore sample GPS files
 
 *.gpx
+
+## Ignore JSDoc and npm files
+
+out
+node_modules
+npm-debug.log

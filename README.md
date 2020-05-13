@@ -40,7 +40,7 @@ Momentálně lze nahrávat pouze soubory formátu `.gpx`.
 
 ## Licence
 
-&copy; 2020 David Klement, [Apache Licence 2.0](https://github.com/kulisak12/Runalysis/blob/master/LICENSE)
+&copy; 2020 David Klement, [Apache License 2.0](https://github.com/kulisak12/Runalysis/blob/master/LICENSE)
 
 ## Použité knihovny
 
@@ -51,5 +51,6 @@ Momentálně lze nahrávat pouze soubory formátu `.gpx`.
   - [TinyColor](https://github.com/bgrins/TinyColor), knihovna na operace s barvami, dostupná pod [licencí MIT](https://github.com/bgrins/TinyColor/blob/master/LICENSE).
   - [API Mapy.cz](https://api.mapy.cz/), API pro vložení mapy do stránek, dostupné pod [touto licencí](https://api.mapy.cz/#pact).
   - [Font awesome](https://fontawesome.com), zdroj ikonek, dostupný pod [licencí CC BY 4.0](https://fontawesome.com/license).
+  - [JSDoc](https://jsdoc.app/), program pro vytváření dokumentací, dostupný pod [licencí Apache 2.0](https://github.com/jsdoc/jsdoc/blob/master/LICENSE).
 
 ## Dokumentace
