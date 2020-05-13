@@ -1,7 +1,7 @@
 /**
  * @category FileReading
  * @module FileLoader
- * @description Accepts an uploaded file and processes it.
+ * @description Sets up a drag-and-drop area and calls the appropriate parser.
  */
 
 /**

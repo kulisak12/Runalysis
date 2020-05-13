@@ -26,7 +26,7 @@
 				},
 				{
 					"label": "User documentation",
-					"href": "https://kulisak12.github.io/Runalysis/about/userdoc"
+					"href": "https://kulisak12.github.io/Runalysis/about/userdoc/index.html"
 				}
 			]
 		}
@@ -34,6 +34,7 @@
 	"opts": {
 		"recurse": true,
 		"destination": "./docs/devdoc/",
-		"template": "node_modules/better-docs"
+		"template": "node_modules/better-docs",
+		"readme": "docs/devdoc.md"
 	}
 }
