@@ -1,96 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> Types</title>
+    
+    <meta charset="utf-8">
+    <title>JSDoc: Types</title>
 
-  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="./build/entry.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
-  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
-  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
-  <link type="text/css" rel="stylesheet" href="">
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-
-  
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="./build/entry.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Muli:100,400,700|Oswald:300|Inconsolata,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+    
 </head>
 
-
-
-<body class="layout small-header">
+<body>
     <div id="stickyNavbarOverlay"></div>
-    
-
-<div class="top-nav">
-    <div class="inner">
-        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-        </a>
-        <div class="logo">
-            
-             
-                <a href="index.html">
-                    <h1 class="navbar-item">Runalysis: Developer documentation</h1>
-                </a>
-            
-        </div>
-        <div class="menu">
-            
-            <div class="navigation">
-                <a
-                    href="index.html"
-                    class="link"
-                >
-                    API Documentation
-                </a>
-                <div class="dropdown is-hoverable is-right">
-                    <a class="dropdown-trigger link">
-                        Tutorials
-                        <i class="fas fa-chevron-down fa-xs"></i>
+    <div class="top-navbar">
+        <div class="container">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                    
+                    
+                        <h1 class="navbar-item">Runalysis: Developer documentation</h1>
+                    
+                    <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
                     </a>
-                    <div class="dropdown-menu">
-                        <div class="dropdown-content">
-                        
+                </div>
+                
+                <div class="navbar-menu">
+                    <div class="navbar-end">
+                    
+                        <div class="navbar-item">
+                            <a href="https://kulisak12.github.io/Runalysis/" target="_blank">
+                                App
+                            </a>
                         </div>
+                    
+                        <div class="navbar-item">
+                            <a href="https://github.com/kulisak12/Runalysis" target="_blank">
+                                Github
+                            </a>
+                        </div>
+                    
+                        <div class="navbar-item">
+                            <a href="https://kulisak12.github.io/Runalysis/about/userdoc" target="_blank">
+                                User documentation
+                            </a>
+                        </div>
+                    
                     </div>
                 </div>
                 
-                
-            </div>
-        </div>
-    </div>
-</div>
-    <div id="main">
-        <div
-            class="sidebar "
-            id="sidebarNav"
-        >
-            
-            <nav>
-                
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-Types.html">Types</a></li></ul><h3>Global</h3><ul><li><a href="global.html#FieldTypes">FieldTypes</a></li></ul></div><div class="category"><h2>FileReading</h2><h3>Modules</h3><ul><li><a href="module-FileLoader.html">FileLoader</a></li><li><a href="module-GpxParser.html">GpxParser</a></li></ul></div><div class="category"><h2>Modules</h2><h3>Modules</h3><ul><li><a href="module-Generic.html">Generic</a></li><li><a href="module-Graphs.html">Graphs</a></li><li><a href="module-Map.html">Map</a></li><li><a href="module-Zones.html">Zones</a></li></ul></div><div class="category"><h2>Processing</h2><h3>Modules</h3><ul><li><a href="module-ActivityProcessing.html">ActivityProcessing</a></li><li><a href="module-DisplayShared.html">DisplayShared</a></li><li><a href="module-GenerateLink.html">GenerateLink</a></li></ul></div><div class="category"><h2>Utility</h2><h3>Modules</h3><ul><li><a href="module-Formatting.html">Formatting</a></li><li><a href="module-Lookup.html">Lookup</a></li></ul></div>
-                
             </nav>
         </div>
-        <div class="core" id="main-content-wrapper">
-            <div class="content">
-                <header class="page-title">
-                    <p>Module</p>
-                    <h1>Types</h1>
-                </header>
-                
+    </div>
+    <div class="container">
+        <div class="columns">
+            <div class="column is-3" id="sidebarNav">
+                <div class="sidebar">
+                    <nav>
+                        <h2><a href="index.html">Home</a></h2><div class="category"><h3>Modules</h3><ul><li><a href="module-Types.html">Types</a></li></ul><h3>Global</h3><ul><li><a href="global.html#FieldTypes">FieldTypes</a></li></ul></div><div class="category"><h2>FileReading</h2><h3>Modules</h3><ul><li><a href="module-FileLoader.html">FileLoader</a></li><li><a href="module-GpxParser.html">GpxParser</a></li></ul></div><div class="category"><h2>Modules</h2><h3>Modules</h3><ul><li><a href="module-Generic.html">Generic</a></li><li><a href="module-Graphs.html">Graphs</a></li><li><a href="module-Map.html">Map</a></li><li><a href="module-Zones.html">Zones</a></li></ul></div><div class="category"><h2>Processing</h2><h3>Modules</h3><ul><li><a href="module-ActivityProcessing.html">ActivityProcessing</a></li><li><a href="module-DisplayShared.html">DisplayShared</a></li><li><a href="module-GenerateLink.html">GenerateLink</a></li></ul></div><div class="category"><h2>Utility</h2><h3>Modules</h3><ul><li><a href="module-Formatting.html">Formatting</a></li><li><a href="module-Lookup.html">Lookup</a></li></ul></div>
+                    </nav>
+                </div>
+            </div>
+            <div class="column is-9-desktop">
+                <div class="content" id="main-content-wrapper">
+                    <header class="page-title">
+                        <p>Module</p>
+                        <h1>Types</h1>
+                    </header>
+
+                    
 
 
 
@@ -130,7 +120,7 @@
 
     
         <div class='vertical-section'>
-            <h1>Type Definitions</h1>
+            <h3 class="title"><span>Type Definitions</span></h3>
             <div class="members">
             
                 <div class="member">
@@ -167,27 +157,27 @@ Carries the data for this point and for the previous section.</p>
     <h5 class="subsection-title">Properties:</h5>
 
     
-<div class="table-container">
-    <table class="props table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
 
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
+<table class="props">
+    <thead>
+    <tr>
         
-            
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+        
 <tr class="deep-level-0">
     
         <td class="name"><code>lat</code></td>
@@ -209,8 +199,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Latitude of point</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>lon</code></td>
@@ -232,8 +222,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Longitude of point</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>date</code></td>
@@ -255,8 +245,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Timestamp of point</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>ignore</code></td>
@@ -278,8 +268,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>If run was paused and this section should therefore be ignored</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>duration</code></td>
@@ -301,8 +291,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Duration of section, in seconds</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>sumDuration</code></td>
@@ -324,8 +314,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Total duration until point, in seconds</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>distance</code></td>
@@ -347,8 +337,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Length of section, in meters</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>sumDistance</code></td>
@@ -370,8 +360,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Total distance until point, in seconds</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>elev</code></td>
@@ -393,8 +383,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Elevation of point, in meters</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>elevDiff</code></td>
@@ -416,8 +406,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Change in elevation over section, in meters</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>sumElevGain</code></td>
@@ -439,8 +429,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Total elevation gain until point</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>incline</code></td>
@@ -462,8 +452,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Incline of section, represented as a fraction</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>pace</code></td>
@@ -485,8 +475,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Speed of section, in km/h</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>sumPace</code></td>
@@ -508,8 +498,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Weighted sum of pace until point, in km/h * s</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>gap</code></td>
@@ -531,8 +521,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Grade adjusted speed of section, in km/h</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>sumGap</code></td>
@@ -554,8 +544,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Weighted sum of gap until point, in km/h * s</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>hr</code></td>
@@ -580,8 +570,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Heart rate of point, in bpm, may not exist</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>sumHr</code></td>
@@ -603,8 +593,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Weighted sum of hr until point, in bpm * s, 0 if hr doesn't exist</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>cad</code></td>
@@ -629,8 +619,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Cadence of point, in spm, may not exist</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>sumCad</code></td>
@@ -652,8 +642,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Weighted sum of cad until point, in spm * s, 0 if cad doesn't exist</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>temp</code></td>
@@ -678,8 +668,8 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Temperature of point, in degrees C, may not exist</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>sumTemp</code></td>
@@ -701,10 +691,10 @@ Carries the data for this point and for the previous section.</p>
     <td class="description last"><p>Weighted sum of temp until point, in C * s, 0 if temp doesn't exist</p></td>
 </tr>
 
-        
-        </tbody>
-    </table>
-</div>
+    
+    </tbody>
+</table>
+
 
 
 
@@ -789,27 +779,27 @@ Carries all data of the activity.</p>
     <h5 class="subsection-title">Properties:</h5>
 
     
-<div class="table-container">
-    <table class="props table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
 
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
+<table class="props">
+    <thead>
+    <tr>
         
-            
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+        
 <tr class="deep-level-0">
     
         <td class="name"><code>name</code></td>
@@ -831,8 +821,8 @@ Carries all data of the activity.</p>
     <td class="description last"><p>Activity name</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>source</code></td>
@@ -854,8 +844,8 @@ Carries all data of the activity.</p>
     <td class="description last"><p>File extension of source</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>startTime</code></td>
@@ -877,8 +867,8 @@ Carries all data of the activity.</p>
     <td class="description last"><p>Timestamp of activity start</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>points</code></td>
@@ -900,8 +890,8 @@ Carries all data of the activity.</p>
     <td class="description last"><p>Array of track points</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>laps</code></td>
@@ -923,8 +913,8 @@ Carries all data of the activity.</p>
     <td class="description last"><p>Array of point indeces indicating laps</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>hasEle</code></td>
@@ -946,8 +936,8 @@ Carries all data of the activity.</p>
     <td class="description last"><p>Whether elevation information exists</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>hasHr</code></td>
@@ -969,8 +959,8 @@ Carries all data of the activity.</p>
     <td class="description last"><p>Whether heart rate information exists</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>hasCad</code></td>
@@ -992,8 +982,8 @@ Carries all data of the activity.</p>
     <td class="description last"><p>Whether cadence information exists</p></td>
 </tr>
 
+    
         
-            
 <tr class="deep-level-0">
     
         <td class="name"><code>hasTemp</code></td>
@@ -1015,10 +1005,10 @@ Carries all data of the activity.</p>
     <td class="description last"><p>Whether temperature information exists</p></td>
 </tr>
 
-        
-        </tbody>
-    </table>
-</div>
+    
+    </tbody>
+</table>
+
 
 
 
@@ -1081,25 +1071,25 @@ Carries all data of the activity.</p>
 
 
 
-            </div>
-            
-            <footer class="footer">
-                <div class="content has-text-centered">
-                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a></p>
-                    <p class="sidebar-created-by">
-                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
-                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
-                    </p>
                 </div>
-            </footer>
-            
-        </div>
-        <div id="side-nav" class="side-nav">
+            </div>
         </div>
     </div>
+
+
+<footer class="footer">
+    <div class="content has-text-centered">
+        <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Wed May 13 2020 13:38:34 GMT+0200 (CEST)</p>
+        <p class="sidebar-created-by">
+            <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by
+            <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+        </p>
+    </div>
+</footer>
+
+
 <script src="scripts/app.min.js"></script>
 <script>PR.prettyPrint();</script>
 <script src="scripts/linenumber.js"> </script>
-
 </body>
 </html>
