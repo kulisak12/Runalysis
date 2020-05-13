@@ -56,5 +56,9 @@ Momentálně lze nahrávat pouze soubory formátu `.gpx`.
 
 ## Dokumentace
 
+<<<<<<< HEAD
 [Uživatelská dokumentace](https://kulisak12.github.io/Runalysis/about/userdoc/index.html)
+=======
+[Uživatelská dokumentace](https://kulisak12.github.io/Runalysis/about/userdoc)
+>>>>>>> 9d6ddf82ccf92e1b8ddd15804d72379749977d8f
 [Vývojářská dokumentace](https://kulisak12.github.io/Runalysis/devdoc/index.html)
