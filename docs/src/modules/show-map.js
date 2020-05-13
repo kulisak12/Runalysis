@@ -3,7 +3,7 @@
 var markerLayer = null;
 
 /**
- * Create the map and add the gps recording to it
+ * Create the map and add the gps recording to it.
  */
 function addGps() {
     var center = SMap.Coords.fromWGS84(14.0, 50.0);
@@ -31,7 +31,7 @@ function addGps() {
 }
 
 /**
- * Build a gpx file
+ * Build a gpx file.
  */
 function createGpx() {
     var gpx = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><gpx><trk><trkseg>";
@@ -49,7 +49,7 @@ function createGpx() {
 // NUMBER STATS
 
 /**
- * Create activity summaries
+ * Create activity summaries.
  */
 function addNumbers() {
 	var numbersContainer = document.getElementById("numbers-container");
@@ -75,7 +75,7 @@ function addNumbers() {
 }
 
 /**
- * Create div for a stat
+ * Create div for a stat.
  * @param {string} field 
  * @param {(null|string)} stat Formatted string to display. If missing, it will be calculated.
  * @returns {HTMLDivElement} Number box
@@ -108,7 +108,7 @@ function createNumberBox(field, stat) {
 }
 
 /**
- * Calculate statistics for the entire activity
+ * Calculate statistics for the entire activity.
  * @param {string} field 
  * @returns {number} Average or total value for the given field.
  */
@@ -127,7 +127,7 @@ function getOverallStat(field) {
 }
 
 /**
- * Calculate training impulse for the entire activity
+ * Calculate training impulse for the entire activity.
  * @returns {number} Trimp
  */
 function calculateTrimp() {
@@ -141,7 +141,7 @@ function calculateTrimp() {
 }
 
 /**
- * Formula to calculate intensity from heart rate
+ * Formula to calculate intensity from heart rate.
  * @param {number} hr Heart rate
  * @returns {number} Trimp unit
  */

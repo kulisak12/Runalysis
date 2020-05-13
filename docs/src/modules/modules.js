@@ -1,5 +1,5 @@
 /**
- * Hide or show the module
+ * Hide or show the module.
  * @param {HTMLElement} sender The clicked element
  */
 function toggleModule(sender) {
@@ -19,8 +19,10 @@ function toggleModule(sender) {
 	}
 }
 
+// ACTIVITY SHARING
+
 /**
- * Generate link for sharing
+ * Generate link for sharing.
  */
 function addShareLink() {
 	// select fields to show
@@ -65,7 +67,7 @@ function addShareLink() {
 }
 
 /**
- * Save coordinate difference as integer
+ * Save coordinate difference as integer.
  * @param {number} coordDiff Unscaled coordinate difference
  * @returns {number} Rounded upscaled difference
  */
@@ -74,7 +76,7 @@ function roundCoord(coordDiff) {
 }
 
 /**
- * Encode a pair of coordinates
+ * Encode a pair of coordinates.
  * @param {number} lat Latitude
  * @param {number} lon Longitude
  * @returns {string} Encoded pair

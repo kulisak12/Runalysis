@@ -1,5 +1,5 @@
 /**
- * General value formatter
+ * General field value formatter.
  * @param {number} value Value to be formatted
  * @param {string} field Field type, used to determine formatting
  * @returns {string} Formatted value including unit
@@ -36,7 +36,7 @@ function format(value, field) {
 }
 
 /**
- * Time formatter
+ * Time formatter.
  * @param {number} time 
  * @returns {string} Time in HH:MM:SS
  */
@@ -56,7 +56,7 @@ function formatTime(time) {
 }
 
 /**
- * Pace formatter
+ * Pace formatter.
  * @param {number} speed Speed in km/h 
  * @returns {string} Pace in HH:MM:SS min/km
  */
@@ -65,7 +65,7 @@ function formatPace(speed) {
 }
 
 /**
- * Distance formatter
+ * Distance formatter.
  * @param {number} distance Distance in meters 
  * @returns {string} Distance in km
  */
@@ -75,7 +75,7 @@ function formatDistance(distance) {
 }
 
 /**
- * Elevation formatter
+ * Elevation formatter.
  * @param {number} elev Elevation
  * @returns {string} Elevation in meters rounded to one decimal digit
  */
@@ -85,7 +85,7 @@ function formatElevation(elev) {
 }
 
 /**
- * Heart rate formatter
+ * Heart rate formatter.
  * @param {number} hr Heart rate
  * @returns {string} Heart rate in bpm
  */
@@ -94,7 +94,7 @@ function formatHeartRate(hr) {
 }
 
 /**
- * Cadence formatter
+ * Cadence formatter.
  * @param {number} cad Cadence
  * @returns {string} Cadense in spm
  */
@@ -103,7 +103,7 @@ function formatCadence(cad) {
 }
 
 /**
- * Temperature formatter
+ * Temperature formatter.
  * @param {number} temp Temperature
  * @returns {string} Temperature in degrees C
  */
@@ -112,7 +112,7 @@ function formatTemperature(temp) {
 }
 
 /**
- * Cut of the unit from formatted value
+ * Cut off the unit from formatted value.
  * @param {string} value Formatted value
  * @returns {string} Formatted value without unit
  */
@@ -121,7 +121,7 @@ function removeUnit(value) {
 }
 
 /**
- * Pad the beginning of string with zeros
+ * Pad the beginning of string with zeros.
  * @param {string} str 
  * @param {number} zeros Final length of string
  * @returns {string} Zero-padded string
@@ -134,7 +134,7 @@ function padZeros(str, zeros) {
 }
 
 /**
- * Get full field name to be displayed
+ * Get full field name to be displayed.
  * @param {string} id Field
  * @returns {string} Field display name
  */
@@ -147,7 +147,7 @@ function getFieldName(id) {
 }
 
 /**
- * Get field id from display name
+ * Get field id from display name.
  * @param {string} name Field display name
  * @returns {string} Field
  */
@@ -160,7 +160,7 @@ function getFieldId(name) {
 }
 
 /**
- * Convert pace to speed
+ * Convert pace to speed.
  * @param {number} pace Pace in min/km
  * @returns {number} Speed in km/h
  */
@@ -169,7 +169,7 @@ function toSpeed(pace) {
 }
 
 /**
- * Convert speed to pace
+ * Convert speed to pace.
  * @param {number} speed Speed in km/h
  * @returns {number} Pace in min/km
  */
@@ -178,7 +178,7 @@ function toPace(speed) {
 }
 
 /**
- * Is field of pace type
+ * Is field of pace type.
  * @param {string} field 
  * @returns {boolean}
  */
@@ -187,8 +187,8 @@ function isPace(field) {
 }
 
 /**
- * Algorithm to place ticks on a graph axis showing time
- * Tries to find the optimal spacing
+ * Algorithm to place ticks on a graph axis showing time.
+ * Tries to find the optimal spacing.
  * @param {number} a Min shown value
  * @param {number} b Max shown value
  * @param {number} pixels Size of axis in pixels
@@ -237,8 +237,8 @@ function timeTicker(a, b, pixels, opts, dygraph, vals) {
 }
 
 /**
- * Algorithm to place ticks on a graph axis in speed and label it with pace
- * Tries to round shown values to nice numbers
+ * Algorithm to place ticks on a graph axis in speed and label it with pace.
+ * Tries to round shown values to nice numbers.
  * @param {number} a Min shown value
  * @param {number} b Max shown value
  * @param {number} pixels Size of axis in pixels
@@ -274,7 +274,7 @@ function paceTicker(speedA, speedB, pixels, opts, dygraph, vals) {
 }
 
 /**
- * Round value to nearest lower power of base
+ * Round value to nearest lower power of base.
  * @param {number} value 
  * @param {number} base 
  * @returns {number} Nearest lower power of base
@@ -285,8 +285,8 @@ function getBaseScale(value, base) {
 }
 
 /**
- * Round speed to nearest higher nice number
- * Size of rounding is proportional to zoom
+ * Round speed to nearest higher nice number.
+ * Size of rounding is proportional to zoom.
  * @param {number} speed 
  * @param {number} unitsPerTick How far away should the following tick be
  * @returns {number} Rounded speed
@@ -307,8 +307,8 @@ function snap(speed, unitsPerTick) {
 }
 
 /**
- * Ticker to display no ticks
- * All parameters are omitted
+ * Ticker to display no ticks.
+ * All parameters are omitted.
  * @returns {Array} Empty array
  */
 function emptyTicker(a, b, pixels, opts, dygraph, vals) {

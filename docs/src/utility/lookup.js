@@ -1,5 +1,5 @@
 /**
- * Find a point closest to the specified time
+ * Find a point closest to the specified time.
  * @param {number} time 
  * @returns {Point} 
  */
@@ -21,7 +21,7 @@ function getPointByTime(time) {
 }
 
 /**
- * Get the min and max value of a field in the entire run
+ * Get the min and max value of a field in the entire run.
  * @param {string} field 
  * @returns {number[]} Min and max value, in this order
  */
@@ -44,7 +44,7 @@ function getExtremes(field) {
 }
 
 /**
- * Get the stat for a given field to be shown when a range is selected
+ * Get the stat for a given field to be shown when a range is selected.
  * @param {Point} point1 Beginning of the range
  * @param {Point} point2 End of the range
  * @param {string} field 
@@ -64,7 +64,7 @@ function rangeStats(point1, point2, field) {
 }
 
 /**
- * Get the change in field value over a range
+ * Get the change in field value over a range.
  * @param {Point} point1 Beginning of the range
  * @param {Point} point2 End of the range
  * @param {string} field 
@@ -75,8 +75,8 @@ function pointDifference(point1, point2, field) {
 }
 
 /**
- * Get a list of available fields of given type
- * @param {FieldTypes} fieldType Selector for fields, must be an enumerated value of {@link FieldTypes}
+ * Get a list of available fields of given type.
+ * @param {FieldTypes} fieldType Filter for returned fields
  * @returns {string[]} Array of fields
  */
 function getAvailableData(fieldType) {

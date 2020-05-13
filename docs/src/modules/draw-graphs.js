@@ -2,7 +2,7 @@
 var graphs;
 
 /**
- * Create content of the graph module
+ * Create content of the graph module.
  */
 function drawGraphs() {
 	addGraphBoxes(); // containers
@@ -22,7 +22,7 @@ function drawGraphs() {
 // PAGE BUILDING
 
 /**
- * Create graphs using the Dygraph library
+ * Create graphs using the Dygraph library.
  */
 function addGraphs() {
 	var graphDivs = Array.from(document.getElementsByClassName("graph-div"));
@@ -48,7 +48,7 @@ function addGraphs() {
 }
 
 /**
- * Get the dataset of data to be graphed
+ * Get the dataset of data to be graphed.
  * @param {string} field1 Primary field
  * @param {string} field2 Secondary field
  * @returns {Array[]} Array of values for each point: time, field1 and field2
@@ -67,7 +67,7 @@ function getGraphData(field1, field2) {
 }
 
 /**
- * Create container divs for every graph
+ * Create container divs for every graph.
  */
 function addGraphBoxes() {	
 	var primaryFields = getAvailableData(FieldTypes.PRIMARY);
@@ -100,7 +100,7 @@ function addGraphBoxes() {
 }
 
 /**
- * Create divs for the graph and for field stats
+ * Create divs for the graph and for field stats.
  * @param {string} field1 Primary field
  * @param {string} field2 Secondary field
  * @returns {HTMLDivElement} Graph box
@@ -121,7 +121,7 @@ function createGraphBox(field1, field2) {
 }
 
 /**
- * Create div for field stats
+ * Create div for field stats.
  * @param {string} field 
  * @param {string} side Left or right
  * @returns {HTMLDivElement} Field div
@@ -151,7 +151,7 @@ function createFieldDiv(field, side) {
 }
 
 /**
- * Set display and formatting options for graph
+ * Set display and formatting options for graph.
  * @param {*} g Graph
  */
 function setOptions(g) {
@@ -187,7 +187,7 @@ function setOptions(g) {
 }
 
 /**
- * Set plot colors for graph
+ * Set plot colors for graph.
  * @param {*} g Graph
  */
 function setColors(g) {
@@ -201,7 +201,7 @@ function setColors(g) {
 }
 
 /**
- * Use the synchronize library to keep x axis in sync
+ * Use the synchronize library to keep x axis in sync.
  * @param {Array} graphs 
  */
 function sync(graphs) {
@@ -213,7 +213,7 @@ function sync(graphs) {
 }
 
 /**
- * Add the x axis
+ * Add the x axis.
  * @returns {Object} Graph
  */
 function addAxis() {
@@ -250,8 +250,8 @@ function addAxis() {
 // USER INTERACTION
 
 /**
- * Callback when user hovers over a point in a graph
- * Display values of fields, highlight point on the map
+ * Callback when user hovers over a point in a graph.
+ * Display values of fields, highlight point on the map.
  * @param {Event} event Mouse move event
  * @param {number} x Selected time
  * @param {*} points Unused
@@ -286,8 +286,8 @@ function highlight(event, x, points, row, seriesName) {
 }
 
 /**
- * Callback when user moves mouse out of graph area
- * Reset displayed values of fields
+ * Callback when user moves mouse out of graph area.
+ * Reset displayed values of fields.
  * @param {Event} event Mouse move event
  */
 function unhighlight(event) {
@@ -302,8 +302,8 @@ function unhighlight(event) {
 }
 
 /**
- * Callback whenever the graph is updated
- * Update field stats for selected range
+ * Callback whenever the graph is updated.
+ * Update field stats for selected range.
  * @param {*} g Graph
  * @param {boolean} isInitial Whether this is the first time drawing the graph
  */
@@ -322,7 +322,7 @@ function visibleRange(g, isInitial) {
 }
 
 /**
- * Create a sidebar with custom user settings
+ * Create a sidebar with custom user settings.
  */
 function addGraphSettings() {
 	// get all graph elements
@@ -356,7 +356,7 @@ function addGraphSettings() {
 }
 
 /**
- * Create a dropdown for changing the displayed field
+ * Create a dropdown for changing the displayed field.
  * @param {FieldTypes} fieldTypes Selector for options in dropdown
  * @param {string} selected Currently selected field
  * @returns {HTMLSelectElement} Graph selection
@@ -376,7 +376,7 @@ function createSelection(fieldTypes, selected) {
 }
 
 /**
- * Change the field plotted in a graph
+ * Change the field plotted in a graph.
  * @param {string} newField 
  * @param {*} g Graph 
  * @param {HTMLDivElement} graphBox Container div
@@ -421,7 +421,7 @@ function swapFields(newField, g, graphBox, fieldType) {
 // GET METHODS
 
 /**
- * Get the fields plotted in a graph
+ * Get the fields plotted in a graph.
  * @param {*} g Graph 
  * @returns {string[]} Primary and secondary field, in this order
  */
@@ -432,7 +432,7 @@ function getGraphFields(g) {
 }
 
 /**
- * Get only the two main graph boxes, exclude top and axis
+ * Get only the two main graph boxes, exclude top and axis.
  * @returns {HTMLDivElement[]} Field graph boxes
  */
 function getFieldGraphBoxes() {
@@ -448,8 +448,8 @@ function getFieldGraphBoxes() {
 }
 
 /**
- * Determine the initial y axis range
- * Try to cut off thin spikes
+ * Determine the initial y axis range.
+ * Try to cut off thin spikes.
  * @param {string} field
  * @returns {number} Cutoff value
  */
@@ -502,7 +502,7 @@ function searchForBestCutoff(field) {
 }
 
 /**
- * Calculate average and deviation in a range, suggest cutoff point
+ * Calculate average and deviation in a range, suggest cutoff point.
  * @param {number} sum Sum of values in the range
  * @param {number} sumSquares Sum of squares of values in the range
  * @param {number} duration Duration of the range

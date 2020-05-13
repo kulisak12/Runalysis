@@ -1,5 +1,5 @@
 /**
- * Parser for the .gpx format
+ * Parser for the .gpx format.
  * @param {string} fileContent Text in .gpx format
  * @returns {Run} Parsed run object
  */
@@ -38,7 +38,7 @@ function gpxParser(fileContent) {
 }
 
 /**
- * Get all the points from a gpx segment
+ * Get all the points from a gpx segment.
  * @param {HTMLElement} trkSeg Gpx segment element
  * @returns {Point[]} 
  */
@@ -53,7 +53,7 @@ function parseTrkSeg(trkSeg) {
 
 
 /**
- * Get data from a track point
+ * Get data from a track point.
  * @param {HTMLElement} trkPt Gpx track point element
  * @return {Point} 
  */
@@ -74,7 +74,7 @@ function parseTrkPt(trkPt) {
 	return point;
 }
 /**
- * Get an extension value, if it exists
+ * Get an extension value, if it exists.
  * @param {HTMLElement} valueEle Gpx extension element
  * @return {(null|number)} Extension value or null
  */

@@ -1,6 +1,6 @@
 /**
- * A track point object
- * Carries the data for this point and for the previous section
+ * A track point object.
+ * Carries the data for this point and for the previous section.
  * @typedef {Object} Point
  * @property {number} lat Latitude of point
  * @property {number} lon Longitude of point
@@ -27,8 +27,8 @@
  */
 
  /**
- * A run object
- * Carries all data of the activity
+ * A run object.
+ * Carries all data of the activity.
  * @typedef {Object} Run
  * @property {string} name Activity name
  * @property {string} source File extension of source
@@ -43,7 +43,7 @@
 
 
 /**
- * Set options for Dropzone
+ * Set options for Dropzone.
  */
 function dropzoneInit() {
 	var options = {
@@ -63,7 +63,7 @@ function dropzoneInit() {
 }
 
 /**
- * Send events to Dropzone
+ * Send events to Dropzone.
  * @param {File} file The uploaded file
  */
 function processFile(file) {
@@ -76,7 +76,7 @@ function processFile(file) {
 }
 
 /**
- * Extract file content, send it to a parser and redirect to view page
+ * Extract file content, send it to a parser and redirect to view page.
  * @param {File} file The uploaded file
  * @param {Function} parser 
  */

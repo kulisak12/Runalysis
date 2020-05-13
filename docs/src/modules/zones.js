@@ -1,5 +1,5 @@
 /**
- * Create the zones module
+ * Create the zones module.
  */
 function addZones() {
 	// add settings
@@ -21,7 +21,7 @@ function addZones() {
 }
 
 /**
- * Create a table to display the individual zones
+ * Create a table to display the individual zones.
  * @param {string} field 
  * @returns {HTMLTableElement} Table
  */
@@ -39,7 +39,7 @@ function createZoneTable(field) {
 }
 
 /**
- * Create the header for each table
+ * Create the header for each table.
  * @param {string} field 
  * @returns {HTMLTableRowElement} Header row
  */
@@ -53,7 +53,7 @@ function createZoneHeaderRow(field) {
 }
 
 /**
- * Create a row for zone charts
+ * Create a row for zone charts.
  * @param {string} baseColor Field color
  * @returns {HTMLTableRowElement} Column row
  */
@@ -71,7 +71,7 @@ function createZoneColumnRow(baseColor) {
 }
 
 /**
- * Create a chart column
+ * Create a chart column.
  * @param {string} color
  * @returns {HTMLTableCellElement} Column cell
  */
@@ -89,7 +89,7 @@ function createZoneColumn(color) {
 }
 
 /**
- * Create a row for total duration and distance labels
+ * Create a row for total duration and distance labels.
  * @param {string} dataType zone-time or zone-dist
  * @returns {HTMLTableRowElement} Totals row
  */
@@ -105,7 +105,7 @@ function createZoneDataRow(dataType) {
 }
 
 /**
- * Recalculate the zone distribution
+ * Recalculate the zone distribution.
  * @param {string} field 
  */
 function refreshZones(field) {
@@ -139,7 +139,7 @@ function refreshZones(field) {
 }
 
 /**
- * Get the zone distribution
+ * Get the zone distribution.
  * @param {string} field 
  * @returns {Array} Array of objects with total time and distance for each zone
  */
@@ -167,7 +167,7 @@ function getZoneData(field) {
 }
 
 /**
- * Determine in which zone does a given value belong
+ * Determine in which zone does a given value belong.
  * @param {number[]} zones Zone thresholds
  * @param {number} value 
  * @returns {number} Zone index
@@ -181,7 +181,7 @@ function getZone(zones, value) {
 }
 
 /**
- * Get the user's custom zones, or the default values
+ * Get the user's custom zones, or the default values.
  * @param {string} field 
  * @returns {number[]} Zone thresholds
  */
@@ -204,7 +204,7 @@ function getZoneThresholds(field) {
 }
 
 /**
- * Get a range string for the given zone
+ * Get a range string for the given zone.
  * @param {number} zone Zone index
  * @param {string} field 
  * @returns {string} Formatted range
@@ -221,7 +221,7 @@ function thresholdsString(zone, field) {
 }
 
 /**
- * Display the zone customization dialogue
+ * Display the zone customization dialogue.
  * @param {string} field 
  */
 function openPopup(field) {
@@ -264,7 +264,7 @@ function openPopup(field) {
 }
 
 /**
- * Close the zone customization popup
+ * Close the zone customization popup.
  */
 function closePopup() {
 	document.getElementById("slider").noUiSlider.destroy();
@@ -272,7 +272,7 @@ function closePopup() {
 }
 
 /**
- * Update user's custom zones with values from customization dialogue
+ * Update user's custom zones with values from customization dialogue.
  * @param {string} field 
  */
 function saveZoneSettings(field) {
@@ -292,7 +292,7 @@ function saveZoneSettings(field) {
 }
 
 /**
- * Restore default zone values
+ * Restore default zone values.
  * @param {string} field 
  */
 function resetZoneSettings(field) {
@@ -305,7 +305,7 @@ function resetZoneSettings(field) {
 }
 
 /**
- * Create a sidebar with zone customization buttons
+ * Create a sidebar with zone customization buttons.
  * @param {string} field 
  */
 function addZoneSettings(field) {
@@ -320,7 +320,7 @@ function addZoneSettings(field) {
 }
 
 /**
- * Create a header with field name above the customization button
+ * Create a header with field name above the customization button.
  * @param {string} field 
  * @returns {HTMLElement} Header element
  */
@@ -332,7 +332,7 @@ function createHeader(field) {
 }
 
 /**
- * Create a label which says whether default or custom zones are in use
+ * Create a label which says whether default or custom zones are in use.
  * @param {string} field 
  * @returns {HTMLElement} Label element
  */
@@ -344,7 +344,7 @@ function createCustomizedLabel(field) {
 }
 
 /**
- * Create a customize button which opens the popup
+ * Create a customize button which opens the popup.
  * @param {string} field 
  * @returns {HTMLButtonElement} Button
  */
@@ -357,7 +357,7 @@ function createPopupButton(field) {
 }
 
 /**
- * Create an array filled with one value
+ * Create an array filled with one value.
  * @param {*} value Value to be filled
  * @param {number} length Final array lenght
  * @returns {Array}

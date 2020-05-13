@@ -22,7 +22,7 @@ const colors = {
 };
 
 /**
- * Enumerate for field types based on where in graphs they are plotted
+ * Enumerate for field types based on where in graphs they are plotted.
  * @enum {number}
  */
 const FieldTypes = {
