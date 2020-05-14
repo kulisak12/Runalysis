@@ -60,13 +60,13 @@ function createGpx() {
  */
 function addNumbers() {
 	var numbersContainer = document.getElementById("numbers-container");
-	// date
+	// date and activity name
 	var date = new Date(run.startTime);
 	var options = {dateStyle: "full", timeStyle: "medium"};
 	var dateBox = document.createElement("div");
 	dateBox.classList.add("date-box");
 	var dateValue = document.createElement("p");
-	dateValue.innerHTML = date.toLocaleString("en-GB", options);
+	dateValue.innerHTML = run.name + " | " + date.toLocaleString("en-GB", options);
 	dateBox.appendChild(dateValue);
 	numbersContainer.appendChild(dateBox);
 
