@@ -288,6 +288,7 @@ function saveZoneSettings(field) {
 		for (var i = 0; i < numZones; i++) {
 			values[i] = toSpeed(values[i]);
 		}
+		values.reverse();
 		field = "pace";
 	}
 	localStorage.setItem(field, JSON.stringify(values));
